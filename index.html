@@ -2,238 +2,247 @@
 <html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>הבית הארור 👻</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Heebo:wght@400;700&display=swap');
 *{margin:0;padding:0;box-sizing:border-box;}
-:root{
-  --bg:#0a0812;--bg2:#110f1e;--bg3:#1a1730;--bg4:#252040;
-  --blood:#c0392b;--ghost:#6c3aed;--ghost2:#a78bfa;
-  --gold:#d97706;--gold2:#fbbf24;--green:#059669;
-  --text:#e8e0f8;--muted:#7c6f9f;--dim:#3a3355;
-}
-body{background:var(--bg);color:var(--text);font-family:'Heebo',sans-serif;min-height:100vh;overflow:hidden;}
-
-/* SCREENS */
+body{background:#0a0812;color:#e8e0f8;font-family:'Heebo',sans-serif;overflow:hidden;touch-action:none;}
 .screen{display:none;position:fixed;inset:0;flex-direction:column;align-items:center;justify-content:center;}
 .screen.on{display:flex;}
 
-/* ===== LANDING ===== */
-#s-land{background:radial-gradient(ellipse at 50% 30%,#1a0a3e 0%,var(--bg) 70%);}
-.title-pixel{font-family:'Press Start 2P',monospace;font-size:28px;color:var(--ghost2);text-shadow:0 0 20px var(--ghost),0 4px 0 #3a0a8a;margin-bottom:8px;text-align:center;line-height:1.6;}
-.sub-pixel{font-family:'Press Start 2P',monospace;font-size:10px;color:var(--muted);text-align:center;margin-bottom:32px;}
-.land-card{background:rgba(17,15,30,.95);border:2px solid var(--ghost);border-radius:4px;padding:28px 32px;width:100%;max-width:420px;display:flex;flex-direction:column;gap:14px;box-shadow:0 0 40px rgba(108,58,237,.3);}
-.lbl{font-size:11px;color:var(--muted);margin-bottom:4px;letter-spacing:1px;}
-.inp{width:100%;background:var(--bg2);border:1px solid var(--dim);color:var(--text);border-radius:3px;padding:10px 12px;font-family:'Heebo',sans-serif;font-size:14px;outline:none;transition:border-color .15s;}
-.inp:focus{border-color:var(--ghost2);}
-.gender-row{display:flex;gap:8px;}
-.gbtn{flex:1;padding:10px;border-radius:3px;border:2px solid var(--dim);background:var(--bg2);color:var(--muted);font-family:'Heebo',sans-serif;font-weight:700;font-size:14px;cursor:pointer;transition:all .15s;}
-.gbtn.on{border-color:var(--ghost2);background:rgba(108,58,237,.25);color:var(--ghost2);}
-.av-row{display:flex;gap:6px;flex-wrap:wrap;}
-.av{width:36px;height:36px;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer;border:2px solid var(--dim);background:var(--bg2);transition:all .15s;}
-.av.on{border-color:#fff;background:var(--bg3);}
-.c-row{display:flex;gap:6px;flex-wrap:wrap;}
-.cdot{width:24px;height:24px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:border-color .15s;}
-.cdot.on{border-color:#fff;}
-.divider{height:1px;background:var(--dim);}
-.btn{border:none;border-radius:3px;padding:12px 20px;font-family:'Heebo',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all .15s;width:100%;}
+/* LANDING */
+#s-land{background:radial-gradient(ellipse at 50% 30%,#1a0a3e,#0a0812 70%);}
+.px{font-family:'Press Start 2P',monospace;}
+.title{font-family:'Press Start 2P',monospace;font-size:24px;color:#a78bfa;text-shadow:0 0 20px #6c3aed,0 4px 0 #3a0a8a;text-align:center;margin-bottom:6px;}
+.sub{font-family:'Press Start 2P',monospace;font-size:9px;color:#7c6f9f;text-align:center;margin-bottom:24px;}
+.card{background:rgba(17,15,30,.96);border:2px solid #6c3aed;border-radius:4px;padding:24px 28px;width:100%;max-width:400px;display:flex;flex-direction:column;gap:12px;box-shadow:0 0 40px rgba(108,58,237,.3);}
+.lbl{font-size:11px;color:#7c6f9f;letter-spacing:1px;margin-bottom:3px;}
+.inp{width:100%;background:#110f1e;border:1px solid #3a3355;color:#e8e0f8;border-radius:3px;padding:9px 12px;font-family:'Heebo',sans-serif;font-size:14px;outline:none;}
+.inp:focus{border-color:#a78bfa;}
+.grow{display:flex;gap:8px;}
+.gbtn{flex:1;padding:9px;border-radius:3px;border:2px solid #3a3355;background:#110f1e;color:#7c6f9f;font-family:'Heebo',sans-serif;font-weight:700;font-size:14px;cursor:pointer;}
+.gbtn.on{border-color:#a78bfa;background:rgba(108,58,237,.2);color:#a78bfa;}
+.avrow{display:flex;gap:5px;flex-wrap:wrap;}
+.av{width:34px;height:34px;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:19px;cursor:pointer;border:2px solid #3a3355;background:#110f1e;}
+.av.on{border-color:#fff;background:#252040;}
+.crow{display:flex;gap:5px;flex-wrap:wrap;}
+.cd{width:22px;height:22px;border-radius:50%;cursor:pointer;border:2px solid transparent;}
+.cd.on{border-color:#fff;}
+.hr{height:1px;background:#3a3355;}
+.btn{border:none;border-radius:3px;padding:11px;font-family:'Heebo',sans-serif;font-size:14px;font-weight:700;cursor:pointer;width:100%;}
+.bp{background:#6c3aed;color:#fff;}
+.bg{background:#1a1730;color:#e8e0f8;border:1px solid #3a3355;}
+.br{background:#c0392b;color:#fff;}
+.bgo{background:#d97706;color:#111;}
 .btn:hover{filter:brightness(1.15);}
-.btn-p{background:var(--ghost);color:#fff;box-shadow:0 0 12px rgba(108,58,237,.4);}
-.btn-g{background:var(--bg3);color:var(--text);border:1px solid var(--dim);}
-.btn-r{background:var(--blood);color:#fff;}
-.btn-gold{background:var(--gold);color:#111;}
-.ghost-float{font-size:56px;animation:flt 3s ease-in-out infinite;display:block;text-align:center;margin-bottom:8px;}
+
+/* LOBBY */
+#s-lobby{background:#0a0812;}
+.lbox{background:#110f1e;border:2px solid #6c3aed;border-radius:4px;padding:22px;max-width:460px;width:100%;}
+.rcode{font-family:'Press Start 2P',monospace;font-size:20px;color:#a78bfa;letter-spacing:8px;text-align:center;padding:12px;background:#0a0812;border-radius:3px;margin-bottom:12px;border:1px solid #6c3aed;}
+.pc{display:flex;align-items:center;gap:9px;background:#0a0812;border-radius:3px;padding:9px 12px;margin-bottom:7px;border:1px solid #252040;}
+.bdg{font-size:10px;padding:3px 9px;border-radius:20px;font-weight:700;}
+.bh{background:#d97706;color:#111;}.br2{background:#059669;color:#fff;}
+.spin{display:inline-block;width:10px;height:10px;border:2px solid #3a3355;border-top-color:#a78bfa;border-radius:50%;animation:sp .7s linear infinite;margin-left:5px;vertical-align:middle;}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+/* ROLE */
+#s-role{background:#0a0812;}
+.rbox{background:#110f1e;border:3px solid #6c3aed;border-radius:4px;padding:28px 36px;text-align:center;max-width:380px;}
+.ri{font-size:72px;margin-bottom:8px;}
+.rt{font-family:'Press Start 2P',monospace;font-size:18px;line-height:1.7;margin-bottom:10px;}
+.rg{color:#c0392b;}.rh{color:#a78bfa;}
+.rd{color:#7c6f9f;font-size:13px;line-height:1.8;}
+
+/* GAME */
+#s-game{background:#000;}
+canvas{display:block;}
+.hud{position:fixed;top:0;left:0;right:0;display:flex;align-items:center;gap:8px;background:rgba(10,8,18,.92);border-bottom:2px solid #6c3aed;padding:5px 10px;z-index:20;}
+.hud-title{font-family:'Press Start 2P',monospace;font-size:10px;color:#a78bfa;}
+.hud-tasks{font-family:'Press Start 2P',monospace;font-size:9px;color:#fbbf24;flex:1;text-align:center;}
+.hud-timer{font-family:'Press Start 2P',monospace;font-size:13px;color:#c0392b;min-width:34px;text-align:right;}
+
+/* action bar */
+.abar{position:fixed;bottom:0;left:0;right:0;display:flex;gap:5px;padding:6px;background:rgba(10,8,18,.92);border-top:2px solid #6c3aed;z-index:20;}
+.abtn{flex:1;padding:7px 4px;border-radius:3px;border:none;cursor:pointer;font-family:'Press Start 2P',monospace;font-size:7px;line-height:1.6;transition:filter .1s;}
+.abtn:hover{filter:brightness(1.2);}
+.at{background:#d97706;color:#111;}
+.ak{background:#c0392b;color:#fff;}
+@keyframes kpulse{0%,100%{box-shadow:0 0 0 0 rgba(192,57,43,.9)}50%{box-shadow:0 0 0 8px rgba(192,57,43,0)}}
+.ak{animation:kpulse 0.8s infinite;}
+.ar{background:#252040;color:#e8e0f8;}
+.ae{background:#1a1730;color:#7c6f9f;border:1px solid #3a3355;}
+
+/* dpad */
+.dpad{position:fixed;bottom:80px;left:10px;display:grid;grid-template-columns:repeat(3,44px);grid-template-rows:repeat(3,44px);gap:3px;z-index:20;}
+.dp{width:44px;height:44px;border-radius:5px;background:rgba(108,58,237,.3);border:2px solid rgba(167,139,250,.4);display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent;}
+.dp:active{background:rgba(108,58,237,.7);}
+.dp-blank{background:transparent;border:none;}
+
+/* VOTE */
+#s-vote{background:#0a0812;justify-content:flex-start;padding-top:16px;overflow-y:auto;gap:10px;}
+.vtitle{font-family:'Press Start 2P',monospace;font-size:14px;color:#a78bfa;text-align:center;}
+.cbox{width:100%;max-width:540px;background:#110f1e;border:1px solid #3a3355;border-radius:3px;padding:10px;max-height:110px;overflow-y:auto;}
+.cm{font-size:12px;line-height:1.7;border-bottom:1px solid #252040;padding:2px 0;}
+.cm:last-child{border:none;}
+.crow2{display:flex;gap:6px;width:100%;max-width:540px;}
+.crow2 .inp{flex:1;}
+.vgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:7px;width:100%;max-width:540px;}
+.vc{background:#110f1e;border:2px solid #252040;border-radius:3px;padding:9px;text-align:center;cursor:pointer;}
+.vc:hover{border-color:#a78bfa;}
+.vc.myv{border-color:#c0392b;}
+.vca{font-size:26px;}.vcn{font-size:11px;font-weight:700;margin-top:3px;}.vcc{font-size:10px;color:#7c6f9f;margin-top:2px;}
+
+/* RESULT */
+#s-result{background:radial-gradient(ellipse at 50% 30%,#1a0a3e,#0a0812 70%);}
+.resico{font-size:80px;animation:flt 2s ease-in-out infinite;text-align:center;}
 @keyframes flt{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+.restitle{font-family:'Press Start 2P',monospace;font-size:18px;text-align:center;line-height:1.7;margin:14px 0 8px;}
+.resdesc{color:#7c6f9f;max-width:360px;line-height:1.8;text-align:center;font-size:13px;}
 
-/* ===== LOBBY ===== */
-#s-lobby{background:var(--bg);}
-.lobby-box{background:var(--bg2);border:2px solid var(--ghost);border-radius:4px;padding:24px;max-width:480px;width:100%;box-shadow:0 0 30px rgba(108,58,237,.2);}
-.room-code{font-family:'Press Start 2P',monospace;font-size:22px;color:var(--ghost2);letter-spacing:8px;text-align:center;padding:14px;background:var(--bg);border-radius:3px;margin-bottom:14px;border:1px solid var(--ghost);}
-.pl-card{display:flex;align-items:center;gap:10px;background:var(--bg);border-radius:3px;padding:10px 14px;margin-bottom:8px;border:1px solid var(--dim);}
-.pl-card .av-sm{font-size:24px;}
-.pl-card .pname{flex:1;font-weight:700;}
-.badge{font-size:11px;padding:3px 10px;border-radius:20px;font-weight:700;}
-.bh{background:var(--gold);color:#111;}
-.br{background:var(--green);color:#fff;}
+/* OVERLAYS */
+.ow{position:fixed;inset:0;background:rgba(8,6,20,.93);display:none;align-items:center;justify-content:center;z-index:100;}
+.ow.on{display:flex;}
+.ob{background:#110f1e;border:2px solid #6c3aed;border-radius:4px;padding:24px 28px;max-width:300px;width:100%;text-align:center;}
+.ob h2{font-family:'Press Start 2P',monospace;font-size:12px;color:#a78bfa;margin-bottom:10px;line-height:1.7;}
 
-/* ===== ROLE ===== */
-#s-role{background:var(--bg);}
-.role-box{background:var(--bg2);border:3px solid var(--ghost);border-radius:4px;padding:32px 40px;text-align:center;max-width:400px;box-shadow:0 0 40px rgba(108,58,237,.4);}
-.r-icon{font-size:80px;margin-bottom:8px;}
-.r-title{font-family:'Press Start 2P',monospace;font-size:22px;line-height:1.6;margin-bottom:12px;}
-.r-ghost{color:var(--blood);}
-.r-human{color:var(--ghost2);}
-.r-desc{color:var(--muted);font-size:13px;line-height:1.8;}
-
-/* ===== GAME CANVAS ===== */
-#s-game{background:#000;flex-direction:column;}
-#game-canvas{display:block;cursor:crosshair;}
-.game-ui{position:fixed;top:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;background:rgba(10,8,18,.9);border-bottom:2px solid var(--ghost);padding:6px 12px;gap:8px;z-index:10;}
-.game-ui h1{font-family:'Press Start 2P',monospace;font-size:12px;color:var(--ghost2);}
-.ui-turn{font-family:'Press Start 2P',monospace;font-size:9px;color:var(--gold2);}
-.ui-timer{font-family:'Press Start 2P',monospace;font-size:14px;color:var(--blood);min-width:40px;}
-.game-actions{position:fixed;bottom:0;left:0;right:0;display:flex;gap:6px;padding:8px;background:rgba(10,8,18,.92);border-top:2px solid var(--ghost);z-index:10;}
-.act{flex:1;padding:8px 6px;border-radius:3px;border:none;cursor:pointer;font-family:'Press Start 2P',monospace;font-size:8px;line-height:1.5;transition:all .15s;}
-.act:hover{filter:brightness(1.2);}
-.a-task{background:var(--gold);color:#111;}
-.a-kill{background:var(--blood);color:#fff;animation:pkill 1s infinite;}
-@keyframes pkill{0%,100%{box-shadow:0 0 0 0 rgba(192,57,43,.8)}50%{box-shadow:0 0 0 6px rgba(192,57,43,0)}}
-.a-rep{background:var(--bg3);color:var(--text);border:1px solid var(--dim);}
-.a-end{background:var(--bg3);color:var(--muted);border:1px solid var(--dim);}
-.a-wait{background:var(--bg3);color:var(--dim);border:1px solid var(--bg);flex:1;font-family:'Press Start 2P',monospace;font-size:8px;padding:8px;text-align:center;}
-
-/* mini map overlay */
-.mini-map{position:fixed;bottom:80px;right:8px;background:rgba(10,8,18,.85);border:1px solid var(--ghost);border-radius:3px;padding:4px;}
-
-/* ===== VOTE ===== */
-#s-vote{background:var(--bg);justify-content:flex-start;padding-top:20px;overflow-y:auto;}
-.vote-title{font-family:'Press Start 2P',monospace;font-size:16px;color:var(--ghost2);margin-bottom:12px;text-align:center;}
-.chat-box{width:100%;max-width:560px;background:var(--bg2);border:1px solid var(--dim);border-radius:3px;padding:10px;max-height:120px;overflow-y:auto;margin-bottom:8px;}
-.chat-m{font-size:12px;line-height:1.7;border-bottom:1px solid var(--dim);padding:2px 0;}
-.chat-m:last-child{border:none;}
-.chat-row{display:flex;gap:6px;width:100%;max-width:560px;margin-bottom:12px;}
-.chat-row .inp{flex:1;}
-.v-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;width:100%;max-width:560px;margin-bottom:12px;}
-.vc{background:var(--bg2);border:2px solid var(--dim);border-radius:3px;padding:10px;text-align:center;cursor:pointer;transition:all .15s;}
-.vc:hover{border-color:var(--ghost2);transform:scale(1.03);}
-.vc.myv{border-color:var(--blood);}
-.vc-av{font-size:28px;}
-.vc-nm{font-size:11px;font-weight:700;margin-top:4px;}
-.vc-ct{font-size:10px;color:var(--muted);margin-top:2px;}
-
-/* ===== RESULT ===== */
-#s-result{background:radial-gradient(ellipse at 50% 30%,#1a0a3e 0%,var(--bg) 70%);}
-.res-icon{font-size:80px;animation:flt 2s ease-in-out infinite;text-align:center;}
-.res-title{font-family:'Press Start 2P',monospace;font-size:22px;text-align:center;line-height:1.6;margin:16px 0 8px;}
-.res-desc{color:var(--muted);max-width:380px;line-height:1.8;text-align:center;font-size:14px;}
-
-/* OVERLAY */
-.ov-wrap{position:fixed;inset:0;background:rgba(8,6,20,.92);display:none;align-items:center;justify-content:center;z-index:100;}
-.ov-wrap.on{display:flex;}
-.ov{background:var(--bg2);border:2px solid var(--ghost);border-radius:4px;padding:28px 32px;max-width:320px;width:100%;text-align:center;box-shadow:0 0 30px rgba(108,58,237,.3);}
-.ov h2{font-family:'Press Start 2P',monospace;font-size:14px;color:var(--ghost2);margin-bottom:12px;line-height:1.6;}
-
-/* scrollbar */
-::-webkit-scrollbar{width:4px;}
-::-webkit-scrollbar-track{background:var(--bg2);}
-::-webkit-scrollbar-thumb{background:var(--ghost);border-radius:2px;}
-
-.spinner{display:inline-block;width:12px;height:12px;border:2px solid var(--dim);border-top-color:var(--ghost2);border-radius:50%;animation:spin .7s linear infinite;margin-left:6px;vertical-align:middle;}
-@keyframes spin{to{transform:rotate(360deg)}}
+::-webkit-scrollbar{width:3px;}
+::-webkit-scrollbar-track{background:#110f1e;}
+::-webkit-scrollbar-thumb{background:#6c3aed;border-radius:2px;}
 </style>
 </head>
 <body>
 
 <!-- LANDING -->
 <div id="s-land" class="screen on">
-  <span class="ghost-float">👻</span>
-  <div class="title-pixel">הבית הארור</div>
-  <div class="sub-pixel">HAUNTED HOUSE</div>
-  <div class="land-card">
+  <div style="font-size:52px;animation:flt 3s ease-in-out infinite;text-align:center;margin-bottom:4px">👻</div>
+  <div class="title">הבית הארור</div>
+  <div class="sub">REAL-TIME MULTIPLAYER</div>
+  <div class="card">
     <div><div class="lbl">שמך</div><input class="inp" id="inp-name" placeholder="Enter name..." maxlength="16"></div>
     <div>
       <div class="lbl">מגדר</div>
-      <div class="gender-row">
+      <div class="grow">
         <button class="gbtn on" id="gm" onclick="setGender('m')">👨 גבר</button>
         <button class="gbtn" id="gf" onclick="setGender('f')">👩 אישה</button>
       </div>
     </div>
-    <div><div class="lbl">דמות</div><div class="av-row" id="av-row"></div></div>
-    <div><div class="lbl">צבע</div><div class="c-row" id="c-row"></div></div>
-    <div class="divider"></div>
-    <button class="btn btn-p" onclick="createRoom()">✨ צור חדר חדש</button>
-    <div style="text-align:center;font-size:11px;color:var(--dim)">— או —</div>
+    <div><div class="lbl">דמות</div><div class="avrow" id="avrow"></div></div>
+    <div><div class="lbl">צבע</div><div class="crow" id="crow"></div></div>
+    <div class="hr"></div>
+    <button class="btn bp" onclick="createRoom()">✨ צור חדר חדש</button>
+    <div style="text-align:center;font-size:11px;color:#3a3355">— או —</div>
     <div><div class="lbl">קוד חדר</div><input class="inp" id="inp-code" placeholder="XXXXXX" maxlength="6" style="letter-spacing:6px;text-align:center;font-size:18px;font-family:monospace"></div>
-    <button class="btn btn-g" onclick="joinRoom()">🚪 הצטרף</button>
+    <button class="btn bg" onclick="joinRoom()">🚪 הצטרף</button>
   </div>
 </div>
 
 <!-- LOBBY -->
 <div id="s-lobby" class="screen">
-  <div style="font-family:'Press Start 2P',monospace;font-size:14px;color:var(--ghost2);margin-bottom:16px">LOBBY</div>
-  <div class="lobby-box">
-    <div style="font-size:11px;color:var(--muted);text-align:center;margin-bottom:6px">שתף קוד זה עם חבריך:</div>
-    <div class="room-code" id="lob-code">------</div>
-    <div id="lob-players"></div>
-    <div id="lob-status" style="text-align:center;font-size:12px;color:var(--muted);margin:8px 0"></div>
-    <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
-      <button class="btn btn-p" id="btn-start" style="display:none" onclick="hostStart()">▶ התחל משחק!</button>
-      <button class="btn btn-g" onclick="leaveRoom()">← צא מהחדר</button>
+  <div class="px" style="font-size:13px;color:#a78bfa;margin-bottom:14px">LOBBY</div>
+  <div class="lbox">
+    <div style="font-size:11px;color:#7c6f9f;text-align:center;margin-bottom:5px">שתף קוד עם חבריך:</div>
+    <div class="rcode" id="lob-code">------</div>
+    <div id="lob-pls"></div>
+    <div id="lob-st" style="text-align:center;font-size:12px;color:#7c6f9f;margin:7px 0"></div>
+    <div style="display:flex;flex-direction:column;gap:7px;margin-top:7px">
+      <button class="btn bp" id="btn-start" style="display:none" onclick="hostStart()">▶ התחל משחק!</button>
+      <button class="btn bg" onclick="leaveRoom()">← צא</button>
     </div>
   </div>
 </div>
 
 <!-- ROLE -->
 <div id="s-role" class="screen">
-  <div class="role-box">
-    <div class="r-icon" id="r-icon"></div>
-    <div class="r-title" id="r-title"></div>
-    <div class="r-desc" id="r-desc"></div>
+  <div class="rbox">
+    <div class="ri" id="r-ico"></div>
+    <div class="rt" id="r-ttl"></div>
+    <div class="rd" id="r-dsc"></div>
   </div>
-  <button class="btn btn-p" style="max-width:260px;margin-top:16px" onclick="enterGame()">הבנתי! משחקים 🎮</button>
+  <button class="btn bp" style="max-width:240px;margin-top:14px" onclick="enterGame()">משחקים! 🎮</button>
 </div>
 
 <!-- GAME -->
 <div id="s-game" class="screen">
-  <div class="game-ui">
-    <div class="game-ui h1" style="font-family:'Press Start 2P',monospace;font-size:11px;color:var(--ghost2)">👁 הבית הארור</div>
-    <div class="ui-turn" id="ui-turn">...</div>
-    <div class="ui-timer" id="ui-timer">90</div>
+  <div class="hud">
+    <div class="hud-title">👁 הבית הארור</div>
+    <div class="hud-tasks" id="hud-tasks">משימות: 0/0</div>
+    <div class="hud-timer" id="hud-timer"></div>
   </div>
-  <canvas id="game-canvas"></canvas>
-  <div class="game-actions" id="game-actions"></div>
+  <canvas id="gc"></canvas>
+  <div class="abar" id="abar"></div>
+  <!-- D-PAD for mobile -->
+  <div class="dpad" id="dpad">
+    <div class="dp dp-blank"></div>
+    <div class="dp" onpointerdown="dpadDir(0,-1)" onpointerup="dpadStop()">▲</div>
+    <div class="dp dp-blank"></div>
+    <div class="dp" onpointerdown="dpadDir(-1,0)" onpointerup="dpadStop()">◀</div>
+    <div class="dp dp-blank"></div>
+    <div class="dp" onpointerdown="dpadDir(1,0)" onpointerup="dpadStop()">▶</div>
+    <div class="dp dp-blank"></div>
+    <div class="dp" onpointerdown="dpadDir(0,1)" onpointerup="dpadStop()">▼</div>
+    <div class="dp dp-blank"></div>
+  </div>
 </div>
 
 <!-- VOTE -->
 <div id="s-vote" class="screen">
-  <div class="vote-title">🗳 ישיבת חירום!</div>
-  <div class="chat-box" id="chat-box"></div>
-  <div class="chat-row">
+  <div class="vtitle">🗳 ישיבת חירום!</div>
+  <div class="cbox" id="cbox"></div>
+  <div class="crow2">
     <input class="inp" id="chat-in" placeholder="הגד דעתך..." onkeydown="if(event.key==='Enter')sendChat()">
-    <button class="btn btn-p" style="width:auto;padding:9px 14px;font-size:13px" onclick="sendChat()">שלח</button>
+    <button class="btn bp" style="width:auto;padding:9px 12px;font-size:13px" onclick="sendChat()">שלח</button>
   </div>
-  <div class="v-grid" id="v-grid"></div>
-  <button class="btn btn-gold" style="max-width:260px" id="btn-resolve" onclick="resolveVote()">📊 סיים הצבעה</button>
+  <div class="vgrid" id="vgrid"></div>
+  <button class="btn bgo" style="max-width:240px" id="btn-res" onclick="resolveVote()">📊 סיים הצבעה</button>
 </div>
 
 <!-- RESULT -->
 <div id="s-result" class="screen">
-  <div class="res-icon" id="res-icon"></div>
-  <div class="res-title" id="res-title"></div>
-  <div class="res-desc" id="res-desc"></div>
-  <button class="btn btn-p" style="max-width:220px;margin-top:20px" onclick="goLand()">🔄 שחק שוב</button>
+  <div class="resico" id="res-ico"></div>
+  <div class="restitle" id="res-ttl"></div>
+  <div class="resdesc" id="res-dsc"></div>
+  <button class="btn bp" style="max-width:200px;margin-top:18px" onclick="goLand()">🔄 שחק שוב</button>
 </div>
 
 <!-- TASK OV -->
-<div class="ov-wrap" id="ov-task">
-  <div class="ov">
-    <h2 id="ov-th"></h2>
-    <div style="font-size:52px;margin:10px 0" id="ov-ti"></div>
-    <p style="color:var(--muted);font-size:13px;line-height:1.7;margin-bottom:16px" id="ov-td"></p>
-    <button class="btn btn-gold" onclick="completeTask()">✓ השלם</button>
-    <br><br><button class="btn btn-g" onclick="closeOv('ov-task')">ביטול</button>
+<div class="ow" id="ov-task">
+  <div class="ob">
+    <h2 id="ot-h"></h2>
+    <div style="font-size:48px;margin:8px 0" id="ot-i"></div>
+    <p style="color:#7c6f9f;font-size:12px;line-height:1.7;margin-bottom:14px" id="ot-d"></p>
+    <button class="btn bgo" onclick="completeTask()">✓ השלם</button>
+    <br><br><button class="btn bg" onclick="cOv('ov-task')">ביטול</button>
   </div>
 </div>
 
 <!-- KILL OV -->
-<div class="ov-wrap" id="ov-kill">
-  <div class="ov">
-    <h2 style="color:var(--blood)">💀 חסל?</h2>
-    <div style="font-size:52px;margin:10px 0" id="ov-kav"></div>
-    <p style="color:var(--muted);font-size:13px;margin-bottom:16px">חסל את <strong id="ov-knm"></strong>?</p>
-    <button class="btn btn-r" onclick="confirmKill()">חסל!</button>
-    <br><br><button class="btn btn-g" onclick="closeOv('ov-kill')">ביטול</button>
+<div class="ow" id="ov-kill">
+  <div class="ob">
+    <h2 style="color:#c0392b">💀 חסל?</h2>
+    <div style="font-size:48px;margin:8px 0" id="ok-av"></div>
+    <p style="color:#7c6f9f;font-size:13px;margin-bottom:14px">חסל את <strong id="ok-nm"></strong>?</p>
+    <button class="btn br" onclick="confirmKill()">חסל!</button>
+    <br><br><button class="btn bg" onclick="cOv('ov-kill')">ביטול</button>
   </div>
 </div>
 
-<!-- FIREBASE -->
+<!-- REPORT OV -->
+<div class="ow" id="ov-report">
+  <div class="ob">
+    <h2>🚨 דיווח על גופה</h2>
+    <p style="color:#7c6f9f;font-size:13px;margin-bottom:14px">לזמן ישיבת חירום?</p>
+    <button class="btn br" onclick="confirmReport()">דווח!</button>
+    <br><br><button class="btn bg" onclick="cOv('ov-report')">ביטול</button>
+  </div>
+</div>
+
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-
 <script>
 // ================================================================
-// FIREBASE CONFIG
+// FIREBASE
 // ================================================================
 const FB={
   apiKey:"AIzaSyA-gi3EIwLFcNS6MN6RGqs3L5UQsxTAbzk",
@@ -251,61 +260,67 @@ const FB={
 const COLORS=['#e74c3c','#3498db','#2ecc71','#f39c12','#9b59b6','#1abc9c','#e67e22','#e91e63'];
 const AVM=['🧔','👨','👨‍🦱','👨‍🦰','👨‍🦲','👨‍🦳'];
 const AVF=['👩','👩‍🦱','👩‍🦰','👩‍🦲','👩‍🦳','👧'];
+const TS=48; // tile size px
+const SPEED=2.8; // tiles per second
+const KILL_RANGE=1.5;
+const KILL_CD=15000; // 15s cooldown
 
-// Tile types: 0=wall 1=floor 2=room_entry
-// 16x12 tile map (each tile = 48px)
-const TSIZE=48;
-const TILEMAP=[
-  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-  [0,1,1,1,1,0,0,1,1,1,1,0,0,1,1,0],
-  [0,1,1,1,1,0,0,1,1,1,1,0,0,1,1,0],
-  [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
-  [0,0,1,0,0,0,0,0,1,0,0,0,0,1,0,0],
-  [0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,0],
-  [0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,0],
-  [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
-  [0,0,1,0,0,0,0,0,1,0,0,0,0,1,0,0],
-  [0,1,1,1,1,0,0,1,1,1,1,0,0,1,1,0],
-  [0,1,1,1,1,0,0,1,1,1,1,0,0,1,1,0],
-  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+// MAP: 0=wall, 1=floor
+const MAP=[
+  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+  [0,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,0],
+  [0,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,0],
+  [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+  [0,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,0],
+  [0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0],
+  [0,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,0],
+  [0,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,0],
+  [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+  [0,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,0],
+  [0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0],
+  [0,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,0],
+  [0,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,0],
+  [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+  [0,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,0],
+  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 ];
-const ROWS=TILEMAP.length, COLS=TILEMAP[0].length;
+const ROWS=MAP.length, COLS=MAP[0].length;
 
-// Room definitions {name, color, tasks inside}
-const ROOMS=[
-  {name:'סלון',     cx:2,  cy:1,  color:'#1a1530', taskIcon:'🛋', desc:'ספה ישנה עם כתמים חשודים'},
-  {name:'מטבח',     cx:9,  cy:1,  color:'#0d1a10', taskIcon:'🍳', desc:'סכין מוטמנת בתוך עוגה'},
-  {name:'מרפסת',    cx:13, cy:1,  color:'#0a1020', taskIcon:'🌕', desc:'ירח מלא מאיר על משהו...'},
-  {name:'חדר שינה', cx:2,  cy:5,  color:'#1a0d15', taskIcon:'🛏', desc:'מיטה שזזה לבד בלילה'},
-  {name:'ספרייה',   cx:9,  cy:5,  color:'#0d1020', taskIcon:'📚', desc:'ספר מקפץ בין המדפים'},
-  {name:'מרתף',     cx:13, cy:5,  color:'#150a0a', taskIcon:'🪜', desc:'קולות מהמרתף ממש...'},
-  {name:'אמבטיה',   cx:2,  cy:9,  color:'#0a1520', taskIcon:'🛁', desc:'מים צוננים שלא מתחממים'},
-  {name:'חדר ילדים',cx:9,  cy:9,  color:'#10150a', taskIcon:'🧸', desc:'בובה שזוזה לבד'},
-  {name:'חדר עליית גג',cx:13,cy:9,color:'#151015',taskIcon:'🏚', desc:'תקרה שמשמיעה צעדים'},
-];
-
-const TASKS=[
-  {name:'תקן חשמל',   icon:'⚡',desc:'המנורה מציצה. תקן את החיבור.'},
-  {name:'מצא מפתח',   icon:'🗝',desc:'המפתח הנסתר. חפש היטב.'},
-  {name:'נקה כתם',    icon:'🧹',desc:'כתם אדום על הרצפה. מנקים.'},
-  {name:'הדלק נרות',  icon:'🕯',desc:'הדלק בסדר הנכון.'},
-  {name:'שדר SOS',    icon:'📻',desc:'שדר לפני שיאוחר מדי.'},
-  {name:'הרכב שלד',   icon:'💀',desc:'הרכב כדי לשחרר הקסם.'},
-  {name:'טארוט',      icon:'🃏',desc:'הנח הקלפים בסדר.'},
-  {name:'תקן שעון',   icon:'🕰',desc:'עצר ב-3:00 — תקן אותו.'},
+const ROOM_INFO=[
+  {name:'סלון',     cx:2,  cy:2,  color:'#130d20'},
+  {name:'מטבח',     cx:9,  cy:2,  color:'#0d1810'},
+  {name:'מרפסת',    cx:16, cy:2,  color:'#0a1018'},
+  {name:'חדר שינה', cx:2,  cy:7,  color:'#18090d'},
+  {name:'ספרייה',   cx:9,  cy:7,  color:'#0d1018'},
+  {name:'מרתף',     cx:16, cy:7,  color:'#120808'},
+  {name:'אמבטיה',   cx:2,  cy:13, color:'#081218'},
+  {name:'חדר ילדים',cx:9,  cy:13, color:'#0f1208'},
+  {name:'עליית גג', cx:16, cy:13, color:'#130d18'},
 ];
 
-// Task locations on map (tx,ty in tile coords)
-const TASK_TILES=[
-  {tx:2,ty:2},{tx:9,ty:2},{tx:13,ty:2},
-  {tx:2,ty:6},{tx:9,ty:6},{tx:13,ty:6},
-  {tx:2,ty:10},{tx:9,ty:10},{tx:13,ty:10},
+const TASK_DEFS=[
+  {name:'תקן חשמל',  icon:'⚡',desc:'חיבור שבור. תקן לפני שהחשיך לגמרי.'},
+  {name:'מצא מפתח', icon:'🗝',desc:'מפתח נסתר. חפש היטב.'},
+  {name:'נקה כתם',  icon:'🧹',desc:'כתם חשוד על הרצפה.'},
+  {name:'הדלק נרות',icon:'🕯',desc:'הדלק בסדר הנכון.'},
+  {name:'שדר SOS',  icon:'📻',desc:'שדר לפני שיאוחר.'},
+  {name:'הרכב שלד', icon:'💀',desc:'הרכב לשחרור הקסם.'},
+  {name:'טארוט',    icon:'🃏',desc:'הנח הקלפים בסדר.'},
+  {name:'תקן שעון', icon:'🕰',desc:'עצר ב-3:00. תקן.'},
+  {name:'ניתוח ספר',icon:'📖',desc:'מצא הדף הנכון.'},
+];
+
+// Task positions (tx,ty tile coords)
+const TASK_POS=[
+  {tx:2,ty:2},{tx:9,ty:2},{tx:16,ty:2},
+  {tx:2,ty:7},{tx:9,ty:7},{tx:16,ty:7},
+  {tx:2,ty:13},{tx:9,ty:13},{tx:16,ty:13},
 ];
 
 const STARTS=[
-  {x:2.5,y:3.5},{x:9.5,y:3.5},{x:13.5,y:3.5},
-  {x:2.5,y:7.5},{x:9.5,y:7.5},{x:13.5,y:7.5},
-  {x:5.5,y:5.5},{x:10.5,y:7.5}
+  {x:2.5,y:3},{x:9.5,y:3},{tx:16.5,y:3,x:16.5},
+  {x:2.5,y:8},{x:9.5,y:8},{x:16.5,y:8},
+  {x:5,y:5},{x:12,y:12}
 ];
 
 // ================================================================
@@ -315,36 +330,42 @@ let db=null;
 let myId='p'+Date.now()+Math.random().toString(36).slice(2,6);
 let myColor=0,myGender='m',myAvIdx=0,myName='שחקן';
 let isHost=false,roomCode=null,gs=null;
-let timerInt=null,killTarget=null,activeTaskId=null,roomRef=null;
+let killTarget=null,activeTaskId=null,rRef=null;
 
-// Canvas render state
-let cam={x:0,y:0}; // camera offset in pixels
-let playerAnims={}; // {id: {x,y,dir,frame,frameTimer}}
-let particles=[]; // ghost kill particles
-let lastRender=0;
+// Local movement
+let keys={};
+let dpadVel={x:0,y:0};
+let myX=2.5,myY=2.5; // local smooth position
+let lastPosUpdate=0;
+let lastKillTime=0;
+let killCooldown=0;
+let animFrame=0,animTimer=0,lastLoop=0;
+let particles=[];
+let camX=0,camY=0;
+let canvas,ctx;
 
 // ================================================================
-// FIREBASE
+// FIREBASE INIT
 // ================================================================
 function initFB(){
   if(db)return true;
   try{
     if(!firebase.apps.length)firebase.initializeApp(FB);
     db=firebase.database();return true;
-  }catch(e){alert('Firebase error: '+e.message);return false;}
+  }catch(e){alert('Firebase: '+e.message);return false;}
 }
 
 // ================================================================
-// LANDING UI
+// LANDING
 // ================================================================
 function buildUI(){
-  document.getElementById('c-row').innerHTML=
-    COLORS.map((c,i)=>`<div class="cdot${i===myColor?' on':''}" style="background:${c}" onclick="pickColor(${i})"></div>`).join('');
+  document.getElementById('crow').innerHTML=
+    COLORS.map((c,i)=>`<div class="cd${i===myColor?' on':''}" style="background:${c}" onclick="pickC(${i})"></div>`).join('');
   const avs=myGender==='m'?AVM:AVF;
-  document.getElementById('av-row').innerHTML=
+  document.getElementById('avrow').innerHTML=
     avs.map((a,i)=>`<div class="av${i===myAvIdx?' on':''}" onclick="pickAv(${i})">${a}</div>`).join('');
 }
-function pickColor(i){myColor=i;buildUI();}
+function pickC(i){myColor=i;buildUI();}
 function pickAv(i){myAvIdx=i;buildUI();}
 function setGender(g){
   myGender=g;myAvIdx=0;
@@ -362,16 +383,16 @@ async function createRoom(){
   myName=document.getElementById('inp-name').value.trim()||'שחקן';
   roomCode=String(Math.floor(100000+Math.random()*900000));
   isHost=true;
-  const me=mkPlayer(0);
+  const me=mkP(0);
+  myX=me.x;myY=me.y;
   await db.ref('rooms/'+roomCode).set({
     host:myId,phase:'lobby',
-    players:{[myId]:me},tasks:{},bodies:{},log:{},chat:{},votes:{},
-    doneTasks:0,totalTasks:0,turn:myId,timer:90
+    players:{[myId]:me},
+    tasks:{},bodies:{},chat:{},votes:{},
+    doneTasks:0,totalTasks:0,
+    gameStartAt:0,voteActive:false
   });
-  go('s-lobby');
-  document.getElementById('lob-code').textContent=roomCode;
-  document.getElementById('btn-start').style.display='block';
-  listenRoom();
+  showLobby();
 }
 async function joinRoom(){
   if(!initFB())return;
@@ -381,24 +402,30 @@ async function joinRoom(){
   const snap=await db.ref('rooms/'+code).get();
   if(!snap.exists()){alert('חדר לא נמצא!');return;}
   const room=snap.val();
-  if(room.phase!=='lobby'){alert('המשחק כבר התחיל!');return;}
+  if(room.phase==='result'){alert('המשחק נגמר כבר');return;}
   roomCode=code;isHost=false;
   const idx=Object.keys(room.players||{}).length;
   const usedC=Object.values(room.players||{}).map(p=>p.color);
   let col=myColor;
   if(usedC.includes(col)){for(let i=0;i<8;i++){if(!usedC.includes(i)){col=i;break;}}}
   myColor=col;
-  await db.ref('rooms/'+roomCode+'/players/'+myId).set(mkPlayer(idx));
+  const me=mkP(idx);
+  myX=me.x;myY=me.y;
+  await db.ref('rooms/'+roomCode+'/players/'+myId).set(me);
+  showLobby();
+}
+function mkP(idx){
+  const s=STARTS[idx%STARTS.length];
+  return{id:myId,name:myName,color:myColor,avatar:getAv(),alive:true,x:s.x,y:s.y,isGhost:false,killCooldown:0};
+}
+function showLobby(){
   go('s-lobby');
   document.getElementById('lob-code').textContent=roomCode;
+  if(isHost)document.getElementById('btn-start').style.display='block';
   listenRoom();
 }
-function mkPlayer(idx){
-  return{id:myId,name:myName,color:myColor,avatar:getAv(),
-    alive:true,pos:STARTS[idx%STARTS.length],isGhost:false,tasksDone:0};
-}
 function leaveRoom(){
-  stopListen();clearInterval(timerInt);
+  stopListen();
   if(roomCode)db.ref('rooms/'+roomCode+'/players/'+myId).remove();
   goLand();
 }
@@ -408,35 +435,34 @@ function leaveRoom(){
 // ================================================================
 function listenRoom(){
   stopListen();
-  roomRef=db.ref('rooms/'+roomCode).on('value',snap=>{
+  rRef=db.ref('rooms/'+roomCode).on('value',snap=>{
     if(!snap||!snap.exists())return;
     gs=snap.val();
     onState(gs);
   });
 }
-function stopListen(){
-  if(roomRef&&roomCode){db.ref('rooms/'+roomCode).off('value',roomRef);roomRef=null;}
-}
+function stopListen(){if(rRef&&roomCode){db.ref('rooms/'+roomCode).off('value',rRef);rRef=null;}}
+
 function onState(s){
   if(!s)return;
-  if(s.phase==='lobby')renderLobby(s);
-  else if(s.phase==='role')showRole(s);
-  else if(s.phase==='game')onGame(s);
-  else if(s.phase==='vote')onVote(s);
-  else if(s.phase==='result')onResult(s);
+  if(s.phase==='lobby')     renderLobby(s);
+  else if(s.phase==='role') showRole(s);
+  else if(s.phase==='game') onGame(s);
+  else if(s.phase==='vote') onVote(s);
+  else if(s.phase==='result') onResult(s);
 }
 
 // ================================================================
-// LOBBY
+// LOBBY RENDER
 // ================================================================
 function renderLobby(s){
   if(cur()!=='s-lobby')return;
   const ps=Object.values(s.players||{});
-  document.getElementById('lob-players').innerHTML=ps.map(p=>
-    `<div class="pl-card"><span class="av-sm">${p.avatar||'🧑'}</span><span class="pname" style="color:${COLORS[p.color]}">${p.name}${p.id===myId?' (אני)':''}</span><span class="badge ${p.id===s.host?'bh':'br'}">${p.id===s.host?'HOST':'READY'}</span></div>`
+  document.getElementById('lob-pls').innerHTML=ps.map(p=>
+    `<div class="pc"><span style="font-size:22px">${p.avatar||'🧑'}</span><span style="flex:1;font-weight:700;color:${COLORS[p.color]}">${p.name}${p.id===myId?' (אני)':''}</span><span class="bdg ${p.id===s.host?'bh':'br2'}">${p.id===s.host?'HOST':'JOIN'}</span></div>`
   ).join('');
   const n=ps.length;
-  document.getElementById('lob-status').innerHTML=n>=2?`${n} שחקנים ✓`:`<span class="spinner"></span> ממתין לשחקנים...`;
+  document.getElementById('lob-st').innerHTML=n>=2?`${n} שחקנים ✓`:`<span class="spin"></span> ממתין...`;
   if(isHost)document.getElementById('btn-start').style.display=n>=2?'block':'none';
 }
 
@@ -446,20 +472,23 @@ function renderLobby(s){
 async function hostStart(){
   if(!isHost||!gs)return;
   const ps=Object.values(gs.players||{});
-  if(ps.length<2){alert('צריך לפחות 2 שחקנים');return;}
+  if(ps.length<2){alert('צריך לפחות 2');return;}
   const gi=Math.floor(Math.random()*ps.length);
   const up={};
   ps.forEach((p,i)=>{
+    const s=STARTS[i%STARTS.length];
     up['players/'+p.id+'/isGhost']=(i===gi);
-    up['players/'+p.id+'/pos']=STARTS[i%STARTS.length];
+    up['players/'+p.id+'/x']=s.x;
+    up['players/'+p.id+'/y']=s.y;
     up['players/'+p.id+'/alive']=true;
+    up['players/'+p.id+'/killCooldown']=0;
   });
-  const shuffled=[...TASKS].sort(()=>Math.random()-.5);
+  const shuf=[...TASK_DEFS].sort(()=>Math.random()-.5);
   const tasks={};
-  TASK_TILES.forEach((t,i)=>{tasks['t'+i]={tx:t.tx,ty:t.ty,defIdx:i%shuffled.length,done:false,id:'t'+i};});
-  up.tasks=tasks;up.bodies={};up.log={};up.chat={};up.votes={};
-  up.doneTasks=0;up.totalTasks=TASK_TILES.length;
-  up.turn=ps[0].id;up.timer=90;up.phase='role';
+  TASK_POS.forEach((t,i)=>{tasks['t'+i]={tx:t.tx,ty:t.ty,defIdx:i%shuf.length,done:false,id:'t'+i};});
+  up.tasks=tasks;up.bodies={};up.chat={};up.votes={};
+  up.doneTasks=0;up.totalTasks=TASK_POS.length;
+  up.gameStartAt=Date.now();up.phase='role';up.voteActive=false;
   await db.ref('rooms/'+roomCode).update(up);
 }
 
@@ -468,352 +497,365 @@ async function hostStart(){
 // ================================================================
 function showRole(s){
   if(cur()==='s-role')return;
-  const me=s.players&&s.players[myId];
-  if(!me)return;
+  const me=s.players&&s.players[myId];if(!me)return;
   if(me.isGhost){
-    document.getElementById('r-icon').textContent='👻';
-    document.getElementById('r-title').innerHTML='<span class="r-ghost">אתה הרוח!</span>';
-    document.getElementById('r-desc').textContent='חסל שחקנים מבלי להיתפס. שקר, התחמק, הישאר חף. תנצח כשנשארים 2.';
+    document.getElementById('r-ico').textContent='👻';
+    document.getElementById('r-ttl').innerHTML='<span class="rg">אתה הרוח!</span>';
+    document.getElementById('r-dsc').textContent='חסל שחקנים בשקט. אל תיתפס. תנצח כשנשארים 2 בלבד.';
   }else{
-    document.getElementById('r-icon').textContent='🕵️';
-    document.getElementById('r-title').innerHTML='<span class="r-human">אתה חוקר</span>';
-    document.getElementById('r-desc').textContent='השלם משימות ועקוב אחר חשודים. דווח על גופות לזמן הצבעה.';
+    document.getElementById('r-ico').textContent='🕵️';
+    document.getElementById('r-ttl').innerHTML='<span class="rh">אתה חוקר</span>';
+    document.getElementById('r-dsc').textContent='השלם את כל המשימות. אם מישהו מת — דווח על הגופה לזמן הצבעה.';
   }
   go('s-role');
 }
 async function enterGame(){
+  const me=gs&&gs.players&&gs.players[myId];
+  if(me){myX=me.x||2.5;myY=me.y||2.5;}
   await db.ref('rooms/'+roomCode+'/phase').set('game');
+  startGame();
+}
+
+// ================================================================
+// GAME LOOP
+// ================================================================
+function startGame(){
   go('s-game');
-  initCanvas();
-  startTimer();
+  canvas=document.getElementById('gc');
+  canvas.width=window.innerWidth;
+  canvas.height=window.innerHeight;
+  ctx=canvas.getContext('2d');
+  window.addEventListener('keydown',e=>{keys[e.key]=true;e.preventDefault();},{passive:false});
+  window.addEventListener('keyup',e=>{keys[e.key]=false;});
+  window.addEventListener('resize',()=>{canvas.width=window.innerWidth;canvas.height=window.innerHeight;});
+  lastLoop=performance.now();
+  requestAnimationFrame(loop);
+}
+
+function loop(ts){
+  if(cur()!=='s-game'){requestAnimationFrame(loop);return;}
+  const dt=Math.min(ts-lastLoop,50)/1000; // seconds
+  lastLoop=ts;
+  updateMe(dt,ts);
+  updateParticles(dt);
+  render(ts);
+  requestAnimationFrame(loop);
 }
 
 // ================================================================
-// CANVAS GAME
+// MOVEMENT
 // ================================================================
-let canvas,ctx;
-function initCanvas(){
-  canvas=document.getElementById('game-canvas');
-  const W=window.innerWidth, H=window.innerHeight-90;
-  canvas.width=W; canvas.height=H;
-  canvas.onclick=onCanvasClick;
-  // init player anim states
-  if(gs&&gs.players){
-    Object.values(gs.players).forEach(p=>{
-      playerAnims[p.id]={x:p.pos.x*TSIZE,y:p.pos.y*TSIZE,tx:p.pos.x*TSIZE,ty:p.pos.y*TSIZE,frame:0,ft:0};
-    });
+function updateMe(dt,ts){
+  if(!gs||!gs.players||!gs.players[myId])return;
+  const me=gs.players[myId];
+  if(!me.alive)return;
+
+  // keyboard
+  let dx=0,dy=0;
+  if(keys['ArrowLeft']||keys['a']||keys['A'])dx=-1;
+  if(keys['ArrowRight']||keys['d']||keys['D'])dx=1;
+  if(keys['ArrowUp']||keys['w']||keys['W'])dy=-1;
+  if(keys['ArrowDown']||keys['s']||keys['S'])dy=1;
+  // dpad
+  dx+=dpadVel.x;dy+=dpadVel.y;
+
+  if(dx!==0&&dy!==0){dx*=0.707;dy*=0.707;}
+
+  const spd=SPEED*dt;
+  const nx=myX+dx*spd, ny=myY+dy*spd;
+
+  // collision
+  const ok=(x,y)=>{
+    const margin=0.25;
+    return canWalk(x-margin,y-margin)&&canWalk(x+margin,y-margin)&&canWalk(x-margin,y+margin)&&canWalk(x+margin,y+margin);
+  };
+  if(ok(nx,myY))myX=nx;
+  if(ok(myX,ny))myY=ny;
+
+  // anim
+  if(dx!==0||dy!==0){animTimer+=dt;if(animTimer>0.15){animTimer=0;animFrame=(animFrame+1)%4;}}
+  else animFrame=0;
+
+  // kill cooldown
+  if(killCooldown>0)killCooldown=Math.max(0,killCooldown-dt*1000);
+
+  // push pos to firebase (throttled)
+  if(ts-lastPosUpdate>80){
+    lastPosUpdate=ts;
+    db.ref('rooms/'+roomCode+'/players/'+myId).update({x:myX,y:myY});
   }
-  requestAnimationFrame(gameLoop);
+}
+function canWalk(x,y){
+  const r=Math.floor(y),c=Math.floor(x);
+  if(r<0||r>=ROWS||c<0||c>=COLS)return false;
+  return MAP[r][c]===1;
 }
 
-function gameLoop(ts){
-  if(cur()!=='s-game'){requestAnimationFrame(gameLoop);return;}
-  const dt=Math.min(ts-lastRender,50);lastRender=ts;
-  updateAnims(dt);
-  drawGame();
-  requestAnimationFrame(gameLoop);
-}
+function dpadDir(x,y){dpadVel.x=x;dpadVel.y=y;}
+function dpadStop(){dpadVel.x=0;dpadVel.y=0;}
 
-function updateAnims(dt){
-  if(!gs||!gs.players)return;
-  Object.values(gs.players).forEach(p=>{
-    if(!playerAnims[p.id]) playerAnims[p.id]={x:p.pos.x*TSIZE,y:p.pos.y*TSIZE,tx:p.pos.x*TSIZE,ty:p.pos.y*TSIZE,frame:0,ft:0};
-    const a=playerAnims[p.id];
-    a.tx=p.pos.x*TSIZE; a.ty=p.pos.y*TSIZE;
-    const dx=a.tx-a.x, dy=a.ty-a.y;
-    const speed=4;
-    if(Math.abs(dx)>1||Math.abs(dy)>1){
-      a.x+=dx*speed*dt/100;
-      a.y+=dy*speed*dt/100;
-      a.ft+=dt;
-      if(a.ft>150){a.ft=0;a.frame=(a.frame+1)%4;}
-    }else{a.x=a.tx;a.y=a.ty;a.frame=0;}
-  });
-  // update particles
+// ================================================================
+// PARTICLES
+// ================================================================
+function updateParticles(dt){
   particles=particles.filter(p=>{
-    p.life-=dt;p.x+=p.vx*dt/100;p.y+=p.vy*dt/100;p.vy+=0.5;
+    p.life-=dt;p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=4*dt;
     return p.life>0;
   });
-  // camera follows me
-  if(gs&&gs.players&&gs.players[myId]){
-    const me=gs.players[myId];
-    const a=playerAnims[myId];
-    if(a){
-      const tw=canvas.width/2,th=(canvas.height)/2;
-      cam.x=Math.max(0,Math.min(COLS*TSIZE-canvas.width, a.x-tw+TSIZE/2));
-      cam.y=Math.max(0,Math.min(ROWS*TSIZE-canvas.height, a.y-th+TSIZE/2));
-    }
+}
+function spawnKillFX(wx,wy){
+  for(let i=0;i<10;i++){
+    const a=Math.random()*Math.PI*2,spd=1+Math.random()*3;
+    particles.push({x:wx,y:wy,vx:Math.cos(a)*spd,vy:Math.sin(a)*spd-3,life:0.8+Math.random()*0.5,maxLife:1.3,char:['💀','🩸','👻','💨'][i%4],size:20});
   }
 }
 
-function drawGame(){
-  if(!canvas||!ctx){canvas=document.getElementById('game-canvas');ctx=canvas.getContext('2d');if(!ctx)return;}
-  ctx.clearRect(0,0,canvas.width,canvas.height);
+// ================================================================
+// RENDER
+// ================================================================
+function render(ts){
+  if(!canvas||!ctx)return;
+  const W=canvas.width,H=canvas.height;
+  ctx.clearRect(0,0,W,H);
   if(!gs)return;
-  ctx.save();
-  ctx.translate(-cam.x,-cam.y);
 
-  // Draw floor tiles
-  for(let r=0;r<ROWS;r++){
-    for(let c=0;c<COLS;c++){
-      const t=TILEMAP[r][c];
-      const x=c*TSIZE,y=r*TSIZE;
+  // Camera follows player
+  const targetCamX=myX*TS-W/2+TS/2;
+  const targetCamY=myY*TS-H/2+TS/2;
+  camX+=(targetCamX-camX)*0.12;
+  camY+=(targetCamY-camY)*0.12;
+  camX=Math.max(0,Math.min(COLS*TS-W,camX));
+  camY=Math.max(0,Math.min(ROWS*TS-H,camY));
+
+  ctx.save();
+  ctx.translate(-camX,-camY);
+
+  // Visible tile range
+  const c0=Math.max(0,Math.floor(camX/TS)-1);
+  const c1=Math.min(COLS,Math.ceil((camX+W)/TS)+1);
+  const r0=Math.max(0,Math.floor(camY/TS)-1);
+  const r1=Math.min(ROWS,Math.ceil((camY+H)/TS)+1);
+
+  // Draw tiles
+  for(let r=r0;r<r1;r++){
+    for(let c=c0;c<c1;c++){
+      const t=MAP[r][c];
+      const px=c*TS,py=r*TS;
       if(t===0){
         // Wall
-        drawPixelRect(ctx,x,y,TSIZE,TSIZE,'#0d0b18');
-        // Wall detail
-        ctx.fillStyle='#16132a';
-        ctx.fillRect(x+2,y+2,TSIZE-4,4);
-        ctx.fillRect(x+2,y+TSIZE-6,TSIZE-4,4);
+        ctx.fillStyle='#0e0c1c';
+        ctx.fillRect(px,py,TS,TS);
+        ctx.fillStyle='#18162e';
+        ctx.fillRect(px+1,py+1,TS-2,4);
+        ctx.fillStyle='#080614';
+        ctx.fillRect(px+1,py+TS-4,TS-2,3);
       }else{
-        // Floor - find room color
-        const rm=ROOMS.find(rm2=>{
-          const dx=Math.abs(c-rm2.cx),dy=Math.abs(r-rm2.cy);
-          return dx<=2&&dy<=2;
+        // Floor — color by room
+        let fc='#131025';
+        const rm=ROOM_INFO.find(rm=>{
+          const dx=Math.abs(c-rm.cx),dy=Math.abs(r-rm.cy);
+          return dx<=4&&dy<=4;
         });
-        const fc=rm?rm.color:'#131025';
+        if(rm)fc=rm.color;
         ctx.fillStyle=fc;
-        ctx.fillRect(x,y,TSIZE,TSIZE);
-        // Floor pattern
-        ctx.fillStyle='rgba(255,255,255,0.025)';
-        if((r+c)%2===0)ctx.fillRect(x,y,TSIZE,TSIZE);
-        // Border
-        ctx.strokeStyle='rgba(255,255,255,0.05)';
-        ctx.strokeRect(x+0.5,y+0.5,TSIZE-1,TSIZE-1);
+        ctx.fillRect(px,py,TS,TS);
+        // Floor grid
+        ctx.strokeStyle='rgba(255,255,255,0.04)';
+        ctx.lineWidth=0.5;
+        ctx.strokeRect(px,py,TS,TS);
+        // Worn pattern
+        if((r+c)%3===0){ctx.fillStyle='rgba(0,0,0,0.07)';ctx.fillRect(px+2,py+2,TS-4,TS-4);}
       }
     }
   }
 
-  // Draw room labels
-  ROOMS.forEach(rm=>{
-    ctx.font='bold 10px Heebo';
-    ctx.fillStyle='rgba(200,180,255,0.4)';
-    ctx.textAlign='center';
-    ctx.fillText(rm.name,rm.cx*TSIZE+TSIZE/2,(rm.cy-1)*TSIZE+14);
+  // Room labels
+  ctx.font='bold 11px Heebo';
+  ctx.textAlign='center';
+  ROOM_INFO.forEach(rm=>{
+    ctx.fillStyle='rgba(167,139,250,0.35)';
+    ctx.fillText(rm.name,rm.cx*TS+TS/2,(rm.cy-3)*TS);
   });
 
-  // Draw tasks
+  // Tasks
   const tasks=Object.values(gs.tasks||{});
+  const pulse=0.6+0.4*Math.sin(ts/400);
   tasks.forEach(t=>{
     if(t.done)return;
-    const x=t.tx*TSIZE,y=t.ty*TSIZE;
-    // Glowing task marker
-    const pulse=0.6+0.4*Math.sin(Date.now()/400);
+    const px=t.tx*TS,py=t.ty*TS;
     ctx.save();
-    ctx.shadowBlur=12*pulse;
-    ctx.shadowColor='#d97706';
-    ctx.font='22px serif';
-    ctx.textAlign='center';
-    ctx.textBaseline='middle';
-    ctx.fillText(TASKS[t.defIdx].icon,x+TSIZE/2,y+TSIZE/2);
+    ctx.shadowBlur=14*pulse;ctx.shadowColor='#d97706';
+    ctx.font='24px serif';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText(TASK_DEFS[t.defIdx].icon,px+TS/2,py+TS/2);
     ctx.restore();
-    // Gold border
-    ctx.strokeStyle=`rgba(217,119,6,${0.5+0.3*pulse})`;
-    ctx.lineWidth=2;
-    ctx.strokeRect(x+3,y+3,TSIZE-6,TSIZE-6);
+    ctx.strokeStyle=`rgba(217,119,6,${0.4+0.4*pulse})`;
+    ctx.lineWidth=2;ctx.strokeRect(px+3,py+3,TS-6,TS-6);
   });
 
-  // Draw bodies
+  // Bodies
   Object.values(gs.bodies||{}).forEach(b=>{
-    const x=b.tx*TSIZE,y=b.ty*TSIZE;
-    ctx.font='26px serif';
-    ctx.textAlign='center';
-    ctx.textBaseline='middle';
-    ctx.fillText('💀',x+TSIZE/2,y+TSIZE/2);
-    ctx.fillStyle='rgba(192,57,43,0.3)';
-    ctx.fillRect(x,y+TSIZE*0.6,TSIZE,TSIZE*0.4);
+    const px=b.tx*TS,py=b.ty*TS;
+    ctx.fillStyle='rgba(192,57,43,0.25)';ctx.fillRect(px,py+TS*0.6,TS,TS*0.4);
+    ctx.font='28px serif';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText('💀',px+TS/2,py+TS*0.7);
+    ctx.font='bold 9px Heebo';ctx.fillStyle='#e74c3c';
+    ctx.fillText(b.pname||'',px+TS/2,py+TS-4);
   });
 
-  // Draw players
-  const me=gs.players&&gs.players[myId];
+  // Players
+  const me=gs.players[myId];
   Object.values(gs.players||{}).forEach(p=>{
-    if(!p.alive)return;
-    const a=playerAnims[p.id];
-    if(!a)return;
-    const x=a.x,y=a.y;
-    const isMe=(p.id===myId);
-
-    // Shadow
-    ctx.fillStyle='rgba(0,0,0,0.4)';
-    ctx.beginPath();
-    ctx.ellipse(x+TSIZE/2,y+TSIZE*0.88,TSIZE*0.28,TSIZE*0.1,0,0,Math.PI*2);
-    ctx.fill();
-
-    // Body - pixel art style character
-    const col=COLORS[p.color];
-    const bodyW=TSIZE*0.55, bodyH=TSIZE*0.65;
-    const bx=x+(TSIZE-bodyW)/2, by=y+TSIZE*0.2;
-
-    // Suit body
-    ctx.fillStyle=col;
-    ctx.beginPath();
-    ctx.roundRect(bx,by,bodyW,bodyH,bodyW*0.3);
-    ctx.fill();
-
-    // Helmet/head
-    ctx.fillStyle='rgba(180,220,255,0.85)';
-    ctx.beginPath();
-    ctx.roundRect(bx+bodyW*0.1,by-bodyH*0.35,bodyW*0.8,bodyH*0.45,bodyW*0.4);
-    ctx.fill();
-    ctx.strokeStyle='rgba(100,160,220,0.6)';
-    ctx.lineWidth=1.5;
-    ctx.stroke();
-
-    // Avatar inside helmet
-    ctx.font=`${TSIZE*0.28}px serif`;
-    ctx.textAlign='center';
-    ctx.textBaseline='middle';
-    ctx.fillText(p.avatar||'🧑',x+TSIZE/2,by-bodyH*0.1);
-
-    // Backpack
-    ctx.fillStyle=darken(col,0.7);
-    ctx.fillRect(bx-bodyW*0.18,by+bodyH*0.1,bodyW*0.18,bodyH*0.5);
-
-    // Legs (walking animation)
-    const legOff=a.frame<2?TSIZE*0.05:-TSIZE*0.05;
-    ctx.fillStyle=darken(col,0.8);
-    ctx.beginPath();
-    ctx.roundRect(bx+bodyW*0.15,by+bodyH*0.85+legOff,bodyW*0.28,bodyH*0.32,4);
-    ctx.fill();
-    ctx.beginPath();
-    ctx.roundRect(bx+bodyW*0.55,by+bodyH*0.85-legOff,bodyW*0.28,bodyH*0.32,4);
-    ctx.fill();
-
-    // Glow for current turn player
-    if(gs.turn===p.id){
-      ctx.save();
-      ctx.shadowBlur=16;
-      ctx.shadowColor=col;
-      ctx.strokeStyle=col;
-      ctx.lineWidth=2;
-      ctx.beginPath();
-      ctx.roundRect(bx-2,by-bodyH*0.38,bodyW+4,bodyH+bodyH*0.38+4,bodyW*0.35);
-      ctx.stroke();
-      ctx.restore();
+    const isMe=p.id===myId;
+    const px=(isMe?myX:p.x)*TS, py=(isMe?myY:p.y)*TS;
+    if(!p.alive){
+      // Dead ghost silhouette
+      ctx.globalAlpha=0.25;
+      ctx.font='24px serif';ctx.textAlign='center';ctx.textBaseline='middle';
+      ctx.fillText('👻',px+TS/2,py+TS/2);
+      ctx.globalAlpha=1;return;
     }
-
-    // Ghost effect
-    if(p.isGhost&&isMe){
-      ctx.save();
-      ctx.globalAlpha=0.3+0.15*Math.sin(Date.now()/300);
-      ctx.fillStyle='rgba(160,100,255,0.5)';
-      ctx.beginPath();
-      ctx.roundRect(bx-4,by-bodyH*0.4,bodyW+8,bodyH+bodyH*0.4+8,bodyW*0.4);
-      ctx.fill();
-      ctx.restore();
-    }
-
-    // Name tag
-    ctx.fillStyle='rgba(0,0,0,0.6)';
-    const nw=ctx.measureText(p.name).width+10;
-    ctx.fillRect(x+TSIZE/2-nw/2,y-16,nw,14);
-    ctx.font='bold 10px Heebo';
-    ctx.fillStyle=isMe?'#fbbf24':COLORS[p.color];
-    ctx.textAlign='center';
-    ctx.textBaseline='top';
-    ctx.fillText(p.name,x+TSIZE/2,y-15);
+    drawPlayer(ctx,px,py,p,isMe,ts);
   });
 
-  // Particles
+  // Particles (screen space converted)
   particles.forEach(p=>{
     ctx.globalAlpha=p.life/p.maxLife;
-    ctx.font=`${p.size}px serif`;
-    ctx.textAlign='center';
-    ctx.textBaseline='middle';
+    ctx.font=`${p.size}px serif`;ctx.textAlign='center';ctx.textBaseline='middle';
     ctx.fillText(p.char,p.x,p.y);
   });
   ctx.globalAlpha=1;
 
-  // Darkness overlay (limited vision)
+  // Darkness vignette
   if(me&&me.alive){
-    const a=playerAnims[myId];
-    if(a){
-      const px=a.x+TSIZE/2-cam.x, py=a.y+TSIZE/2-cam.y;
-      const vr=TSIZE*3.5;
-      const grad=ctx.createRadialGradient(px+cam.x,py+cam.y,vr*0.4,px+cam.x,py+cam.y,vr*1.2);
-      grad.addColorStop(0,'rgba(0,0,0,0)');
-      grad.addColorStop(0.6,'rgba(0,0,0,0.15)');
-      grad.addColorStop(1,'rgba(0,0,0,0.92)');
-      ctx.save();
-      ctx.fillStyle=grad;
-      ctx.fillRect(cam.x,cam.y,canvas.width,canvas.height);
-      ctx.restore();
-    }
+    const cx=myX*TS+TS/2-camX, cy=myY*TS+TS/2-camY;
+    const vr=TS*3.8;
+    const grad=ctx.createRadialGradient(cx+camX,cy+camY,vr*0.5,cx+camX,cy+camY,vr*1.3);
+    grad.addColorStop(0,'rgba(0,0,0,0)');
+    grad.addColorStop(0.55,'rgba(0,0,0,0.1)');
+    grad.addColorStop(1,'rgba(0,0,0,0.95)');
+    ctx.fillStyle=grad;
+    ctx.fillRect(camX,camY,W,H);
   }
 
   ctx.restore();
-  updateGameUI();
+  updateHUD(ts);
+}
+
+function drawPlayer(ctx,px,py,p,isMe,ts){
+  const col=COLORS[p.color];
+  const bw=TS*0.52,bh=TS*0.6;
+  const bx=px+(TS-bw)/2,by=py+TS*0.22;
+
+  // Shadow
+  ctx.fillStyle='rgba(0,0,0,0.45)';
+  ctx.beginPath();ctx.ellipse(px+TS/2,py+TS*0.9,bw*0.4,TS*0.08,0,0,Math.PI*2);ctx.fill();
+
+  // Glow if ghost (visible only to self)
+  if(p.isGhost&&isMe){
+    ctx.save();ctx.globalAlpha=0.25+0.1*Math.sin(ts/250);
+    ctx.fillStyle='rgba(192,57,43,0.6)';
+    ctx.beginPath();ctx.roundRect(bx-5,by-bh*0.42,bw+10,bh+bh*0.45,bw*0.4);ctx.fill();
+    ctx.restore();
+  }
+
+  // Suit body
+  ctx.fillStyle=col;
+  ctx.beginPath();ctx.roundRect(bx,by,bw,bh,bw*0.28);ctx.fill();
+
+  // Suit highlight
+  ctx.fillStyle='rgba(255,255,255,0.12)';
+  ctx.beginPath();ctx.roundRect(bx+bw*0.1,by+bh*0.06,bw*0.35,bh*0.32,4);ctx.fill();
+
+  // Backpack
+  ctx.fillStyle=darken(col,0.65);
+  ctx.beginPath();ctx.roundRect(bx-bw*0.2,by+bh*0.1,bw*0.2,bh*0.5,3);ctx.fill();
+
+  // Helmet
+  const hx=bx+bw*0.08,hy=by-bh*0.38,hw=bw*0.84,hh=bh*0.44;
+  ctx.fillStyle='rgba(160,210,255,0.82)';
+  ctx.beginPath();ctx.roundRect(hx,hy,hw,hh,hw*0.45);ctx.fill();
+  ctx.strokeStyle='rgba(100,170,240,0.5)';ctx.lineWidth=1.5;ctx.stroke();
+
+  // Face emoji inside helmet
+  ctx.font=`${TS*0.26}px serif`;ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText(p.avatar||'🧑',px+TS/2,hy+hh*0.52);
+
+  // Legs with walk animation
+  const lf=animFrame;
+  const lOff=isMe?[Math.sin(lf*Math.PI/2)*TS*0.07,-Math.sin(lf*Math.PI/2)*TS*0.07]:[0,0];
+  ctx.fillStyle=darken(col,0.75);
+  ctx.beginPath();ctx.roundRect(bx+bw*0.12,by+bh*0.88+lOff[0],bw*0.3,bh*0.28,3);ctx.fill();
+  ctx.beginPath();ctx.roundRect(bx+bw*0.56,by+bh*0.88+lOff[1],bw*0.3,bh*0.28,3);ctx.fill();
+
+  // Name tag
+  const nm=p.name+(isMe?' ★':'');
+  ctx.font=`bold 10px Heebo`;
+  const nw=ctx.measureText(nm).width+8;
+  ctx.fillStyle='rgba(0,0,0,0.65)';
+  ctx.fillRect(px+TS/2-nw/2,py-15,nw,13);
+  ctx.fillStyle=isMe?'#fbbf24':COLORS[p.color];
+  ctx.textAlign='center';ctx.textBaseline='top';
+  ctx.fillText(nm,px+TS/2,py-15);
+
+  // Kill cooldown arc (for ghost)
+  if(p.isGhost&&isMe&&killCooldown>0){
+    const pct=killCooldown/KILL_CD;
+    ctx.strokeStyle='rgba(192,57,43,0.7)';ctx.lineWidth=3;
+    ctx.beginPath();ctx.arc(px+TS/2,py+TS/2,bw*0.6,-Math.PI/2,-Math.PI/2+Math.PI*2*(1-pct));ctx.stroke();
+  }
 }
 
 function darken(hex,f){
   let r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);
-  return `rgb(${Math.round(r*f)},${Math.round(g*f)},${Math.round(b*f)})`;
+  return`rgb(${Math.round(r*f)},${Math.round(g*f)},${Math.round(b*f)})`;
 }
 
-function drawPixelRect(c,x,y,w,h,col){
-  c.fillStyle=col;c.fillRect(x,y,w,h);
-  c.fillStyle='rgba(255,255,255,0.04)';c.fillRect(x,y,w,2);c.fillRect(x,y,2,h);
-  c.fillStyle='rgba(0,0,0,0.3)';c.fillRect(x,y+h-2,w,2);c.fillRect(x+w-2,y,2,h);
-}
-
-function onCanvasClick(e){
-  if(!gs||!gs.players)return;
-  const me=gs.players[myId];
-  if(!me||!me.alive||gs.turn!==myId)return;
-  const rect=canvas.getBoundingClientRect();
-  const wx=(e.clientX-rect.left+cam.x)/TSIZE;
-  const wy=(e.clientY-rect.top+cam.y)/TSIZE;
-  const tc=Math.floor(wx),tr=Math.floor(wy);
-  moveTo(tr,tc);
-}
-
-function updateGameUI(){
+// ================================================================
+// HUD
+// ================================================================
+function updateHUD(ts){
   if(!gs)return;
-  const isMyTurn=gs.turn===myId;
-  const tp=gs.players&&gs.players[gs.turn];
-  document.getElementById('ui-turn').textContent=isMyTurn?'🔥 התור שלך!':'⏳ '+(tp?tp.name:'?');
-  document.getElementById('ui-timer').textContent=gs.timer||90;
-  renderActions();
-}
+  const done=gs.doneTasks||0,total=gs.totalTasks||0;
+  document.getElementById('hud-tasks').textContent=`משימות: ${done}/${total}`;
 
-// ================================================================
-// MOVE
-// ================================================================
-async function moveTo(tr,tc){
-  if(!gs||!gs.players)return;
-  if(gs.turn!==myId)return;
-  const me=gs.players[myId];
-  if(!me||!me.alive)return;
-  if(TILEMAP[tr]===undefined||TILEMAP[tr][tc]===0)return;
-  const dr=Math.abs(me.pos.y-tr), dc=Math.abs(me.pos.x-tc);
-  if(dr>1||dc>1){return;} // must step adjacent
-  await db.ref('rooms/'+roomCode+'/players/'+myId+'/pos').set({x:tc,y:tr});
-  addLog('🚶 '+me.name+' זז');
-}
+  // Game timer
+  const elapsed=gs.gameStartAt?Math.floor((ts-gs.gameStartAt)/1000):0;
+  document.getElementById('hud-timer').textContent=Math.floor(elapsed/60)+':'+(elapsed%60<10?'0':'')+elapsed%60;
 
-// ================================================================
-// ACTIONS
-// ================================================================
-function renderActions(){
-  if(!gs||!gs.players)return;
-  const me=gs.players[myId];
-  const area=document.getElementById('game-actions');
-  if(!me){area.innerHTML='';return;}
-  if(gs.turn!==myId){area.innerHTML='<div class="a-wait">⏳ ממתין לתור שלך...</div>';return;}
-  if(!me.alive){area.innerHTML='<div class="a-wait">☠ צופה בלבד</div>';return;}
+  // Action bar
+  const me=gs.players&&gs.players[myId];
+  if(!me||!me.alive){document.getElementById('abar').innerHTML='<div style="flex:1;text-align:center;font-family:\'Press Start 2P\',monospace;font-size:8px;padding:8px;color:#3a3355">☠ צופה בלבד</div>';return;}
+
   const tasks=Object.values(gs.tasks||{});
   const bodies=Object.values(gs.bodies||{});
   const players=Object.values(gs.players||{});
-  const pos=me.pos;
-  const taskHere=tasks.find(t=>t.tx===Math.round(pos.x)&&t.ty===Math.round(pos.y)&&!t.done);
-  const bodyHere=bodies.find(b=>b.tx===Math.round(pos.x)&&b.ty===Math.round(pos.y));
-  const nearby=players.filter(p=>p.id!==myId&&p.alive&&p.pos&&Math.abs(p.pos.x-pos.x)<=1.5&&Math.abs(p.pos.y-pos.y)<=1.5);
+
+  const taskHere=tasks.find(t=>!t.done&&Math.hypot(t.tx-myX,t.ty-myY)<1.2);
+  const bodyHere=bodies.find(b=>Math.hypot(b.tx-myX,b.ty-myY)<1.2);
+  const nearby=players.filter(p=>p.id!==myId&&p.alive&&Math.hypot((p.x||0)-myX,(p.y||0)-myY)<KILL_RANGE);
+
   let h='';
-  if(taskHere) h+=`<button class="act a-task" onclick="openTask('${taskHere.id}',${taskHere.defIdx})">⚙<br>משימה</button>`;
-  if(bodyHere) h+=`<button class="act a-rep" onclick="doReport()">🚨<br>דווח</button>`;
-  if(me.isGhost&&nearby.length) h+=`<button class="act a-kill" onclick="pickKill()">💀<br>חסל!</button>`;
-  h+=`<button class="act a-end" onclick="endTurn()">➡<br>סיים תור</button>`;
-  area.innerHTML=h;
+  if(taskHere) h+=`<button class="abtn at" onclick="openTask('${taskHere.id}',${taskHere.defIdx})">⚙<br>משימה</button>`;
+  if(bodyHere) h+=`<button class="abtn ar" onclick="oOv('ov-report')">🚨<br>דווח</button>`;
+  if(me.isGhost&&nearby.length&&killCooldown<=0)
+    h+=`<button class="abtn ak" onclick="pickKill()">💀<br>חסל!</button>`;
+  else if(me.isGhost&&killCooldown>0)
+    h+=`<button class="abtn ae" style="min-width:60px">${Math.ceil(killCooldown/1000)}s<br>cooldown</button>`;
+  if(!h) h='<div style="flex:1;text-align:center;font-family:\'Press Start 2P\',monospace;font-size:7px;padding:8px;color:#3a3355">WASD / ↑↓←→ להזזה</div>';
+  document.getElementById('abar').innerHTML=h;
+}
+
+// ================================================================
+// GAME STATE SYNC
+// ================================================================
+function onGame(s){
+  const c=cur();
+  if(c==='s-lobby'||c==='s-role'||c==='s-land'){
+    const me=s.players&&s.players[myId];
+    if(me){myX=me.x||2.5;myY=me.y||2.5;}
+    startGame();
+  }
+  if(isHost)checkWin(s);
 }
 
 // ================================================================
@@ -821,95 +863,71 @@ function renderActions(){
 // ================================================================
 function openTask(id,defIdx){
   activeTaskId=id;
-  document.getElementById('ov-th').textContent=TASKS[defIdx].name;
-  document.getElementById('ov-ti').textContent=TASKS[defIdx].icon;
-  document.getElementById('ov-td').textContent=TASKS[defIdx].desc;
-  openOv('ov-task');
+  document.getElementById('ot-h').textContent=TASK_DEFS[defIdx].name;
+  document.getElementById('ot-i').textContent=TASK_DEFS[defIdx].icon;
+  document.getElementById('ot-d').textContent=TASK_DEFS[defIdx].desc;
+  oOv('ov-task');
 }
 async function completeTask(){
-  closeOv('ov-task');
-  if(!gs||!activeTaskId)return;
+  cOv('ov-task');if(!gs||!activeTaskId)return;
   const t=gs.tasks[activeTaskId];if(!t)return;
   const me=gs.players[myId];
   await db.ref('rooms/'+roomCode+'/tasks/'+activeTaskId+'/done').set(true);
   await db.ref('rooms/'+roomCode+'/doneTasks').set((gs.doneTasks||0)+1);
-  addLog('✅ '+me.name+': '+TASKS[t.defIdx].name,'lt');
 }
 
 // ================================================================
 // KILL
 // ================================================================
 function pickKill(){
-  if(!gs)return;
-  const me=gs.players[myId];
-  const nearby=Object.values(gs.players).filter(p=>p.id!==myId&&p.alive&&p.pos&&Math.abs(p.pos.x-me.pos.x)<=1.5&&Math.abs(p.pos.y-me.pos.y)<=1.5);
+  if(!gs||killCooldown>0)return;
+  const players=Object.values(gs.players||{});
+  const nearby=players.filter(p=>p.id!==myId&&p.alive&&Math.hypot((p.x||0)-myX,(p.y||0)-myY)<KILL_RANGE);
   if(!nearby.length)return;
   killTarget=nearby[0];
-  document.getElementById('ov-kav').textContent=killTarget.avatar||'🧑';
-  document.getElementById('ov-knm').textContent=killTarget.name;
-  openOv('ov-kill');
+  document.getElementById('ok-av').textContent=killTarget.avatar||'🧑';
+  document.getElementById('ok-nm').textContent=killTarget.name;
+  oOv('ov-kill');
 }
 async function confirmKill(){
-  closeOv('ov-kill');if(!killTarget)return;
-  // spawn particles
-  const a=playerAnims[killTarget.id];
-  if(a){for(let i=0;i<12;i++){particles.push({x:a.x+TSIZE/2,y:a.y+TSIZE/2,vx:(Math.random()-0.5)*4,vy:-Math.random()*5-2,life:1200,maxLife:1200,size:18,char:['💀','🩸','👻','💨'][Math.floor(Math.random()*4)]});}}
+  cOv('ov-kill');if(!killTarget)return;
+  spawnKillFX(killTarget.x*TS,killTarget.y*TS);
+  killCooldown=KILL_CD;
   await db.ref('rooms/'+roomCode+'/players/'+killTarget.id+'/alive').set(false);
-  await db.ref('rooms/'+roomCode+'/bodies/b'+Date.now()).set({tx:Math.round(killTarget.pos.x),ty:Math.round(killTarget.pos.y),pname:killTarget.name});
-  addLog('💀 '+killTarget.name+' חוסל!','lk');
+  await db.ref('rooms/'+roomCode+'/bodies/b'+Date.now()).set({
+    tx:Math.round(killTarget.x),ty:Math.round(killTarget.y),pname:killTarget.name
+  });
   killTarget=null;
 }
 
 // ================================================================
 // REPORT
 // ================================================================
-async function doReport(){
-  clearInterval(timerInt);
+async function confirmReport(){
+  cOv('ov-report');
   const me=gs.players[myId];
   await db.ref('rooms/'+roomCode+'/chat/c'+Date.now()).set({name:'מערכת',msg:me.name+' דיווח על גופה!',color:'#e74c3c',ts:Date.now()});
   await db.ref('rooms/'+roomCode).update({phase:'vote',votes:{}});
 }
 
 // ================================================================
-// GAME PHASE
-// ================================================================
-function onGame(s){
-  const c=cur();
-  if(c==='s-lobby'||c==='s-role'||c==='s-land'){
-    go('s-game');initCanvas();startTimer();
-  }
-  if(c==='s-game')renderGame_update(s);
-  if(isHost)checkWin(s);
-}
-function renderGame_update(s){
-  // Sync new players into anim state
-  Object.values(s.players||{}).forEach(p=>{
-    if(!playerAnims[p.id]&&p.pos)
-      playerAnims[p.id]={x:p.pos.x*TSIZE,y:p.pos.y*TSIZE,tx:p.pos.x*TSIZE,ty:p.pos.y*TSIZE,frame:0,ft:0};
-  });
-}
-
-// ================================================================
 // VOTE
 // ================================================================
-function onVote(s){
-  if(cur()!=='s-vote')go('s-vote');
-  renderVote(s);
-}
+function onVote(s){if(cur()!=='s-vote')go('s-vote');renderVote(s);}
 function renderVote(s){
   const chat=Object.values(s.chat||{}).sort((a,b)=>a.ts-b.ts);
-  const cb=document.getElementById('chat-box');
-  cb.innerHTML=chat.map(m=>`<div class="chat-m"><span style="font-weight:700;color:${m.color||'#a78bfa'}">${m.name}: </span>${m.msg}</div>`).join('');
+  const cb=document.getElementById('cbox');
+  cb.innerHTML=chat.map(m=>`<div class="cm"><span style="font-weight:700;color:${m.color||'#a78bfa'}">${m.name}: </span>${m.msg}</div>`).join('');
   cb.scrollTop=cb.scrollHeight;
   const votes=s.votes||{},myVote=votes[myId];
   const alive=Object.values(s.players||{}).filter(p=>p.alive);
-  document.getElementById('v-grid').innerHTML=
+  document.getElementById('vgrid').innerHTML=
     alive.map(p=>`<div class="vc${myVote===p.id?' myv':''}" onclick="castVote('${p.id}')">
-      <div class="vc-av">${p.avatar||'🧑'}</div>
-      <div class="vc-nm" style="color:${COLORS[p.color]}">${p.name}${p.id===myId?' (אני)':''}</div>
-      <div class="vc-ct">${Object.values(votes).filter(v=>v===p.id).length} קולות</div></div>`
-    ).join('')+`<div class="vc" onclick="castVote('skip')"><div class="vc-av">⏭</div><div class="vc-nm" style="color:var(--muted)">דלג</div></div>`;
-  document.getElementById('btn-resolve').style.display=isHost?'block':'none';
+      <div class="vca">${p.avatar||'🧑'}</div>
+      <div class="vcn" style="color:${COLORS[p.color]}">${p.name}${p.id===myId?' (אני)':''}</div>
+      <div class="vcc">${Object.values(votes).filter(v=>v===p.id).length} קולות</div></div>`
+    ).join('')+'<div class="vc" onclick="castVote(\'skip\')"><div class="vca">⏭</div><div class="vcn" style="color:#7c6f9f">דלג</div></div>';
+  document.getElementById('btn-res').style.display=isHost?'block':'none';
 }
 async function castVote(tid){await db.ref('rooms/'+roomCode+'/votes/'+myId).set(tid);}
 async function sendChat(){
@@ -927,41 +945,11 @@ async function resolveVote(){
     const ejId=sorted[0][0];const ej=gs.players[ejId];
     if(ej){
       await db.ref('rooms/'+roomCode+'/players/'+ejId+'/alive').set(false);
-      addLog('🗳 '+ej.name+' הוצא','lv');
       if(ej.isGhost){await doResult('humans');return;}
     }
-  }else addLog('🗳 לא הוצבע','lv');
+  }
   checkWin(gs);
-  const next=nextTurn(gs.turn);
-  await db.ref('rooms/'+roomCode).update({phase:'game',turn:next,timer:90,votes:{},chat:{}});
-}
-
-// ================================================================
-// TIMER
-// ================================================================
-function startTimer(){
-  clearInterval(timerInt);
-  timerInt=setInterval(async()=>{
-    if(!gs||gs.phase!=='game')return;
-    const t=Math.max((gs.timer||1)-1,0);
-    const el=document.getElementById('ui-timer');if(el)el.textContent=t;
-    if(isHost){
-      await db.ref('rooms/'+roomCode+'/timer').set(t);
-      if(t<=0){addLog('⏰ הזמן נגמר');await endTurn();}
-    }
-  },1000);
-}
-async function endTurn(){
-  clearInterval(timerInt);
-  const next=nextTurn(gs?gs.turn:myId);
-  await db.ref('rooms/'+roomCode).update({turn:next,timer:90});
-  startTimer();
-}
-function nextTurn(cur2){
-  if(!gs||!gs.players)return cur2;
-  const alive=Object.values(gs.players).filter(p=>p.alive);
-  const idx=alive.findIndex(p=>p.id===cur2);
-  return alive[(idx+1)%alive.length]?.id||alive[0]?.id||cur2;
+  await db.ref('rooms/'+roomCode).update({phase:'game',votes:{},chat:{}});
 }
 
 // ================================================================
@@ -976,40 +964,36 @@ async function checkWin(s){
   if(humans.length<=1){await doResult('ghost');return;}
   if((s.doneTasks||0)>=(s.totalTasks||1)&&(s.totalTasks||0)>0){await doResult('humans');return;}
 }
-async function doResult(w){clearInterval(timerInt);await db.ref('rooms/'+roomCode).update({phase:'result',winner:w});}
+async function doResult(w){await db.ref('rooms/'+roomCode).update({phase:'result',winner:w});}
 function onResult(s){
   if(cur()==='s-result')return;
   const ghost=Object.values(s.players||{}).find(p=>p.isGhost);
   if(s.winner==='humans'){
-    document.getElementById('res-icon').textContent='🎉';
-    document.getElementById('res-title').textContent='האנשים ניצחו!';
-    document.getElementById('res-title').style.color='#a78bfa';
-    document.getElementById('res-desc').textContent='הרוח הייתה '+(ghost?.name||'?')+'. כל הכבוד!';
+    document.getElementById('res-ico').textContent='🎉';
+    document.getElementById('res-ttl').textContent='האנשים ניצחו!';
+    document.getElementById('res-ttl').style.color='#a78bfa';
+    document.getElementById('res-dsc').textContent='הרוח הייתה '+(ghost?.name||'?')+'. כל הכבוד!';
   }else{
-    document.getElementById('res-icon').textContent='👻';
-    document.getElementById('res-title').textContent='הרוח ניצחה!';
-    document.getElementById('res-title').style.color='#c0392b';
-    document.getElementById('res-desc').textContent=(ghost?.name||'?')+' הייתה הרוח. הבית נשאר ארור לנצח...';
+    document.getElementById('res-ico').textContent='👻';
+    document.getElementById('res-ttl').textContent='הרוח ניצחה!';
+    document.getElementById('res-ttl').style.color='#c0392b';
+    document.getElementById('res-dsc').textContent=(ghost?.name||'?')+' הרוח הארורה. הבית שלה לנצח.';
   }
   go('s-result');
 }
 
 // ================================================================
-// LOG / UTILS
+// UTILS
 // ================================================================
-async function addLog(m,t=''){
-  if(!db||!roomCode)return;
-  await db.ref('rooms/'+roomCode+'/log/l'+Date.now()+'x').set({m,t,ts:Date.now()});
-}
 function go(id){
   document.querySelectorAll('.screen').forEach(s=>{s.classList.remove('on');s.style.display='';});
   const el=document.getElementById(id);if(!el)return;
   el.style.display='flex';el.classList.add('on');
 }
 function cur(){const el=document.querySelector('.screen.on');return el?el.id:'';}
-function openOv(id){const el=document.getElementById(id);if(el)el.classList.add('on');}
-function closeOv(id){const el=document.getElementById(id);if(el)el.classList.remove('on');}
-function goLand(){stopListen();clearInterval(timerInt);gs=null;roomCode=null;isHost=false;go('s-land');}
+function oOv(id){const el=document.getElementById(id);if(el)el.classList.add('on');}
+function cOv(id){const el=document.getElementById(id);if(el)el.classList.remove('on');}
+function goLand(){stopListen();gs=null;roomCode=null;isHost=false;killCooldown=0;keys={};go('s-land');}
 
 // ================================================================
 // BOOT
