@@ -999,6 +999,26 @@ function cOv(id){const el=document.getElementById(id);if(el)el.classList.remove(
 function goLand(){stopListen();gs=null;roomCode=null;isHost=false;killCooldown=0;keys={};go('s-land');}
 
 // ================================================================
+// KEYBOARD
+// ================================================================
+window.addEventListener('keydown',function(e){
+  if(cur()!=='s-game') return;
+  if(!gs||!gs.players) return;
+  const me=gs.players[myId];
+  if(!me||!me.alive||gs.turn!==myId) return;
+  const p=me.pos;
+  let nr=Math.round(p.y), nc=Math.round(p.x);
+  const key=e.key;
+  if(key==='ArrowUp'    ||key==='w'||key==='W'){ nr--; }
+  else if(key==='ArrowDown' ||key==='s'||key==='S'){ nr++; }
+  else if(key==='ArrowLeft' ||key==='a'||key==='A'){ nc--; }
+  else if(key==='ArrowRight'||key==='d'||key==='D'){ nc++; }
+  else return;
+  e.preventDefault();
+  moveTo(nr,nc);
+});
+
+// ================================================================
 // BOOT
 // ================================================================
 buildUI();
