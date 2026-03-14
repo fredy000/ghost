@@ -6,7 +6,6 @@
   <title>הבית הארור 👻</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Heebo:wght@400;700;800&display=swap');
-
     * { margin:0; padding:0; box-sizing:border-box; }
     html, body { width:100%; height:100%; }
     body{
@@ -16,7 +15,6 @@
       overflow:hidden;
       touch-action:none;
     }
-
     .screen{
       display:none;
       position:fixed;
@@ -26,10 +24,8 @@
       flex-direction:column;
     }
     .screen.on{ display:flex; }
-
     .px{ font-family:'Press Start 2P', monospace; }
 
-    /* LAND */
     #s-land{
       background:radial-gradient(circle at top,#1f1248 0%, #09070f 65%);
       padding:18px;
@@ -143,7 +139,6 @@
     }
     .cd.on{ border-color:#fff; }
 
-    /* LOBBY */
     #s-lobby{
       background:#09070f;
       padding:16px;
@@ -187,7 +182,6 @@
     .ready{ background:#059669; color:#fff; }
     .notready{ background:#3b334f; color:#d4c9f7; }
 
-    /* ROLE */
     #s-role{
       background:#09070f;
       padding:18px;
@@ -213,7 +207,6 @@
       line-height:1.9;
     }
 
-    /* GAME */
     #s-game{ background:#000; }
     canvas{ display:block; }
 
@@ -312,7 +305,6 @@
     .dp:active{ background:rgba(108,58,237,.6); }
     .dp.blank{ background:transparent; border:none; }
 
-    /* VOTE */
     #s-vote{
       background:#09070f;
       justify-content:flex-start;
@@ -368,7 +360,6 @@
     .vcn{ font-size:11px; font-weight:800; margin-top:3px; }
     .vcc{ font-size:10px; color:#8d7cb8; margin-top:2px; }
 
-    /* RESULT */
     #s-result{
       background:radial-gradient(circle at top,#1f1248 0%, #09070f 65%);
       padding:18px;
@@ -396,7 +387,6 @@
       50%{ transform:translateY(-12px); }
     }
 
-    /* MODALS */
     .ow{
       position:fixed;
       inset:0;
@@ -431,7 +421,6 @@
 </head>
 <body>
 
-  <!-- LAND -->
   <div id="s-land" class="screen on">
     <div style="font-size:58px; animation:floaty 3s ease-in-out infinite;">👻</div>
     <div class="title">הבית הארור</div>
@@ -462,7 +451,6 @@
       </div>
 
       <button class="btn bp" onclick="createRoom()">✨ צור חדר חדש</button>
-
       <div style="text-align:center; font-size:11px; color:#50456d;">— או —</div>
 
       <div>
@@ -474,7 +462,6 @@
     </div>
   </div>
 
-  <!-- LOBBY -->
   <div id="s-lobby" class="screen">
     <div class="px" style="font-size:13px;color:#b295ff;margin-bottom:14px;">LOBBY</div>
     <div class="lbox">
@@ -491,7 +478,6 @@
     </div>
   </div>
 
-  <!-- ROLE -->
   <div id="s-role" class="screen">
     <div class="rbox">
       <div class="ri" id="r-ico"></div>
@@ -501,7 +487,6 @@
     <button class="btn bp" style="max-width:240px;margin-top:14px;" onclick="confirmRoleReady()">משחקים! 🎮</button>
   </div>
 
-  <!-- GAME -->
   <div id="s-game" class="screen">
     <div class="hud">
       <div class="hud-left">👁 הבית הארור</div>
@@ -529,7 +514,6 @@
     </div>
   </div>
 
-  <!-- VOTE -->
   <div id="s-vote" class="screen">
     <div class="vtitle">🗳 ישיבת חירום</div>
     <div class="cbox" id="cbox"></div>
@@ -541,7 +525,6 @@
     <button class="btn bgo" id="btn-resolve" style="max-width:240px;display:none;" onclick="resolveVote()">📊 סיים הצבעה</button>
   </div>
 
-  <!-- RESULT -->
   <div id="s-result" class="screen">
     <div class="resico" id="res-ico"></div>
     <div class="restitle" id="res-ttl"></div>
@@ -549,7 +532,6 @@
     <button class="btn bp" style="max-width:220px;margin-top:18px;" onclick="goLand()">🔄 שחק שוב</button>
   </div>
 
-  <!-- TASK -->
   <div class="ow" id="ov-task">
     <div class="ob">
       <h2 id="ot-h"></h2>
@@ -561,7 +543,6 @@
     </div>
   </div>
 
-  <!-- KILL -->
   <div class="ow" id="ov-kill">
     <div class="ob">
       <h2 style="color:#ef4444;">💀 חסל?</h2>
@@ -575,7 +556,6 @@
     </div>
   </div>
 
-  <!-- REPORT -->
   <div class="ow" id="ov-report">
     <div class="ob">
       <h2>🚨 דיווח על גופה</h2>
@@ -591,9 +571,6 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
   <script>
-    // =========================================================
-    // FIREBASE
-    // =========================================================
     const FB = {
       apiKey: "AIzaSyA-gi3EIwLFcNS6MN6RGqs3L5UQsxTAbzk",
       authDomain: "ghost-a424e.firebaseapp.com",
@@ -604,9 +581,6 @@
       appId: "1:449116961300:web:e3b20392eb17101e4cc501"
     };
 
-    // =========================================================
-    // CONSTANTS
-    // =========================================================
     const COLORS = ['#e74c3c','#3498db','#2ecc71','#f39c12','#9b59b6','#1abc9c','#e67e22','#e91e63'];
     const AVM = ['🧔','👨','👨‍🦱','👨‍🦰','👨‍🦲','👨‍🦳'];
     const AVF = ['👩','👩‍🦱','👩‍🦰','👩‍🦲','👩‍🦳','👧'];
@@ -688,9 +662,6 @@
       fakeghost: '👻 הופעת רוח'
     };
 
-    // =========================================================
-    // STATE
-    // =========================================================
     let db = null;
     let roomListener = null;
 
@@ -724,9 +695,6 @@
     let killTarget = null;
     let gameStartedLocal = false;
 
-    // =========================================================
-    // INIT
-    // =========================================================
     function initFB(){
       if(db) return true;
       try{
@@ -785,9 +753,6 @@
       if(el) el.classList.remove('on');
     }
 
-    // =========================================================
-    // ROOM HELPERS
-    // =========================================================
     function buildPlayer(index){
       const s = STARTS[index % STARTS.length];
       return {
@@ -821,7 +786,6 @@
 
     async function createRoom(){
       if(!initFB()) return;
-
       myName = document.getElementById('inp-name').value.trim() || 'שחקן';
       roomCode = String(Math.floor(100000 + Math.random() * 900000));
       isHost = true;
@@ -854,7 +818,6 @@
 
     async function joinRoom(){
       if(!initFB()) return;
-
       myName = document.getElementById('inp-name').value.trim() || 'שחקן';
       const code = document.getElementById('inp-code').value.trim();
 
@@ -896,7 +859,6 @@
       myY = me.y;
 
       await db.ref('rooms/' + roomCode + '/players/' + myId).set(me);
-
       go('s-lobby');
       listenRoom();
     }
@@ -929,9 +891,6 @@
       go('s-land');
     }
 
-    // =========================================================
-    // LOBBY
-    // =========================================================
     async function toggleReady(){
       if(!roomCode || !gs || !gs.players || !gs.players[myId]) return;
       const cur = !!gs.players[myId].ready;
@@ -1019,9 +978,6 @@
       await db.ref('rooms/' + roomCode).update(updates);
     }
 
-    // =========================================================
-    // ROLE
-    // =========================================================
     function renderRole(){
       const me = gs.players && gs.players[myId];
       if(!me) return;
@@ -1061,9 +1017,6 @@
       }
     }
 
-    // =========================================================
-    // STATE ROUTER
-    // =========================================================
     function onState(){
       if(!gs) return;
 
@@ -1092,9 +1045,6 @@
       }
     }
 
-    // =========================================================
-    // GAME START / LOOP
-    // =========================================================
     function onGame(){
       const me = gs.players && gs.players[myId];
       if(me){
@@ -1140,9 +1090,6 @@
       requestAnimationFrame(loop);
     }
 
-    // =========================================================
-    // HOST EVENT TICK
-    // =========================================================
     async function hostTick(){
       if(!gs || gs.phase !== 'game') return;
 
@@ -1169,9 +1116,6 @@
       await checkWin();
     }
 
-    // =========================================================
-    // PLAYER UPDATE
-    // =========================================================
     function updatePlayer(dt, ts){
       if(!gs || !gs.players || !gs.players[myId]) return;
 
@@ -1224,7 +1168,6 @@
         killCooldownLocal = Math.max(0, killCooldownLocal - dt * 1000);
       }
 
-      // sprint noise
       if(sprinting && ts - lastNoiseEmit > 240){
         lastNoiseEmit = ts;
         noiseBursts.push({
@@ -1255,9 +1198,6 @@
     function dpadDir(x,y){ dpadVel.x = x; dpadVel.y = y; }
     function dpadStop(){ dpadVel.x = 0; dpadVel.y = 0; }
 
-    // =========================================================
-    // PARTICLES
-    // =========================================================
     function updateParticles(dt){
       particles = particles.filter(p => {
         p.life -= dt;
@@ -1290,9 +1230,6 @@
       }
     }
 
-    // =========================================================
-    // RENDER
-    // =========================================================
     function renderGame(ts){
       if(!canvas || !ctx || !gs) return;
 
@@ -1324,12 +1261,21 @@
           const tile = MAP[r][c];
 
           if(tile === 0){
-            ctx.fillStyle = '#0d0b16';
+            ctx.fillStyle = '#221a36';
             ctx.fillRect(x,y,TS,TS);
-            ctx.fillStyle = '#1a1730';
-            ctx.fillRect(x+1,y+1,TS-2,5);
-            ctx.fillStyle = '#080614';
-            ctx.fillRect(x+1,y+TS-4,TS-2,3);
+
+            ctx.strokeStyle = '#3b2d5c';
+            ctx.lineWidth = 1.5;
+            ctx.strokeRect(x+0.5,y+0.5,TS-1,TS-1);
+
+            ctx.fillStyle = '#4c3a75';
+            ctx.fillRect(x+2,y+2,TS-4,6);
+
+            ctx.fillStyle = '#120d1f';
+            ctx.fillRect(x+2,y+TS-6,TS-4,4);
+
+            ctx.fillStyle = 'rgba(255,255,255,0.03)';
+            ctx.fillRect(x+6,y+10,TS-12,TS-20);
           }else{
             let fc = '#131025';
             const room = ROOM_INFO.find(rm => Math.abs(c-rm.cx)<=4 && Math.abs(r-rm.cy)<=4);
@@ -1346,7 +1292,6 @@
         }
       }
 
-      // room labels
       ctx.font = 'bold 11px Heebo';
       ctx.textAlign = 'center';
       ctx.fillStyle = 'rgba(178,149,255,.35)';
@@ -1354,28 +1299,30 @@
         ctx.fillText(rm.name, rm.cx*TS + TS/2, (rm.cy-3)*TS);
       });
 
-      // tasks
       Object.values(gs.tasks || {}).forEach(t => {
         if(t.done) return;
+
         const px = t.tx * TS;
         const py = t.ty * TS;
         const pulse = 0.6 + 0.4 * Math.sin(ts / 350);
 
+        ctx.fillStyle = 'rgba(0,0,0,0.35)';
+        roundRect(ctx, px + 6, py + 6, TS - 12, TS - 12, 8, true, false);
+
         ctx.save();
         ctx.shadowBlur = 18 * pulse;
-        ctx.shadowColor = '#d97706';
-        ctx.font = '25px serif';
+        ctx.shadowColor = '#f59e0b';
+        ctx.font = '26px serif';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillText(TASK_DEFS[t.defIdx].icon, px + TS/2, py + TS/2);
         ctx.restore();
 
-        ctx.strokeStyle = `rgba(217,119,6,${0.25 + pulse * .45})`;
+        ctx.strokeStyle = `rgba(245,158,11,${0.35 + pulse * .45})`;
         ctx.lineWidth = 2;
         ctx.strokeRect(px+4, py+4, TS-8, TS-8);
       });
 
-      // bodies
       Object.values(gs.bodies || {}).forEach(b => {
         const px = b.tx * TS;
         const py = b.ty * TS;
@@ -1393,7 +1340,6 @@
         ctx.fillText(b.pname || '', px + TS/2, py + TS - 5);
       });
 
-      // fake ghost event visual
       if(gs.event && gs.event.type === 'fakeghost'){
         const fx = 9.5 * TS;
         const fy = 7 * TS;
@@ -1404,11 +1350,8 @@
         ctx.globalAlpha = 1;
       }
 
-      // footsteps event visual
       if(gs.event && gs.event.type === 'footsteps'){
-        const path = [
-          [4,3],[5,4],[6,5],[7,6],[8,7],[9,8],[10,9]
-        ];
+        const path = [[4,3],[5,4],[6,5],[7,6],[8,7],[9,8],[10,9]];
         ctx.globalAlpha = .6;
         ctx.font = '18px serif';
         path.forEach((p, i) => {
@@ -1417,7 +1360,6 @@
         ctx.globalAlpha = 1;
       }
 
-      // players
       Object.values(gs.players || {}).forEach(p => {
         const isMe = p.id === myId;
         const px = (isMe ? myX : p.x) * TS;
@@ -1436,7 +1378,6 @@
         drawPlayer(ctx, px, py, p, isMe, ts);
       });
 
-      // noise bursts
       noiseBursts.forEach(n => {
         ctx.beginPath();
         ctx.arc(n.x, n.y, n.r, 0, Math.PI*2);
@@ -1445,7 +1386,6 @@
         ctx.stroke();
       });
 
-      // kill fx
       particles.forEach(p => {
         ctx.globalAlpha = Math.max(0, p.life);
         ctx.font = `${p.size}px serif`;
@@ -1455,7 +1395,6 @@
       });
       ctx.globalAlpha = 1;
 
-      // lighting
       applyLighting(ctx, me, W, H, ts);
 
       ctx.restore();
@@ -1523,9 +1462,8 @@
       ctx.fillText(name, px + TS/2, py - 16);
     }
 
-    function applyLighting(ctx, me, W, H, ts){
+    function applyLighting(ctx, me, W, H){
       const event = gs.event;
-
       let radiusTiles = 3.8;
       if(event && event.type === 'blackout'){
         radiusTiles = me && me.isGhost ? 3.2 : 1.7;
@@ -1538,12 +1476,12 @@
       const grad = ctx.createRadialGradient(cx, cy, vr*.42, cx, cy, vr*1.25);
       grad.addColorStop(0, 'rgba(0,0,0,0)');
       grad.addColorStop(.45, 'rgba(0,0,0,.10)');
-      grad.addColorStop(1, event && event.type === 'blackout' ? 'rgba(0,0,0,.98)' : 'rgba(0,0,0,.93)');
+      grad.addColorStop(1, event && event.type === 'blackout' ? 'rgba(0,0,0,.92)' : 'rgba(0,0,0,.78)');
       ctx.fillStyle = grad;
       ctx.fillRect(camX, camY, W, H);
     }
 
-    function updateHUD(ts){
+    function updateHUD(){
       const done = gs.doneTasks || 0;
       const total = gs.totalTasks || 0;
       document.getElementById('hud-tasks').textContent = `משימות: ${done}/${total}`;
@@ -1570,9 +1508,24 @@
       const bodies = Object.values(gs.bodies || {});
       const players = Object.values(gs.players || {});
 
-      const taskHere = tasks.find(t => !t.done && Math.hypot(t.tx - myX, t.ty - myY) < 1.15);
-      const bodyHere = bodies.find(b => Math.hypot(b.tx - myX, b.ty - myY) < 1.15);
-      const nearbyVictims = players.filter(p => p.id !== myId && p.alive && Math.hypot((p.x||0)-myX,(p.y||0)-myY) < KILL_RANGE);
+      const taskHere = !me.isGhost ? tasks.find(t => {
+        if(t.done) return false;
+        const tx = t.tx + 0.5;
+        const ty = t.ty + 0.5;
+        return Math.hypot(tx - myX, ty - myY) < 1.0;
+      }) : null;
+
+      const bodyHere = bodies.find(b => {
+        const bx = b.tx + 0.5;
+        const by = b.ty + 0.5;
+        return Math.hypot(bx - myX, by - myY) < 1.0;
+      });
+
+      const nearbyVictims = players.filter(p =>
+        p.id !== myId &&
+        p.alive &&
+        Math.hypot((p.x||0)-myX,(p.y||0)-myY) < KILL_RANGE
+      );
 
       let html = '';
 
@@ -1595,7 +1548,7 @@
       }
 
       if(!html){
-        html = `<div style="flex:1;text-align:center;font-family:'Press Start 2P',monospace;font-size:7px;padding:8px;color:#5b4d7c">WASD / Shift לריצה</div>`;
+        html = `<div style="flex:1;text-align:center;font-family:'Press Start 2P',monospace;font-size:7px;padding:8px;color:#5b4d7c">תעמוד ממש על אייקון המשימה</div>`;
       }
 
       document.getElementById('abar').innerHTML = html;
@@ -1612,9 +1565,6 @@
       }
     }
 
-    // =========================================================
-    // TASKS
-    // =========================================================
     function openTask(id, defIdx){
       activeTaskId = id;
       document.getElementById('ot-h').textContent = TASK_DEFS[defIdx].name;
@@ -1639,9 +1589,6 @@
       activeTaskId = null;
     }
 
-    // =========================================================
-    // KILL / REPORT
-    // =========================================================
     function pickKill(){
       if(!gs || !gs.players || killCooldownLocal > 0) return;
       const players = Object.values(gs.players);
@@ -1697,9 +1644,6 @@
       });
     }
 
-    // =========================================================
-    // VOTE
-    // =========================================================
     function renderVote(){
       const chat = Object.values(gs.chat || {}).sort((a,b) => a.ts - b.ts);
       const votes = gs.votes || {};
@@ -1789,9 +1733,6 @@
       });
     }
 
-    // =========================================================
-    // RESULT / WIN
-    // =========================================================
     async function checkWin(){
       if(!gs || gs.phase === 'vote' || gs.phase === 'result') return;
 
@@ -1830,9 +1771,6 @@
       }
     }
 
-    // =========================================================
-    // UTIL
-    // =========================================================
     function darken(hex, f){
       const r = parseInt(hex.slice(1,3), 16);
       const g = parseInt(hex.slice(3,5), 16);
@@ -1855,9 +1793,6 @@
     function clamp(v,min,max){ return Math.max(min, Math.min(max, v)); }
     function rand(min,max){ return Math.floor(Math.random() * (max-min+1)) + min; }
 
-    // =========================================================
-    // INPUTS
-    // =========================================================
     window.addEventListener('keydown', e => {
       keys[e.key] = true;
       if(currentScreen() === 's-game'){
@@ -1872,9 +1807,6 @@
 
     window.addEventListener('resize', resizeCanvas);
 
-    // =========================================================
-    // BOOT
-    // =========================================================
     buildUI();
   </script>
 </body>
