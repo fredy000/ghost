@@ -199,6 +199,21 @@ h1,h2{font-family:'Creepster',cursive;letter-spacing:2px;}
       <input class="txt-input" id="inp-name" placeholder="שם שחקן..." maxlength="20">
     </div>
     <div>
+      <div class="input-label">בחר מגדר</div>
+      <div style="display:flex;gap:10px;margin-bottom:4px">
+        <button id="btn-male" onclick="selectGender('male')" style="flex:1;padding:10px;border-radius:8px;border:2px solid var(--ghost);background:var(--ghost);color:#fff;font-family:'Heebo',sans-serif;font-weight:700;font-size:14px;cursor:pointer;">
+          👨 גבר
+        </button>
+        <button id="btn-female" onclick="selectGender('female')" style="flex:1;padding:10px;border-radius:8px;border:2px solid var(--bg4);background:var(--bg3);color:var(--muted);font-family:'Heebo',sans-serif;font-weight:700;font-size:14px;cursor:pointer;">
+          👩 אישה
+        </button>
+      </div>
+    </div>
+    <div>
+      <div class="input-label">בחר דמות</div>
+      <div class="color-row" id="avatar-row"></div>
+    </div>
+    <div>
       <div class="input-label">בחר צבע</div>
       <div class="color-row" id="color-row"></div>
     </div>
@@ -320,7 +335,9 @@ h1,h2{font-family:'Creepster',cursive;letter-spacing:2px;}
 //  CONSTANTS
 // ================================================================
 const COLORS=['#e74c3c','#3498db','#2ecc71','#f39c12','#9b59b6','#1abc9c','#e67e22','#e91e63'];
-const AVATARS=['🧑','👩','🧔','👨‍🦱','👩‍🦰','🧑‍🦲','👩‍🦳','🧑‍🦱'];
+const AVATARS_MALE  =['🧔','👨','👨‍🦱','👨‍🦰','👨‍🦲','👨‍🦳','🧑','👦'];
+const AVATARS_FEMALE=['👩','👩‍🦱','👩‍🦰','👩‍🦲','👩‍🦳','👧','🧕','💁‍♀️'];
+const AVATARS=AVATARS_MALE; // default
 
 const MAP=[
   [0,0,0,0,0,0,0,0,0,0],
@@ -381,6 +398,43 @@ function initFirebase(){
 // ================================================================
 //  LANDING UI
 // ================================================================
+let myGender='male';
+let myAvatarIdx=0;
+
+function selectGender(g){
+  myGender=g;
+  myAvatarIdx=0;
+  const male=document.getElementById('btn-male');
+  const female=document.getElementById('btn-female');
+  if(g==='male'){
+    male.style.background='var(--ghost)';male.style.color='#fff';male.style.borderColor='var(--ghost)';
+    female.style.background='var(--bg3)';female.style.color='var(--muted)';female.style.borderColor='var(--bg4)';
+  } else {
+    female.style.background='var(--ghost)';female.style.color='#fff';female.style.borderColor='var(--ghost)';
+    male.style.background='var(--bg3)';male.style.color='var(--muted)';male.style.borderColor='var(--bg4)';
+  }
+  buildAvatarRow();
+}
+
+function buildAvatarRow(){
+  const row=document.getElementById('avatar-row');
+  if(!row)return;
+  const avs=myGender==='male'?AVATARS_MALE:AVATARS_FEMALE;
+  row.innerHTML=avs.map((a,i)=>
+    `<div onclick="pickAvatar(${i})" style="width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:22px;cursor:pointer;border:2px solid ${i===myAvatarIdx?'#fff':'transparent'};background:${i===myAvatarIdx?'var(--bg4)':'transparent'};transition:all .15s">${a}</div>`
+  ).join('');
+}
+
+function pickAvatar(i){
+  myAvatarIdx=i;
+  buildAvatarRow();
+}
+
+function getMyAvatar(){
+  const avs=myGender==='male'?AVATARS_MALE:AVATARS_FEMALE;
+  return avs[myAvatarIdx]||avs[0];
+}
+
 function buildColorRow(){
   const row=document.getElementById('color-row');
   row.innerHTML=COLORS.map((c,i)=>
@@ -401,7 +455,7 @@ async function createRoom(){
   roomCode=genCode();
   isHost=true;
 
-  const playerData={id:myId,name:myName,color:myColor,alive:true,pos:{r:1,c:1},isGhost:false,tasksDone:0};
+  const playerData={id:myId,name:myName,color:myColor,avatar:getMyAvatar(),alive:true,pos:{r:1,c:1},isGhost:false,tasksDone:0};
   await db.ref(`rooms/${roomCode}`).set({
     host:myId,
     phase:'lobby',
@@ -441,7 +495,7 @@ async function joinRoom(){
   myColor=col;
 
   const idx=Object.keys(room.players||{}).length;
-  const playerData={id:myId,name:myName,color:myColor,alive:true,pos:{...STARTS[idx%STARTS.length]},isGhost:false,tasksDone:0};
+  const playerData={id:myId,name:myName,color:myColor,avatar:getMyAvatar(),alive:true,pos:{...STARTS[idx%STARTS.length]},isGhost:false,tasksDone:0};
   await db.ref(`rooms/${roomCode}/players/${myId}`).set(playerData);
 
   go('s-lobby');
@@ -478,14 +532,16 @@ function cleanupListeners(){
 }
 
 function handleStateChange(prev,state){
-  if(!state)return;
-  switch(state.phase){
-    case 'lobby': renderLobby(state); break;
-    case 'roleReveal': handleRoleReveal(state); break;
-    case 'game': handleGameState(state); break;
-    case 'vote': handleVoteState(state); break;
-    case 'result': handleResult(state); break;
-  }
+  if(!state||!state.phase)return;
+  try{
+    switch(state.phase){
+      case 'lobby': renderLobby(state); break;
+      case 'roleReveal': handleRoleReveal(state); break;
+      case 'game': handleGameState(state); break;
+      case 'vote': handleVoteState(state); break;
+      case 'result': handleResult(state); break;
+    }
+  }catch(e){console.warn('handleStateChange error:',e);}
 }
 
 // ================================================================
@@ -495,7 +551,7 @@ function renderLobby(state){
   const players=Object.values(state.players||{});
   document.getElementById('lob-players').innerHTML=players.map(p=>`
     <div class="player-card-sm">
-      <div class="pc-avatar">${AVATARS[p.color]}</div>
+      <div class="pc-avatar">${(p.avatar||AVATARS_MALE[p.color%8])}</div>
       <div class="pc-name" style="color:${COLORS[p.color]}">${p.name}${p.id===myId?' (אני)':''}</div>
       <div class="pc-badge ${p.id===state.host?'pc-host':'pc-ready'}">${p.id===state.host?'מארח':'מוכן'}</div>
     </div>
@@ -599,10 +655,9 @@ function renderGame(state){
 
   // header
   const turnPlayer=state.players[state.turn];
-  document.getElementById('turn-info').textContent=
-    isMyTurn ? '🔥 התור שלך!' : `תור: ${turnPlayer?.name||'?'}`;
-  document.getElementById('turn-info').style.color=isMyTurn?'var(--gold2)':'var(--ghost2)';
-  document.getElementById('timer-el').textContent=state.timer||90;
+  safeSet('turn-info','textContent', isMyTurn ? '🔥 התור שלך!' : `תור: ${turnPlayer?.name||'?'}`);
+  safeStyle('turn-info','color',isMyTurn?'var(--gold2)':'var(--ghost2)');
+  safeSet('timer-el','textContent',state.timer||90);
 
   renderMap(state);
   renderSidebar(state);
@@ -612,6 +667,7 @@ function renderGame(state){
 function renderMap(state){
   const grid=document.getElementById('map-grid');
   const cols=MAP[0].length;
+  if(!grid)return;
   grid.style.gridTemplateColumns=`repeat(${cols},var(--tile))`;
   grid.innerHTML='';
   const me=state.players[myId];
@@ -639,7 +695,7 @@ function renderMap(state){
       let inner='';
       if(body){inner=`<div class="tile-emoji">💀</div><div class="tile-lbl">${body.playerName?.substring(0,8)||''}</div>`;}
       else if(here.length>0){
-        const avatars=here.map(p=>`<span style="font-size:${here.length>2?'13px':'18px'};color:${COLORS[p.color]}">${AVATARS[p.color]}</span>`).join('');
+        const avatars=here.map(p=>`<span style="font-size:${here.length>2?'13px':'18px'};color:${COLORS[p.color]}">${(p.avatar||AVATARS_MALE[p.color%8])}</span>`).join('');
         inner=`<div style="display:flex;flex-wrap:wrap;justify-content:center;gap:1px">${avatars}</div>`;
         if(isMeHere) inner+=`<div class="me-label">אני</div>`;
       } else if(task){
@@ -656,7 +712,7 @@ function renderMap(state){
 
 function renderSidebar(state){
   const players=Object.values(state.players||{});
-  document.getElementById('pl-list').innerHTML=players.map(p=>`
+  if(el('pl-list'))el('pl-list').innerHTML=players.map(p=>`
     <div class="mini-p">
       <div class="mini-dot" style="background:${COLORS[p.color]}"></div>
       <div class="mini-name" style="${!p.alive?'text-decoration:line-through;opacity:.4':''}">${p.name}${p.id===myId?' (אני)':''}</div>
@@ -665,7 +721,7 @@ function renderSidebar(state){
   `).join('');
 
   const tasks=Object.values(state.tasks||{});
-  document.getElementById('task-list').innerHTML=tasks.map(t=>`
+  if(el('task-list'))el('task-list').innerHTML=tasks.map(t=>`
     <div class="task-row">
       <div class="tck ${t.done?'done':''}">${t.done?'✓':''}</div>
       <span style="${t.done?'opacity:.4':''}">${TASK_DEFS[t.defIdx].icon} ${TASK_DEFS[t.defIdx].name.substring(0,14)}</span>
@@ -673,11 +729,11 @@ function renderSidebar(state){
   `).join('');
 
   const pct=Math.round((state.doneTasks||0)/Math.max(state.totalTasks||1,1)*100);
-  document.getElementById('pfill').style.width=pct+'%';
-  document.getElementById('t-pct').textContent=pct+'%';
+  safeStyle('pfill','width',pct+'%');
+  safeSet('t-pct','textContent',pct+'%');
 
   const log=Object.values(state.log||{}).sort((a,b)=>b.ts-a.ts);
-  document.getElementById('ev-log').innerHTML=log.slice(0,10).map(e=>`
+  if(el('ev-log'))el('ev-log').innerHTML=log.slice(0,10).map(e=>`
     <div class="log-item ${e.t||''}">${e.m}</div>
   `).join('');
 }
@@ -758,7 +814,7 @@ function pickKillTarget(){
   const nearby=Object.values(state.players).filter(p=>p.id!==myId&&p.alive&&p.pos&&Math.abs(p.pos.r-me.pos.r)<=1&&Math.abs(p.pos.c-me.pos.c)<=1);
   if(!nearby.length)return;
   killTarget=nearby[0]; // pick first; could show menu for multiple
-  document.getElementById('ov-kill-av').textContent=AVATARS[killTarget.color];
+  document.getElementById('ov-kill-av').textContent=(killTarget.avatar||AVATARS_MALE[killTarget.color%8]);
   document.getElementById('ov-kill-name').textContent=killTarget.name;
   openOv('ov-kill');
 }
@@ -804,7 +860,7 @@ function renderVote(state){
   document.getElementById('vote-grid').innerHTML=
     alive.map(p=>`
       <div class="vc ${myVote===p.id?'my-v':''}" onclick="castVote('${p.id}')">
-        <div class="vc-av">${AVATARS[p.color]}</div>
+        <div class="vc-av">${(p.avatar||AVATARS_MALE[p.color%8])}</div>
         <div class="vc-nm" style="color:${COLORS[p.color]}">${p.name}${p.id===myId?' (אני)':''}</div>
         <div class="vc-ct">${Object.values(votes).filter(v=>v===p.id).length} קולות</div>
       </div>
@@ -858,7 +914,7 @@ function startTimerSync(){
   timerInterval=setInterval(async()=>{
     if(!gameState||gameState.phase!=='game')return;
     const t=(gameState.timer||1)-1;
-    document.getElementById('timer-el').textContent=t;
+    safeSet('timer-el','textContent',t);
     if(isHost){
       await db.ref(`rooms/${roomCode}/timer`).set(t);
       if(t<=0){
@@ -933,6 +989,9 @@ async function addLog(m,t=''){
 // ================================================================
 //  UTILS
 // ================================================================
+function el(id){return document.getElementById(id);}
+function safeSet(id,prop,val){const e=el(id);if(e)e[prop]=val;}
+function safeStyle(id,prop,val){const e=el(id);if(e)e.style[prop]=val;}
 function go(id){
   document.querySelectorAll('.screen').forEach(s=>{s.classList.remove('on');s.style.display='';});
   const el=document.getElementById(id);
@@ -955,6 +1014,7 @@ function backToLanding(){
 //  BOOT
 // ================================================================
 buildColorRow();
+buildAvatarRow();
 </script>
 </body>
 </html>
