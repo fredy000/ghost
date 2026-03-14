@@ -463,7 +463,10 @@ function renderLobby(s){
   ).join('');
   const n=ps.length;
   document.getElementById('lob-st').innerHTML=n>=2?`${n} שחקנים ✓`:`<span class="spin"></span> ממתין...`;
-  if(isHost)document.getElementById('btn-start').style.display=n>=2?'block':'none';
+  if(isHost){
+    document.getElementById('btn-start').style.display=n>=2?'block':'none';
+    document.getElementById('task-count-row').style.display=n>=2?'block':'none';
+  }
 }
 
 // ================================================================
