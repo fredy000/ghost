@@ -551,6 +551,7 @@ async function hostStartGame(){
 //  ROLE REVEAL
 // ================================================================
 function handleRoleReveal(state){
+  if(!state||!state.players)return;
   const me=state.players[myId];
   if(!me)return;
   if(currentScreen()!=='s-role'){
@@ -577,7 +578,9 @@ async function goGame(){
 //  GAME
 // ================================================================
 function handleGameState(state){
-  if(currentScreen()==='s-lobby'||currentScreen()==='s-role'){
+  if(!state||!state.players)return;
+  const cur=currentScreen();
+  if(cur==='s-lobby'||cur==='s-role'||cur==='s-landing'){
     go('s-game');
     startTimerSync();
   }
@@ -588,8 +591,10 @@ function handleGameState(state){
 }
 
 function renderGame(state){
+  if(!state||!state.players)return;
   const players=Object.values(state.players||{});
   const me=state.players[myId];
+  if(!me)return;
   const isMyTurn=state.turn===myId;
 
   // header
@@ -931,6 +936,7 @@ async function addLog(m,t=''){
 function go(id){
   document.querySelectorAll('.screen').forEach(s=>{s.classList.remove('on');s.style.display='';});
   const el=document.getElementById(id);
+  if(!el)return;
   el.style.display='flex';el.classList.add('on');
 }
 function currentScreen(){
