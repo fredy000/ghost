@@ -5,401 +5,367 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>הבית הארור 👻</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Creepster&family=Heebo:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Heebo:wght@400;700&display=swap');
 *{margin:0;padding:0;box-sizing:border-box;}
 :root{
-  --bg:#08080f;--bg2:#0f0d18;--bg3:#171425;--bg4:#201c30;
-  --blood:#c0392b;--ghost:#7c3aed;--ghost2:#a78bfa;
-  --gold:#d97706;--gold2:#fbbf24;--green:#059669;--green2:#34d399;
-  --text:#ddd6f3;--muted:#7c6f9f;--dim:#4a4266;
+  --bg:#0a0812;--bg2:#110f1e;--bg3:#1a1730;--bg4:#252040;
+  --blood:#c0392b;--ghost:#6c3aed;--ghost2:#a78bfa;
+  --gold:#d97706;--gold2:#fbbf24;--green:#059669;
+  --text:#e8e0f8;--muted:#7c6f9f;--dim:#3a3355;
 }
-body{background:var(--bg);color:var(--text);font-family:'Heebo',sans-serif;min-height:100vh;}
-h1,h2{font-family:'Creepster',cursive;letter-spacing:2px;}
+body{background:var(--bg);color:var(--text);font-family:'Heebo',sans-serif;min-height:100vh;overflow:hidden;}
 
 /* SCREENS */
-.screen{display:none;min-height:100vh;flex-direction:column;align-items:center;justify-content:center;padding:20px;gap:16px;}
+.screen{display:none;position:fixed;inset:0;flex-direction:column;align-items:center;justify-content:center;}
 .screen.on{display:flex;}
 
-/* BUTTONS */
-.btn{border:none;border-radius:10px;padding:12px 28px;font-family:'Heebo',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:opacity .15s;width:100%;}
-.btn:hover{opacity:.82;}
-.btn-purple{background:var(--ghost);color:#fff;}
-.btn-red{background:var(--blood);color:#fff;}
+/* ===== LANDING ===== */
+#s-land{background:radial-gradient(ellipse at 50% 30%,#1a0a3e 0%,var(--bg) 70%);}
+.title-pixel{font-family:'Press Start 2P',monospace;font-size:28px;color:var(--ghost2);text-shadow:0 0 20px var(--ghost),0 4px 0 #3a0a8a;margin-bottom:8px;text-align:center;line-height:1.6;}
+.sub-pixel{font-family:'Press Start 2P',monospace;font-size:10px;color:var(--muted);text-align:center;margin-bottom:32px;}
+.land-card{background:rgba(17,15,30,.95);border:2px solid var(--ghost);border-radius:4px;padding:28px 32px;width:100%;max-width:420px;display:flex;flex-direction:column;gap:14px;box-shadow:0 0 40px rgba(108,58,237,.3);}
+.lbl{font-size:11px;color:var(--muted);margin-bottom:4px;letter-spacing:1px;}
+.inp{width:100%;background:var(--bg2);border:1px solid var(--dim);color:var(--text);border-radius:3px;padding:10px 12px;font-family:'Heebo',sans-serif;font-size:14px;outline:none;transition:border-color .15s;}
+.inp:focus{border-color:var(--ghost2);}
+.gender-row{display:flex;gap:8px;}
+.gbtn{flex:1;padding:10px;border-radius:3px;border:2px solid var(--dim);background:var(--bg2);color:var(--muted);font-family:'Heebo',sans-serif;font-weight:700;font-size:14px;cursor:pointer;transition:all .15s;}
+.gbtn.on{border-color:var(--ghost2);background:rgba(108,58,237,.25);color:var(--ghost2);}
+.av-row{display:flex;gap:6px;flex-wrap:wrap;}
+.av{width:36px;height:36px;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer;border:2px solid var(--dim);background:var(--bg2);transition:all .15s;}
+.av.on{border-color:#fff;background:var(--bg3);}
+.c-row{display:flex;gap:6px;flex-wrap:wrap;}
+.cdot{width:24px;height:24px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:border-color .15s;}
+.cdot.on{border-color:#fff;}
+.divider{height:1px;background:var(--dim);}
+.btn{border:none;border-radius:3px;padding:12px 20px;font-family:'Heebo',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all .15s;width:100%;}
+.btn:hover{filter:brightness(1.15);}
+.btn-p{background:var(--ghost);color:#fff;box-shadow:0 0 12px rgba(108,58,237,.4);}
+.btn-g{background:var(--bg3);color:var(--text);border:1px solid var(--dim);}
+.btn-r{background:var(--blood);color:#fff;}
 .btn-gold{background:var(--gold);color:#111;}
-.btn-gray{background:var(--bg3);color:var(--text);border:1px solid var(--bg4);}
+.ghost-float{font-size:56px;animation:flt 3s ease-in-out infinite;display:block;text-align:center;margin-bottom:8px;}
+@keyframes flt{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
 
-/* CARD */
-.card{background:var(--bg3);border:1px solid var(--bg4);border-radius:16px;padding:24px;width:100%;max-width:460px;display:flex;flex-direction:column;gap:14px;}
-
-/* INPUTS */
-.lbl{font-size:12px;color:var(--muted);margin-bottom:4px;}
-.inp{width:100%;background:var(--bg2);border:1px solid var(--bg4);color:var(--text);border-radius:8px;padding:10px 14px;font-family:'Heebo',sans-serif;font-size:15px;outline:none;}
-.inp:focus{border-color:var(--ghost);}
-
-/* COLORS */
-.color-row{display:flex;gap:8px;flex-wrap:wrap;}
-.cdot{width:26px;height:26px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:border-color .15s;flex-shrink:0;}
-.cdot.sel{border-color:#fff;}
-
-/* GENDER BUTTONS */
-.gender-row{display:flex;gap:10px;}
-.gbtn{flex:1;padding:10px;border-radius:8px;border:2px solid var(--bg4);background:var(--bg2);color:var(--muted);font-family:'Heebo',sans-serif;font-weight:700;font-size:15px;cursor:pointer;transition:all .15s;}
-.gbtn.sel{border-color:var(--ghost);background:var(--ghost);color:#fff;}
-
-/* AVATAR ROW */
-.avatar-row{display:flex;gap:6px;flex-wrap:wrap;}
-.avbtn{width:38px;height:38px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:22px;cursor:pointer;border:2px solid transparent;background:var(--bg2);transition:all .15s;}
-.avbtn.sel{border-color:#fff;background:var(--bg4);}
-
-/* LOBBY */
-.player-row{display:flex;align-items:center;gap:10px;background:var(--bg2);border-radius:10px;padding:10px 14px;margin-bottom:8px;}
+/* ===== LOBBY ===== */
+#s-lobby{background:var(--bg);}
+.lobby-box{background:var(--bg2);border:2px solid var(--ghost);border-radius:4px;padding:24px;max-width:480px;width:100%;box-shadow:0 0 30px rgba(108,58,237,.2);}
+.room-code{font-family:'Press Start 2P',monospace;font-size:22px;color:var(--ghost2);letter-spacing:8px;text-align:center;padding:14px;background:var(--bg);border-radius:3px;margin-bottom:14px;border:1px solid var(--ghost);}
+.pl-card{display:flex;align-items:center;gap:10px;background:var(--bg);border-radius:3px;padding:10px 14px;margin-bottom:8px;border:1px solid var(--dim);}
+.pl-card .av-sm{font-size:24px;}
+.pl-card .pname{flex:1;font-weight:700;}
 .badge{font-size:11px;padding:3px 10px;border-radius:20px;font-weight:700;}
-.badge-host{background:var(--gold);color:#111;}
-.badge-ready{background:var(--green);color:#fff;}
+.bh{background:var(--gold);color:#111;}
+.br{background:var(--green);color:#fff;}
 
-/* ROLE CARD */
-.role-card{background:var(--bg3);border:2px solid var(--bg4);border-radius:20px;padding:28px 36px;text-align:center;max-width:420px;}
-.role-icon{font-size:72px;margin-bottom:8px;}
-.role-title{font-family:'Creepster',cursive;font-size:38px;}
-.role-ghost{color:var(--blood);}
-.role-human{color:var(--ghost2);}
-.role-desc{color:var(--muted);font-size:14px;line-height:1.7;margin-top:10px;}
+/* ===== ROLE ===== */
+#s-role{background:var(--bg);}
+.role-box{background:var(--bg2);border:3px solid var(--ghost);border-radius:4px;padding:32px 40px;text-align:center;max-width:400px;box-shadow:0 0 40px rgba(108,58,237,.4);}
+.r-icon{font-size:80px;margin-bottom:8px;}
+.r-title{font-family:'Press Start 2P',monospace;font-size:22px;line-height:1.6;margin-bottom:12px;}
+.r-ghost{color:var(--blood);}
+.r-human{color:var(--ghost2);}
+.r-desc{color:var(--muted);font-size:13px;line-height:1.8;}
 
-/* GAME LAYOUT */
-#s-game{padding:0;justify-content:flex-start;align-items:stretch;min-height:100vh;}
-.gtop{display:flex;align-items:center;justify-content:space-between;background:var(--bg2);border-bottom:1px solid var(--bg4);padding:8px 14px;flex-wrap:wrap;gap:6px;}
-.gtop h1{font-size:18px;color:var(--ghost2);}
-.phase-pill{background:var(--bg4);border-radius:20px;padding:3px 12px;font-size:11px;color:var(--gold2);font-weight:700;letter-spacing:1px;}
-.timer{font-family:monospace;font-size:22px;font-weight:700;color:var(--blood);}
-.turn-lbl{font-size:12px;color:var(--ghost2);font-weight:700;}
-
-.gbody{display:flex;flex:1;overflow:hidden;}
-.sidebar{width:190px;background:var(--bg2);border-right:1px solid var(--bg4);display:flex;flex-direction:column;overflow-y:auto;flex-shrink:0;}
-.sb{padding:10px 12px;border-bottom:1px solid var(--bg4);}
-.sb h3{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--dim);margin-bottom:7px;}
-.mp{display:flex;align-items:center;gap:7px;padding:3px 0;}
-.mdot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
-.mname{font-size:12px;flex:1;}
-.tr{display:flex;align-items:flex-start;gap:6px;font-size:11px;margin-bottom:5px;}
-.tck{width:13px;height:13px;border-radius:3px;border:1px solid var(--dim);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:8px;margin-top:1px;}
-.tck.done{background:var(--green);border-color:var(--green);}
-.pbar{height:5px;background:var(--bg4);border-radius:3px;overflow:hidden;margin-top:6px;}
-.pfill{height:100%;background:linear-gradient(90deg,var(--ghost),var(--green2));transition:width .4s;}
-.log-item{font-size:10px;line-height:1.9;color:var(--muted);}
-.lk{color:var(--blood);}
-.lt{color:var(--gold2);}
-.lv{color:var(--ghost2);}
-
-.map-wrap{flex:1;overflow:auto;padding:8px;}
-.map-grid{display:grid;gap:2px;}
-.tile{width:64px;height:64px;border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:transform .12s;user-select:none;position:relative;}
-.tile:hover:not(.wall){transform:scale(1.07);z-index:2;}
-.tile.wall{background:#0c0a15;border:1px solid #0f0d1a;cursor:default;}
-.tile.wall:hover{transform:none;}
-.tile.room{background:var(--bg3);border:1px solid var(--bg4);}
-.tile.corr{background:#120f20;border:1px dashed #1e1830;}
-.tile.t-task{border-color:var(--gold)!important;box-shadow:0 0 6px rgba(217,119,6,.3);}
-.tile.t-me{border-color:var(--ghost2)!important;box-shadow:0 0 10px rgba(124,58,237,.5);}
-.tile.t-body{border-color:var(--blood)!important;}
-.tile-em{font-size:18px;line-height:1;}
-.tile-lb{font-size:8px;color:var(--muted);text-align:center;padding:0 2px;}
-
-.gbot{background:var(--bg2);border-top:1px solid var(--bg4);padding:9px 12px;display:flex;gap:7px;flex-wrap:wrap;}
-.act{flex:1;min-width:80px;padding:8px 10px;border-radius:8px;border:none;cursor:pointer;font-family:'Heebo',sans-serif;font-weight:700;font-size:12px;transition:opacity .15s;}
-.act:hover{opacity:.82;}
+/* ===== GAME CANVAS ===== */
+#s-game{background:#000;flex-direction:column;}
+#game-canvas{display:block;cursor:crosshair;}
+.game-ui{position:fixed;top:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;background:rgba(10,8,18,.9);border-bottom:2px solid var(--ghost);padding:6px 12px;gap:8px;z-index:10;}
+.game-ui h1{font-family:'Press Start 2P',monospace;font-size:12px;color:var(--ghost2);}
+.ui-turn{font-family:'Press Start 2P',monospace;font-size:9px;color:var(--gold2);}
+.ui-timer{font-family:'Press Start 2P',monospace;font-size:14px;color:var(--blood);min-width:40px;}
+.game-actions{position:fixed;bottom:0;left:0;right:0;display:flex;gap:6px;padding:8px;background:rgba(10,8,18,.92);border-top:2px solid var(--ghost);z-index:10;}
+.act{flex:1;padding:8px 6px;border-radius:3px;border:none;cursor:pointer;font-family:'Press Start 2P',monospace;font-size:8px;line-height:1.5;transition:all .15s;}
+.act:hover{filter:brightness(1.2);}
 .a-task{background:var(--gold);color:#111;}
-.a-kill{background:var(--blood);color:#fff;}
-.a-report{background:var(--bg4);color:var(--text);}
-.a-pass{background:var(--bg3);color:var(--muted);border:1px solid var(--bg4);}
-.a-wait{background:var(--bg3);color:var(--dim);border:1px solid var(--bg4);text-align:center;flex:1;padding:10px;border-radius:8px;font-size:12px;}
-@keyframes pk{0%,100%{box-shadow:0 0 0 0 rgba(192,57,43,.7)}50%{box-shadow:0 0 0 8px rgba(192,57,43,0)}}
-.a-kill{animation:pk 1s infinite;}
+.a-kill{background:var(--blood);color:#fff;animation:pkill 1s infinite;}
+@keyframes pkill{0%,100%{box-shadow:0 0 0 0 rgba(192,57,43,.8)}50%{box-shadow:0 0 0 6px rgba(192,57,43,0)}}
+.a-rep{background:var(--bg3);color:var(--text);border:1px solid var(--dim);}
+.a-end{background:var(--bg3);color:var(--muted);border:1px solid var(--dim);}
+.a-wait{background:var(--bg3);color:var(--dim);border:1px solid var(--bg);flex:1;font-family:'Press Start 2P',monospace;font-size:8px;padding:8px;text-align:center;}
 
-/* VOTE */
-#s-vote{justify-content:flex-start;padding-top:24px;}
-.chat-box{width:100%;max-width:580px;background:var(--bg3);border-radius:12px;padding:12px;max-height:130px;overflow-y:auto;}
-.chat-m{font-size:12px;line-height:1.7;padding:2px 0;border-bottom:1px solid var(--bg4);}
+/* mini map overlay */
+.mini-map{position:fixed;bottom:80px;right:8px;background:rgba(10,8,18,.85);border:1px solid var(--ghost);border-radius:3px;padding:4px;}
+
+/* ===== VOTE ===== */
+#s-vote{background:var(--bg);justify-content:flex-start;padding-top:20px;overflow-y:auto;}
+.vote-title{font-family:'Press Start 2P',monospace;font-size:16px;color:var(--ghost2);margin-bottom:12px;text-align:center;}
+.chat-box{width:100%;max-width:560px;background:var(--bg2);border:1px solid var(--dim);border-radius:3px;padding:10px;max-height:120px;overflow-y:auto;margin-bottom:8px;}
+.chat-m{font-size:12px;line-height:1.7;border-bottom:1px solid var(--dim);padding:2px 0;}
 .chat-m:last-child{border:none;}
-.chat-row{display:flex;gap:8px;width:100%;max-width:580px;}
+.chat-row{display:flex;gap:6px;width:100%;max-width:560px;margin-bottom:12px;}
 .chat-row .inp{flex:1;}
-.vote-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;width:100%;max-width:580px;}
-.vc{background:var(--bg3);border:2px solid var(--bg4);border-radius:12px;padding:12px;text-align:center;cursor:pointer;transition:all .15s;}
-.vc:hover{border-color:var(--ghost);transform:scale(1.03);}
+.v-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;width:100%;max-width:560px;margin-bottom:12px;}
+.vc{background:var(--bg2);border:2px solid var(--dim);border-radius:3px;padding:10px;text-align:center;cursor:pointer;transition:all .15s;}
+.vc:hover{border-color:var(--ghost2);transform:scale(1.03);}
 .vc.myv{border-color:var(--blood);}
 .vc-av{font-size:28px;}
-.vc-nm{font-size:12px;font-weight:700;margin-top:4px;}
-.vc-ct{font-size:11px;color:var(--muted);margin-top:2px;}
+.vc-nm{font-size:11px;font-weight:700;margin-top:4px;}
+.vc-ct{font-size:10px;color:var(--muted);margin-top:2px;}
 
-/* RESULT */
-@keyframes flt{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
-.res-icon{font-size:80px;animation:flt 2s ease-in-out infinite;display:block;text-align:center;}
+/* ===== RESULT ===== */
+#s-result{background:radial-gradient(ellipse at 50% 30%,#1a0a3e 0%,var(--bg) 70%);}
+.res-icon{font-size:80px;animation:flt 2s ease-in-out infinite;text-align:center;}
+.res-title{font-family:'Press Start 2P',monospace;font-size:22px;text-align:center;line-height:1.6;margin:16px 0 8px;}
+.res-desc{color:var(--muted);max-width:380px;line-height:1.8;text-align:center;font-size:14px;}
 
 /* OVERLAY */
-.overlay{position:fixed;inset:0;background:rgba(8,8,15,.92);display:none;align-items:center;justify-content:center;z-index:200;}
-.overlay.on{display:flex;}
-.ov{background:var(--bg2);border:1px solid var(--bg4);border-radius:16px;padding:28px 32px;max-width:340px;width:100%;text-align:center;}
-.ov h2{font-family:'Creepster',cursive;font-size:24px;color:var(--ghost2);margin-bottom:10px;}
+.ov-wrap{position:fixed;inset:0;background:rgba(8,6,20,.92);display:none;align-items:center;justify-content:center;z-index:100;}
+.ov-wrap.on{display:flex;}
+.ov{background:var(--bg2);border:2px solid var(--ghost);border-radius:4px;padding:28px 32px;max-width:320px;width:100%;text-align:center;box-shadow:0 0 30px rgba(108,58,237,.3);}
+.ov h2{font-family:'Press Start 2P',monospace;font-size:14px;color:var(--ghost2);margin-bottom:12px;line-height:1.6;}
 
+/* scrollbar */
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:var(--bg2);}
+::-webkit-scrollbar-thumb{background:var(--ghost);border-radius:2px;}
+
+.spinner{display:inline-block;width:12px;height:12px;border:2px solid var(--dim);border-top-color:var(--ghost2);border-radius:50%;animation:spin .7s linear infinite;margin-left:6px;vertical-align:middle;}
 @keyframes spin{to{transform:rotate(360deg)}}
-.spin{display:inline-block;width:14px;height:14px;border:2px solid var(--dim);border-top-color:var(--ghost2);border-radius:50%;animation:spin .8s linear infinite;margin-right:6px;}
-
-.firebase-err{background:rgba(192,57,43,.15);border:1px solid var(--blood);border-radius:10px;padding:12px;font-size:12px;color:#f1948a;line-height:1.7;display:none;}
 </style>
 </head>
 <body>
 
-<!-- =================== LANDING =================== -->
-<div id="s-landing" class="screen on">
-  <h1 style="font-size:46px;color:var(--ghost2);text-shadow:0 0 24px var(--ghost)">👻 הבית הארור</h1>
-  <div class="card">
-    <div id="fb-err" class="firebase-err">⚠️ Firebase לא מוגדר! פתח את הקובץ בעורך טקסט והחלף את FIREBASE_CONFIG.</div>
-    <div>
-      <div class="lbl">השם שלך</div>
-      <input class="inp" id="inp-name" placeholder="שם שחקן..." maxlength="20">
-    </div>
+<!-- LANDING -->
+<div id="s-land" class="screen on">
+  <span class="ghost-float">👻</span>
+  <div class="title-pixel">הבית הארור</div>
+  <div class="sub-pixel">HAUNTED HOUSE</div>
+  <div class="land-card">
+    <div><div class="lbl">שמך</div><input class="inp" id="inp-name" placeholder="Enter name..." maxlength="16"></div>
     <div>
       <div class="lbl">מגדר</div>
       <div class="gender-row">
-        <button class="gbtn sel" id="gbtn-male" onclick="setGender('male')">👨 גבר</button>
-        <button class="gbtn" id="gbtn-female" onclick="setGender('female')">👩 אישה</button>
+        <button class="gbtn on" id="gm" onclick="setGender('m')">👨 גבר</button>
+        <button class="gbtn" id="gf" onclick="setGender('f')">👩 אישה</button>
       </div>
     </div>
-    <div>
-      <div class="lbl">בחר דמות</div>
-      <div class="avatar-row" id="avatar-row"></div>
-    </div>
-    <div>
-      <div class="lbl">בחר צבע</div>
-      <div class="color-row" id="color-row"></div>
-    </div>
-    <div style="height:1px;background:var(--bg4)"></div>
-    <button class="btn btn-purple" onclick="createRoom()">✨ צור חדר חדש</button>
-    <div style="text-align:center;font-size:12px;color:var(--dim)">— או —</div>
-    <div>
-      <div class="lbl">קוד חדר (להצטרפות)</div>
-      <input class="inp" id="inp-code" placeholder="6 ספרות..." maxlength="6" style="letter-spacing:4px;text-align:center;font-size:18px;">
-    </div>
-    <button class="btn btn-gray" onclick="joinRoom()">🚪 הצטרף לחדר</button>
+    <div><div class="lbl">דמות</div><div class="av-row" id="av-row"></div></div>
+    <div><div class="lbl">צבע</div><div class="c-row" id="c-row"></div></div>
+    <div class="divider"></div>
+    <button class="btn btn-p" onclick="createRoom()">✨ צור חדר חדש</button>
+    <div style="text-align:center;font-size:11px;color:var(--dim)">— או —</div>
+    <div><div class="lbl">קוד חדר</div><input class="inp" id="inp-code" placeholder="XXXXXX" maxlength="6" style="letter-spacing:6px;text-align:center;font-size:18px;font-family:monospace"></div>
+    <button class="btn btn-g" onclick="joinRoom()">🚪 הצטרף</button>
   </div>
 </div>
 
-<!-- =================== LOBBY =================== -->
+<!-- LOBBY -->
 <div id="s-lobby" class="screen">
-  <h1 style="font-size:28px;color:var(--ghost2)">🔒 לובי</h1>
-  <div class="card">
-    <div style="text-align:center;color:var(--muted);font-size:13px;">
-      שתף את הקוד הזה עם חבריך:<br>
-      <span id="lob-code" style="font-size:28px;font-weight:700;color:var(--ghost2);letter-spacing:6px;font-family:monospace">------</span>
-    </div>
+  <div style="font-family:'Press Start 2P',monospace;font-size:14px;color:var(--ghost2);margin-bottom:16px">LOBBY</div>
+  <div class="lobby-box">
+    <div style="font-size:11px;color:var(--muted);text-align:center;margin-bottom:6px">שתף קוד זה עם חבריך:</div>
+    <div class="room-code" id="lob-code">------</div>
     <div id="lob-players"></div>
-    <div id="lob-status" style="text-align:center;font-size:13px;color:var(--muted)"></div>
-    <button class="btn btn-purple" id="btn-start" style="display:none" onclick="hostStart()">▶ התחל משחק!</button>
-    <button class="btn btn-gray" onclick="leaveRoom()">← צא מהחדר</button>
-  </div>
-</div>
-
-<!-- =================== ROLE =================== -->
-<div id="s-role" class="screen">
-  <div class="role-card">
-    <div class="role-icon" id="r-icon"></div>
-    <div class="role-title" id="r-title"></div>
-    <div class="role-desc" id="r-desc"></div>
-  </div>
-  <button class="btn btn-purple" style="max-width:280px" onclick="goGame()">הבנתי! בואו נשחק 🎮</button>
-</div>
-
-<!-- =================== GAME =================== -->
-<div id="s-game" class="screen">
-  <div class="gtop">
-    <h1>👁 הבית הארור</h1>
-    <div class="turn-lbl" id="turn-lbl">טוען...</div>
-    <div class="phase-pill">חקירה</div>
-    <div class="timer" id="timer-el">90</div>
-  </div>
-  <div class="gbody">
-    <div class="sidebar">
-      <div class="sb"><h3>שחקנים</h3><div id="pl-list"></div></div>
-      <div class="sb">
-        <h3>משימות</h3>
-        <div id="task-list"></div>
-        <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-top:5px;">
-          <span>התקדמות</span><span id="t-pct">0%</span>
-        </div>
-        <div class="pbar"><div class="pfill" id="pfill" style="width:0%"></div></div>
-      </div>
-      <div class="sb" style="flex:1"><h3>יומן</h3><div id="ev-log"></div></div>
+    <div id="lob-status" style="text-align:center;font-size:12px;color:var(--muted);margin:8px 0"></div>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
+      <button class="btn btn-p" id="btn-start" style="display:none" onclick="hostStart()">▶ התחל משחק!</button>
+      <button class="btn btn-g" onclick="leaveRoom()">← צא מהחדר</button>
     </div>
-    <div class="map-wrap"><div class="map-grid" id="map-grid"></div></div>
   </div>
-  <div class="gbot" id="actions"></div>
 </div>
 
-<!-- =================== VOTE =================== -->
+<!-- ROLE -->
+<div id="s-role" class="screen">
+  <div class="role-box">
+    <div class="r-icon" id="r-icon"></div>
+    <div class="r-title" id="r-title"></div>
+    <div class="r-desc" id="r-desc"></div>
+  </div>
+  <button class="btn btn-p" style="max-width:260px;margin-top:16px" onclick="enterGame()">הבנתי! משחקים 🎮</button>
+</div>
+
+<!-- GAME -->
+<div id="s-game" class="screen">
+  <div class="game-ui">
+    <div class="game-ui h1" style="font-family:'Press Start 2P',monospace;font-size:11px;color:var(--ghost2)">👁 הבית הארור</div>
+    <div class="ui-turn" id="ui-turn">...</div>
+    <div class="ui-timer" id="ui-timer">90</div>
+  </div>
+  <canvas id="game-canvas"></canvas>
+  <div class="game-actions" id="game-actions"></div>
+</div>
+
+<!-- VOTE -->
 <div id="s-vote" class="screen">
-  <h1 style="font-size:28px;color:var(--ghost2)">🗳 ישיבת חירום!</h1>
+  <div class="vote-title">🗳 ישיבת חירום!</div>
   <div class="chat-box" id="chat-box"></div>
   <div class="chat-row">
-    <input class="inp" id="chat-in" placeholder="הגד את דעתך..." onkeydown="if(event.key==='Enter')sendChat()">
-    <button class="btn btn-purple" style="width:auto;padding:9px 16px;font-size:13px" onclick="sendChat()">שלח</button>
+    <input class="inp" id="chat-in" placeholder="הגד דעתך..." onkeydown="if(event.key==='Enter')sendChat()">
+    <button class="btn btn-p" style="width:auto;padding:9px 14px;font-size:13px" onclick="sendChat()">שלח</button>
   </div>
-  <div class="vote-grid" id="vote-grid"></div>
-  <button class="btn btn-gold" style="max-width:280px" id="btn-resolve" onclick="resolveVote()">📊 סיים הצבעה</button>
+  <div class="v-grid" id="v-grid"></div>
+  <button class="btn btn-gold" style="max-width:260px" id="btn-resolve" onclick="resolveVote()">📊 סיים הצבעה</button>
 </div>
 
-<!-- =================== RESULT =================== -->
+<!-- RESULT -->
 <div id="s-result" class="screen">
-  <span class="res-icon" id="res-icon"></span>
-  <h1 id="res-title" style="font-size:40px"></h1>
-  <p id="res-desc" style="color:var(--muted);max-width:380px;line-height:1.8;text-align:center;"></p>
-  <button class="btn btn-purple" style="max-width:240px;margin-top:12px" onclick="goLanding()">🔄 משחק חדש</button>
+  <div class="res-icon" id="res-icon"></div>
+  <div class="res-title" id="res-title"></div>
+  <div class="res-desc" id="res-desc"></div>
+  <button class="btn btn-p" style="max-width:220px;margin-top:20px" onclick="goLand()">🔄 שחק שוב</button>
 </div>
 
-<!-- TASK OVERLAY -->
-<div class="overlay" id="ov-task">
+<!-- TASK OV -->
+<div class="ov-wrap" id="ov-task">
   <div class="ov">
     <h2 id="ov-th"></h2>
-    <div style="font-size:48px;margin:10px 0" id="ov-ti"></div>
-    <p style="color:var(--muted);font-size:13px;line-height:1.7;margin-bottom:18px" id="ov-td"></p>
-    <button class="btn btn-gold" onclick="completeTask()">✓ השלם משימה</button>
-    <br><br>
-    <button class="btn btn-gray" onclick="closeOv('ov-task')">ביטול</button>
+    <div style="font-size:52px;margin:10px 0" id="ov-ti"></div>
+    <p style="color:var(--muted);font-size:13px;line-height:1.7;margin-bottom:16px" id="ov-td"></p>
+    <button class="btn btn-gold" onclick="completeTask()">✓ השלם</button>
+    <br><br><button class="btn btn-g" onclick="closeOv('ov-task')">ביטול</button>
   </div>
 </div>
 
-<!-- KILL OVERLAY -->
-<div class="overlay" id="ov-kill">
+<!-- KILL OV -->
+<div class="ov-wrap" id="ov-kill">
   <div class="ov">
-    <h2 style="color:var(--blood)">💀 חסל שחקן?</h2>
-    <div style="font-size:48px;margin:10px 0" id="ov-kav"></div>
-    <p style="color:var(--muted);font-size:13px;margin-bottom:18px">עומד לחסל את <strong id="ov-knm"></strong></p>
-    <button class="btn btn-red" onclick="confirmKill()">חסל!</button>
-    <br><br>
-    <button class="btn btn-gray" onclick="closeOv('ov-kill')">ביטול</button>
+    <h2 style="color:var(--blood)">💀 חסל?</h2>
+    <div style="font-size:52px;margin:10px 0" id="ov-kav"></div>
+    <p style="color:var(--muted);font-size:13px;margin-bottom:16px">חסל את <strong id="ov-knm"></strong>?</p>
+    <button class="btn btn-r" onclick="confirmKill()">חסל!</button>
+    <br><br><button class="btn btn-g" onclick="closeOv('ov-kill')">ביטול</button>
   </div>
 </div>
 
-<!-- FIREBASE SDK -->
+<!-- FIREBASE -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
 <script>
-// ============================================================
-// 🔥 FIREBASE CONFIG — הפרטים שלך כבר מוגדרים כאן
-// ============================================================
-const FB = {
-  apiKey:            "AIzaSyA-gi3EIwLFcNS6MN6RGqs3L5UQsxTAbzk",
-  authDomain:        "ghost-a424e.firebaseapp.com",
-  databaseURL:       "https://ghost-a424e-default-rtdb.firebaseio.com",
-  projectId:         "ghost-a424e",
-  storageBucket:     "ghost-a424e.firebasestorage.app",
-  messagingSenderId: "449116961300",
-  appId:             "1:449116961300:web:e3b20392eb17101e4cc501"
+// ================================================================
+// FIREBASE CONFIG
+// ================================================================
+const FB={
+  apiKey:"AIzaSyA-gi3EIwLFcNS6MN6RGqs3L5UQsxTAbzk",
+  authDomain:"ghost-a424e.firebaseapp.com",
+  databaseURL:"https://ghost-a424e-default-rtdb.firebaseio.com",
+  projectId:"ghost-a424e",
+  storageBucket:"ghost-a424e.firebasestorage.app",
+  messagingSenderId:"449116961300",
+  appId:"1:449116961300:web:e3b20392eb17101e4cc501"
 };
 
-// ============================================================
-// DATA
-// ============================================================
+// ================================================================
+// CONSTANTS
+// ================================================================
 const COLORS=['#e74c3c','#3498db','#2ecc71','#f39c12','#9b59b6','#1abc9c','#e67e22','#e91e63'];
-const AV_M=['🧔','👨','👨‍🦱','👨‍🦰','👨‍🦲','👨‍🦳','🧑','👦'];
-const AV_F=['👩','👩‍🦱','👩‍🦰','👩‍🦲','👩‍🦳','👧','🧕','👩‍🦱'];
+const AVM=['🧔','👨','👨‍🦱','👨‍🦰','👨‍🦲','👨‍🦳'];
+const AVF=['👩','👩‍🦱','👩‍🦰','👩‍🦲','👩‍🦳','👧'];
 
-const MAP=[
-  [0,0,0,0,0,0,0,0,0,0],
-  [0,'R','R',1,'R','R',0,'R','R',0],
-  [0,'R','T',1,'T','R',0,'R','T',0],
-  [0,1,1,1,1,1,1,1,1,0],
-  [0,'R','T',1,0,0,1,'T','R',0],
-  [0,'R','R',1,0,0,1,'R','R',0],
-  [0,1,1,1,1,1,1,1,1,0],
-  [0,'R','R',1,'R','R',0,'R','R',0],
-  [0,'R','T',1,'T','R',0,'T','R',0],
-  [0,0,0,0,0,0,0,0,0,0],
+// Tile types: 0=wall 1=floor 2=room_entry
+// 16x12 tile map (each tile = 48px)
+const TSIZE=48;
+const TILEMAP=[
+  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+  [0,1,1,1,1,0,0,1,1,1,1,0,0,1,1,0],
+  [0,1,1,1,1,0,0,1,1,1,1,0,0,1,1,0],
+  [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+  [0,0,1,0,0,0,0,0,1,0,0,0,0,1,0,0],
+  [0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,0],
+  [0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,0],
+  [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+  [0,0,1,0,0,0,0,0,1,0,0,0,0,1,0,0],
+  [0,1,1,1,1,0,0,1,1,1,1,0,0,1,1,0],
+  [0,1,1,1,1,0,0,1,1,1,1,0,0,1,1,0],
+  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 ];
-const RNAMES={'1,1':'סלון','1,4':'מטבח','1,7':'חדר שינה','4,1':'מרתף','4,7':'עליית גג','7,1':'חדר ילדים','7,4':'ספרייה','7,7':'חדר אמבטיה'};
-const RICONS={'1,1':'🛋','1,4':'🍳','1,7':'🛏','4,1':'🪜','4,7':'🏚','7,1':'🧸','7,4':'📚','7,7':'🛁'};
+const ROWS=TILEMAP.length, COLS=TILEMAP[0].length;
+
+// Room definitions {name, color, tasks inside}
+const ROOMS=[
+  {name:'סלון',     cx:2,  cy:1,  color:'#1a1530', taskIcon:'🛋', desc:'ספה ישנה עם כתמים חשודים'},
+  {name:'מטבח',     cx:9,  cy:1,  color:'#0d1a10', taskIcon:'🍳', desc:'סכין מוטמנת בתוך עוגה'},
+  {name:'מרפסת',    cx:13, cy:1,  color:'#0a1020', taskIcon:'🌕', desc:'ירח מלא מאיר על משהו...'},
+  {name:'חדר שינה', cx:2,  cy:5,  color:'#1a0d15', taskIcon:'🛏', desc:'מיטה שזזה לבד בלילה'},
+  {name:'ספרייה',   cx:9,  cy:5,  color:'#0d1020', taskIcon:'📚', desc:'ספר מקפץ בין המדפים'},
+  {name:'מרתף',     cx:13, cy:5,  color:'#150a0a', taskIcon:'🪜', desc:'קולות מהמרתף ממש...'},
+  {name:'אמבטיה',   cx:2,  cy:9,  color:'#0a1520', taskIcon:'🛁', desc:'מים צוננים שלא מתחממים'},
+  {name:'חדר ילדים',cx:9,  cy:9,  color:'#10150a', taskIcon:'🧸', desc:'בובה שזוזה לבד'},
+  {name:'חדר עליית גג',cx:13,cy:9,color:'#151015',taskIcon:'🏚', desc:'תקרה שמשמיעה צעדים'},
+];
+
 const TASKS=[
-  {name:'תקן חיבור חשמלי',icon:'⚡',desc:'המנורה מציצה. תקן את החיבור לפני שהחשיך לגמרי.'},
-  {name:'מצא מפתח אבוד',icon:'🗝',desc:'המפתח נעלם. חפש בין הפינות הנסתרות.'},
-  {name:'נקה כתם חשוד',icon:'🧹',desc:'כתם אדום על הרצפה. מנקים ולא שואלים שאלות.'},
-  {name:'הדלק נרות קדושים',icon:'🕯',desc:'החושך מתעמק. הדלק את הנרות בסדר הנכון.'},
-  {name:'שדר SOS',icon:'📻',desc:'הרדיו מקלט קודים מוזרים. שדר SOS החוצה.'},
-  {name:'הרכב שלד',icon:'💀',desc:'שלד במרתף. הרכב אותו לשחרור הקסם.'},
-  {name:'פתור קלפי טארוט',icon:'🃏',desc:'חפיסה הפוכה על השולחן. הנח בסדר הנכון.'},
-  {name:'תקן שעון הרוחות',icon:'🕰',desc:'עצר בשעה 3:00. תקן אותו כדי להמשיך את הזמן.'},
+  {name:'תקן חשמל',   icon:'⚡',desc:'המנורה מציצה. תקן את החיבור.'},
+  {name:'מצא מפתח',   icon:'🗝',desc:'המפתח הנסתר. חפש היטב.'},
+  {name:'נקה כתם',    icon:'🧹',desc:'כתם אדום על הרצפה. מנקים.'},
+  {name:'הדלק נרות',  icon:'🕯',desc:'הדלק בסדר הנכון.'},
+  {name:'שדר SOS',    icon:'📻',desc:'שדר לפני שיאוחר מדי.'},
+  {name:'הרכב שלד',   icon:'💀',desc:'הרכב כדי לשחרר הקסם.'},
+  {name:'טארוט',      icon:'🃏',desc:'הנח הקלפים בסדר.'},
+  {name:'תקן שעון',   icon:'🕰',desc:'עצר ב-3:00 — תקן אותו.'},
 ];
-const STARTS=[{r:1,c:1},{r:1,c:7},{r:7,c:1},{r:7,c:7},{r:4,c:1},{r:4,c:7},{r:1,c:4},{r:7,c:4}];
 
-// ============================================================
+// Task locations on map (tx,ty in tile coords)
+const TASK_TILES=[
+  {tx:2,ty:2},{tx:9,ty:2},{tx:13,ty:2},
+  {tx:2,ty:6},{tx:9,ty:6},{tx:13,ty:6},
+  {tx:2,ty:10},{tx:9,ty:10},{tx:13,ty:10},
+];
+
+const STARTS=[
+  {x:2.5,y:3.5},{x:9.5,y:3.5},{x:13.5,y:3.5},
+  {x:2.5,y:7.5},{x:9.5,y:7.5},{x:13.5,y:7.5},
+  {x:5.5,y:5.5},{x:10.5,y:7.5}
+];
+
+// ================================================================
 // STATE
-// ============================================================
+// ================================================================
 let db=null;
 let myId='p'+Date.now()+Math.random().toString(36).slice(2,6);
-let myColor=0, myGender='male', myAvIdx=0;
-let myName='שחקן';
-let isHost=false;
-let roomCode=null;
-let gs=null; // game state from firebase
-let timerInt=null;
-let killTarget=null;
-let activeTaskId=null;
-let roomListener=null;
+let myColor=0,myGender='m',myAvIdx=0,myName='שחקן';
+let isHost=false,roomCode=null,gs=null;
+let timerInt=null,killTarget=null,activeTaskId=null,roomRef=null;
 
-// ============================================================
-// INIT
-// ============================================================
+// Canvas render state
+let cam={x:0,y:0}; // camera offset in pixels
+let playerAnims={}; // {id: {x,y,dir,frame,frameTimer}}
+let particles=[]; // ghost kill particles
+let lastRender=0;
+
+// ================================================================
+// FIREBASE
+// ================================================================
 function initFB(){
-  if(db) return true;
+  if(db)return true;
   try{
-    if(!firebase.apps.length) firebase.initializeApp(FB);
-    db=firebase.database();
-    return true;
-  }catch(e){
-    document.getElementById('fb-err').style.display='block';
-    return false;
-  }
+    if(!firebase.apps.length)firebase.initializeApp(FB);
+    db=firebase.database();return true;
+  }catch(e){alert('Firebase error: '+e.message);return false;}
 }
 
-// ============================================================
+// ================================================================
 // LANDING UI
-// ============================================================
-function buildColorRow(){
-  document.getElementById('color-row').innerHTML=
-    COLORS.map((c,i)=>`<div class="cdot${i===myColor?' sel':''}" style="background:${c}" onclick="pickColor(${i})"></div>`).join('');
+// ================================================================
+function buildUI(){
+  document.getElementById('c-row').innerHTML=
+    COLORS.map((c,i)=>`<div class="cdot${i===myColor?' on':''}" style="background:${c}" onclick="pickColor(${i})"></div>`).join('');
+  const avs=myGender==='m'?AVM:AVF;
+  document.getElementById('av-row').innerHTML=
+    avs.map((a,i)=>`<div class="av${i===myAvIdx?' on':''}" onclick="pickAv(${i})">${a}</div>`).join('');
 }
-function pickColor(i){ myColor=i; buildColorRow(); }
-
-function buildAvatarRow(){
-  const avs=myGender==='male'?AV_M:AV_F;
-  document.getElementById('avatar-row').innerHTML=
-    avs.map((a,i)=>`<div class="avbtn${i===myAvIdx?' sel':''}" onclick="pickAv(${i})">${a}</div>`).join('');
-}
-function pickAv(i){ myAvIdx=i; buildAvatarRow(); }
-
+function pickColor(i){myColor=i;buildUI();}
+function pickAv(i){myAvIdx=i;buildUI();}
 function setGender(g){
-  myGender=g; myAvIdx=0;
-  document.getElementById('gbtn-male').classList.toggle('sel',g==='male');
-  document.getElementById('gbtn-female').classList.toggle('sel',g==='female');
-  buildAvatarRow();
+  myGender=g;myAvIdx=0;
+  document.getElementById('gm').classList.toggle('on',g==='m');
+  document.getElementById('gf').classList.toggle('on',g==='f');
+  buildUI();
 }
+function getAv(){return(myGender==='m'?AVM:AVF)[myAvIdx]||'🧑';}
 
-function getAvatar(){
-  const avs=myGender==='male'?AV_M:AV_F;
-  return avs[myAvIdx]||avs[0];
-}
-
-// ============================================================
-// ROOM CREATE / JOIN
-// ============================================================
+// ================================================================
+// ROOM
+// ================================================================
 async function createRoom(){
-  if(!initFB()) return;
+  if(!initFB())return;
   myName=document.getElementById('inp-name').value.trim()||'שחקן';
   roomCode=String(Math.floor(100000+Math.random()*900000));
   isHost=true;
-  const me={id:myId,name:myName,color:myColor,avatar:getAvatar(),alive:true,pos:STARTS[0],isGhost:false,tasksDone:0};
+  const me=mkPlayer(0);
   await db.ref('rooms/'+roomCode).set({
     host:myId,phase:'lobby',
-    players:{[myId]:me},
-    tasks:{},bodies:{},log:{},chat:{},votes:{},
+    players:{[myId]:me},tasks:{},bodies:{},log:{},chat:{},votes:{},
     doneTasks:0,totalTasks:0,turn:myId,timer:90
   });
   go('s-lobby');
@@ -407,262 +373,452 @@ async function createRoom(){
   document.getElementById('btn-start').style.display='block';
   listenRoom();
 }
-
 async function joinRoom(){
-  if(!initFB()) return;
+  if(!initFB())return;
   myName=document.getElementById('inp-name').value.trim()||'שחקן';
   const code=document.getElementById('inp-code').value.trim();
-  if(code.length!==6){alert('קוד לא תקין — 6 ספרות');return;}
+  if(code.length!==6){alert('קוד לא תקין');return;}
   const snap=await db.ref('rooms/'+code).get();
   if(!snap.exists()){alert('חדר לא נמצא!');return;}
   const room=snap.val();
   if(room.phase!=='lobby'){alert('המשחק כבר התחיל!');return;}
-  roomCode=code; isHost=false;
+  roomCode=code;isHost=false;
   const idx=Object.keys(room.players||{}).length;
-  const usedColors=Object.values(room.players||{}).map(p=>p.color);
+  const usedC=Object.values(room.players||{}).map(p=>p.color);
   let col=myColor;
-  if(usedColors.includes(col)){for(let i=0;i<8;i++){if(!usedColors.includes(i)){col=i;break;}}}
+  if(usedC.includes(col)){for(let i=0;i<8;i++){if(!usedC.includes(i)){col=i;break;}}}
   myColor=col;
-  const me={id:myId,name:myName,color:myColor,avatar:getAvatar(),alive:true,pos:STARTS[idx%8],isGhost:false,tasksDone:0};
-  await db.ref('rooms/'+roomCode+'/players/'+myId).set(me);
+  await db.ref('rooms/'+roomCode+'/players/'+myId).set(mkPlayer(idx));
   go('s-lobby');
   document.getElementById('lob-code').textContent=roomCode;
   listenRoom();
 }
-
+function mkPlayer(idx){
+  return{id:myId,name:myName,color:myColor,avatar:getAv(),
+    alive:true,pos:STARTS[idx%STARTS.length],isGhost:false,tasksDone:0};
+}
 function leaveRoom(){
-  stopListener();
-  clearInterval(timerInt);
-  if(roomCode) db.ref('rooms/'+roomCode+'/players/'+myId).remove();
-  goLanding();
+  stopListen();clearInterval(timerInt);
+  if(roomCode)db.ref('rooms/'+roomCode+'/players/'+myId).remove();
+  goLand();
 }
 
-// ============================================================
-// FIREBASE LISTENER
-// ============================================================
+// ================================================================
+// LISTENER
+// ================================================================
 function listenRoom(){
-  stopListener();
-  roomListener=db.ref('rooms/'+roomCode).on('value',snap=>{
-    if(!snap||!snap.exists()) return;
+  stopListen();
+  roomRef=db.ref('rooms/'+roomCode).on('value',snap=>{
+    if(!snap||!snap.exists())return;
     gs=snap.val();
     onState(gs);
   });
 }
-function stopListener(){
-  if(roomListener&&roomCode){
-    db.ref('rooms/'+roomCode).off('value',roomListener);
-    roomListener=null;
-  }
+function stopListen(){
+  if(roomRef&&roomCode){db.ref('rooms/'+roomCode).off('value',roomRef);roomRef=null;}
 }
-
 function onState(s){
-  if(!s) return;
-  if(s.phase==='lobby')     renderLobby(s);
-  else if(s.phase==='role') showRole(s);
-  else if(s.phase==='game') onGame(s);
-  else if(s.phase==='vote') onVote(s);
-  else if(s.phase==='result') onResult(s);
+  if(!s)return;
+  if(s.phase==='lobby')renderLobby(s);
+  else if(s.phase==='role')showRole(s);
+  else if(s.phase==='game')onGame(s);
+  else if(s.phase==='vote')onVote(s);
+  else if(s.phase==='result')onResult(s);
 }
 
-// ============================================================
+// ================================================================
 // LOBBY
-// ============================================================
+// ================================================================
 function renderLobby(s){
-  if(curScreen()!=='s-lobby') return;
-  const players=Object.values(s.players||{});
-  document.getElementById('lob-players').innerHTML=players.map(p=>`
-    <div class="player-row">
-      <span style="font-size:26px">${p.avatar||'🧑'}</span>
-      <span style="flex:1;font-weight:700;color:${COLORS[p.color]}">${p.name}${p.id===myId?' (אני)':''}</span>
-      <span class="badge ${p.id===s.host?'badge-host':'badge-ready'}">${p.id===s.host?'מארח':'מוכן'}</span>
-    </div>
-  `).join('');
-  const n=players.length;
-  document.getElementById('lob-status').innerHTML=
-    n>=2?`${n} שחקנים מחוברים ✓`:`<span class="spin"></span>ממתין לשחקנים נוספים...`;
-  if(isHost) document.getElementById('btn-start').style.display=n>=2?'block':'none';
+  if(cur()!=='s-lobby')return;
+  const ps=Object.values(s.players||{});
+  document.getElementById('lob-players').innerHTML=ps.map(p=>
+    `<div class="pl-card"><span class="av-sm">${p.avatar||'🧑'}</span><span class="pname" style="color:${COLORS[p.color]}">${p.name}${p.id===myId?' (אני)':''}</span><span class="badge ${p.id===s.host?'bh':'br'}">${p.id===s.host?'HOST':'READY'}</span></div>`
+  ).join('');
+  const n=ps.length;
+  document.getElementById('lob-status').innerHTML=n>=2?`${n} שחקנים ✓`:`<span class="spinner"></span> ממתין לשחקנים...`;
+  if(isHost)document.getElementById('btn-start').style.display=n>=2?'block':'none';
 }
 
-// ============================================================
+// ================================================================
 // HOST START
-// ============================================================
+// ================================================================
 async function hostStart(){
-  if(!isHost||!gs) return;
-  const players=Object.values(gs.players||{});
-  if(players.length<2){alert('צריך לפחות 2 שחקנים');return;}
-  const ghostIdx=Math.floor(Math.random()*players.length);
+  if(!isHost||!gs)return;
+  const ps=Object.values(gs.players||{});
+  if(ps.length<2){alert('צריך לפחות 2 שחקנים');return;}
+  const gi=Math.floor(Math.random()*ps.length);
   const up={};
-  players.forEach((p,i)=>{
-    up['players/'+p.id+'/isGhost']=(i===ghostIdx);
-    up['players/'+p.id+'/pos']=STARTS[i%8];
+  ps.forEach((p,i)=>{
+    up['players/'+p.id+'/isGhost']=(i===gi);
+    up['players/'+p.id+'/pos']=STARTS[i%STARTS.length];
     up['players/'+p.id+'/alive']=true;
-    up['players/'+p.id+'/tasksDone']=0;
   });
-  const taskTiles=[];
-  MAP.forEach((row,r)=>row.forEach((c,cc)=>{if(c==='T')taskTiles.push({r,c:cc});}));
   const shuffled=[...TASKS].sort(()=>Math.random()-.5);
   const tasks={};
-  taskTiles.forEach((pos,i)=>{
-    tasks['t'+i]={r:pos.r,c:pos.c,defIdx:i%shuffled.length,done:false,id:'t'+i};
-  });
-  up.tasks=tasks;
-  up.bodies={};up.log={};up.chat={};up.votes={};
-  up.doneTasks=0;up.totalTasks=taskTiles.length;
-  up.turn=players[0].id;up.timer=90;
-  up.phase='role';
+  TASK_TILES.forEach((t,i)=>{tasks['t'+i]={tx:t.tx,ty:t.ty,defIdx:i%shuffled.length,done:false,id:'t'+i};});
+  up.tasks=tasks;up.bodies={};up.log={};up.chat={};up.votes={};
+  up.doneTasks=0;up.totalTasks=TASK_TILES.length;
+  up.turn=ps[0].id;up.timer=90;up.phase='role';
   await db.ref('rooms/'+roomCode).update(up);
 }
 
-// ============================================================
-// ROLE REVEAL
-// ============================================================
+// ================================================================
+// ROLE
+// ================================================================
 function showRole(s){
-  if(curScreen()==='s-role') return;
+  if(cur()==='s-role')return;
   const me=s.players&&s.players[myId];
-  if(!me) return;
+  if(!me)return;
   if(me.isGhost){
     document.getElementById('r-icon').textContent='👻';
-    document.getElementById('r-title').innerHTML='<span class="role-ghost">אתה הרוח!</span>';
-    document.getElementById('r-desc').textContent='חסל שחקנים מבלי להיתפס. שקר, התחמק, הישאר חף מפשע. תנצח כשנשארים 2 שחקנים.';
-  } else {
+    document.getElementById('r-title').innerHTML='<span class="r-ghost">אתה הרוח!</span>';
+    document.getElementById('r-desc').textContent='חסל שחקנים מבלי להיתפס. שקר, התחמק, הישאר חף. תנצח כשנשארים 2.';
+  }else{
     document.getElementById('r-icon').textContent='🕵️';
-    document.getElementById('r-title').innerHTML='<span class="role-human">אתה חוקר</span>';
-    document.getElementById('r-desc').textContent='השלם משימות ועקוב אחר חשודים. דווח על גופות לזמן הצבעה. תנצח כשכל המשימות הושלמו או שהרוח מזוהה.';
+    document.getElementById('r-title').innerHTML='<span class="r-human">אתה חוקר</span>';
+    document.getElementById('r-desc').textContent='השלם משימות ועקוב אחר חשודים. דווח על גופות לזמן הצבעה.';
   }
   go('s-role');
 }
-
-async function goGame(){
+async function enterGame(){
   await db.ref('rooms/'+roomCode+'/phase').set('game');
   go('s-game');
+  initCanvas();
   startTimer();
 }
 
-// ============================================================
-// GAME
-// ============================================================
-function onGame(s){
-  if(curScreen()==='s-lobby'||curScreen()==='s-role'||curScreen()==='s-landing'){
-    go('s-game');
-    startTimer();
-  }
-  if(curScreen()==='s-game') renderGame(s);
-  if(isHost) checkWin(s);
-}
-
-function renderGame(s){
-  if(!s||!s.players||!s.players[myId]) return;
-  const me=s.players[myId];
-  const isMyTurn=s.turn===myId;
-  const tp=s.players[s.turn];
-  document.getElementById('turn-lbl').textContent=isMyTurn?'🔥 התור שלך!':'תור: '+(tp?tp.name:'?');
-  document.getElementById('turn-lbl').style.color=isMyTurn?'var(--gold2)':'var(--ghost2)';
-  document.getElementById('timer-el').textContent=s.timer||90;
-  renderMap(s);
-  renderSidebar(s);
-  renderActions(s);
-}
-
-function renderMap(s){
-  const grid=document.getElementById('map-grid');
-  const cols=MAP[0].length;
-  grid.style.gridTemplateColumns='repeat('+cols+',64px)';
-  grid.innerHTML='';
-  const me=s.players[myId];
-  const tasks=Object.values(s.tasks||{});
-  const bodies=Object.values(s.bodies||{});
-  const players=Object.values(s.players||{});
-  MAP.forEach((row,r)=>{
-    row.forEach((cell,c)=>{
-      const d=document.createElement('div');
-      d.className='tile';
-      if(cell===0){d.classList.add('wall');grid.appendChild(d);return;}
-      cell===1?d.classList.add('corr'):d.classList.add('room');
-      const key=r+','+c;
-      const body=bodies.find(b=>b.r===r&&b.c===c);
-      const task=tasks.find(t=>t.r===r&&t.c===c);
-      const here=players.filter(p=>p.alive&&p.pos&&p.pos.r===r&&p.pos.c===c);
-      const isMeHere=me&&me.pos&&me.pos.r===r&&me.pos.c===c;
-      if(task&&!task.done) d.classList.add('t-task');
-      if(body) d.classList.add('t-body');
-      if(isMeHere) d.classList.add('t-me');
-      let inner='';
-      if(body){
-        inner='<div class="tile-em">💀</div><div class="tile-lb">'+(body.pname||'').substring(0,8)+'</div>';
-      } else if(here.length>0){
-        const avs=here.map(p=>'<span style="font-size:'+(here.length>2?'13':'18')+'px">'+(p.avatar||'🧑')+'</span>').join('');
-        inner='<div style="display:flex;flex-wrap:wrap;justify-content:center;gap:1px">'+avs+'</div>';
-        if(isMeHere) inner+='<div style="font-size:7px;color:var(--ghost2);font-weight:700">אני</div>';
-      } else if(task){
-        inner='<div class="tile-em">'+(task.done?'✅':TASKS[task.defIdx].icon)+'</div><div class="tile-lb">'+TASKS[task.defIdx].name.substring(0,8)+'</div>';
-      } else if(cell==='R'){
-        inner='<div class="tile-em">'+(RICONS[key]||'🚪')+'</div><div class="tile-lb">'+(RNAMES[key]||'').substring(0,8)+'</div>';
-      }
-      d.innerHTML=inner;
-      if(cell!==0) d.onclick=()=>moveTo(r,c);
-      grid.appendChild(d);
+// ================================================================
+// CANVAS GAME
+// ================================================================
+let canvas,ctx;
+function initCanvas(){
+  canvas=document.getElementById('game-canvas');
+  const W=window.innerWidth, H=window.innerHeight-90;
+  canvas.width=W; canvas.height=H;
+  canvas.onclick=onCanvasClick;
+  // init player anim states
+  if(gs&&gs.players){
+    Object.values(gs.players).forEach(p=>{
+      playerAnims[p.id]={x:p.pos.x*TSIZE,y:p.pos.y*TSIZE,tx:p.pos.x*TSIZE,ty:p.pos.y*TSIZE,frame:0,ft:0};
     });
+  }
+  requestAnimationFrame(gameLoop);
+}
+
+function gameLoop(ts){
+  if(cur()!=='s-game'){requestAnimationFrame(gameLoop);return;}
+  const dt=Math.min(ts-lastRender,50);lastRender=ts;
+  updateAnims(dt);
+  drawGame();
+  requestAnimationFrame(gameLoop);
+}
+
+function updateAnims(dt){
+  if(!gs||!gs.players)return;
+  Object.values(gs.players).forEach(p=>{
+    if(!playerAnims[p.id]) playerAnims[p.id]={x:p.pos.x*TSIZE,y:p.pos.y*TSIZE,tx:p.pos.x*TSIZE,ty:p.pos.y*TSIZE,frame:0,ft:0};
+    const a=playerAnims[p.id];
+    a.tx=p.pos.x*TSIZE; a.ty=p.pos.y*TSIZE;
+    const dx=a.tx-a.x, dy=a.ty-a.y;
+    const speed=4;
+    if(Math.abs(dx)>1||Math.abs(dy)>1){
+      a.x+=dx*speed*dt/100;
+      a.y+=dy*speed*dt/100;
+      a.ft+=dt;
+      if(a.ft>150){a.ft=0;a.frame=(a.frame+1)%4;}
+    }else{a.x=a.tx;a.y=a.ty;a.frame=0;}
   });
+  // update particles
+  particles=particles.filter(p=>{
+    p.life-=dt;p.x+=p.vx*dt/100;p.y+=p.vy*dt/100;p.vy+=0.5;
+    return p.life>0;
+  });
+  // camera follows me
+  if(gs&&gs.players&&gs.players[myId]){
+    const me=gs.players[myId];
+    const a=playerAnims[myId];
+    if(a){
+      const tw=canvas.width/2,th=(canvas.height)/2;
+      cam.x=Math.max(0,Math.min(COLS*TSIZE-canvas.width, a.x-tw+TSIZE/2));
+      cam.y=Math.max(0,Math.min(ROWS*TSIZE-canvas.height, a.y-th+TSIZE/2));
+    }
+  }
 }
 
-function renderSidebar(s){
-  const players=Object.values(s.players||{});
-  document.getElementById('pl-list').innerHTML=players.map(p=>
-    '<div class="mp"><div class="mdot" style="background:'+COLORS[p.color]+'"></div>'
-    +'<div class="mname" style="'+(p.alive?'':'text-decoration:line-through;opacity:.4')+'">'+p.name+(p.id===myId?' (אני)':'')+'</div>'
-    +(p.alive?'':'<span style="font-size:10px;color:var(--blood)">☠</span>')+'</div>'
-  ).join('');
-  const tasks=Object.values(s.tasks||{});
-  document.getElementById('task-list').innerHTML=tasks.map(t=>
-    '<div class="tr"><div class="tck'+(t.done?' done':'')+'">'+( t.done?'✓':'')+'</div>'
-    +'<span style="'+(t.done?'opacity:.4':'')+'">'+TASKS[t.defIdx].icon+' '+TASKS[t.defIdx].name.substring(0,14)+'</span></div>'
-  ).join('');
-  const pct=Math.round((s.doneTasks||0)/Math.max(s.totalTasks||1,1)*100);
-  document.getElementById('pfill').style.width=pct+'%';
-  document.getElementById('t-pct').textContent=pct+'%';
-  const log=Object.values(s.log||{}).sort((a,b)=>b.ts-a.ts);
-  document.getElementById('ev-log').innerHTML=log.slice(0,10).map(e=>
-    '<div class="log-item '+(e.t||'')+'">'+e.m+'</div>').join('');
+function drawGame(){
+  if(!canvas||!ctx){canvas=document.getElementById('game-canvas');ctx=canvas.getContext('2d');if(!ctx)return;}
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  if(!gs)return;
+  ctx.save();
+  ctx.translate(-cam.x,-cam.y);
+
+  // Draw floor tiles
+  for(let r=0;r<ROWS;r++){
+    for(let c=0;c<COLS;c++){
+      const t=TILEMAP[r][c];
+      const x=c*TSIZE,y=r*TSIZE;
+      if(t===0){
+        // Wall
+        drawPixelRect(ctx,x,y,TSIZE,TSIZE,'#0d0b18');
+        // Wall detail
+        ctx.fillStyle='#16132a';
+        ctx.fillRect(x+2,y+2,TSIZE-4,4);
+        ctx.fillRect(x+2,y+TSIZE-6,TSIZE-4,4);
+      }else{
+        // Floor - find room color
+        const rm=ROOMS.find(rm2=>{
+          const dx=Math.abs(c-rm2.cx),dy=Math.abs(r-rm2.cy);
+          return dx<=2&&dy<=2;
+        });
+        const fc=rm?rm.color:'#131025';
+        ctx.fillStyle=fc;
+        ctx.fillRect(x,y,TSIZE,TSIZE);
+        // Floor pattern
+        ctx.fillStyle='rgba(255,255,255,0.025)';
+        if((r+c)%2===0)ctx.fillRect(x,y,TSIZE,TSIZE);
+        // Border
+        ctx.strokeStyle='rgba(255,255,255,0.05)';
+        ctx.strokeRect(x+0.5,y+0.5,TSIZE-1,TSIZE-1);
+      }
+    }
+  }
+
+  // Draw room labels
+  ROOMS.forEach(rm=>{
+    ctx.font='bold 10px Heebo';
+    ctx.fillStyle='rgba(200,180,255,0.4)';
+    ctx.textAlign='center';
+    ctx.fillText(rm.name,rm.cx*TSIZE+TSIZE/2,(rm.cy-1)*TSIZE+14);
+  });
+
+  // Draw tasks
+  const tasks=Object.values(gs.tasks||{});
+  tasks.forEach(t=>{
+    if(t.done)return;
+    const x=t.tx*TSIZE,y=t.ty*TSIZE;
+    // Glowing task marker
+    const pulse=0.6+0.4*Math.sin(Date.now()/400);
+    ctx.save();
+    ctx.shadowBlur=12*pulse;
+    ctx.shadowColor='#d97706';
+    ctx.font='22px serif';
+    ctx.textAlign='center';
+    ctx.textBaseline='middle';
+    ctx.fillText(TASKS[t.defIdx].icon,x+TSIZE/2,y+TSIZE/2);
+    ctx.restore();
+    // Gold border
+    ctx.strokeStyle=`rgba(217,119,6,${0.5+0.3*pulse})`;
+    ctx.lineWidth=2;
+    ctx.strokeRect(x+3,y+3,TSIZE-6,TSIZE-6);
+  });
+
+  // Draw bodies
+  Object.values(gs.bodies||{}).forEach(b=>{
+    const x=b.tx*TSIZE,y=b.ty*TSIZE;
+    ctx.font='26px serif';
+    ctx.textAlign='center';
+    ctx.textBaseline='middle';
+    ctx.fillText('💀',x+TSIZE/2,y+TSIZE/2);
+    ctx.fillStyle='rgba(192,57,43,0.3)';
+    ctx.fillRect(x,y+TSIZE*0.6,TSIZE,TSIZE*0.4);
+  });
+
+  // Draw players
+  const me=gs.players&&gs.players[myId];
+  Object.values(gs.players||{}).forEach(p=>{
+    if(!p.alive)return;
+    const a=playerAnims[p.id];
+    if(!a)return;
+    const x=a.x,y=a.y;
+    const isMe=(p.id===myId);
+
+    // Shadow
+    ctx.fillStyle='rgba(0,0,0,0.4)';
+    ctx.beginPath();
+    ctx.ellipse(x+TSIZE/2,y+TSIZE*0.88,TSIZE*0.28,TSIZE*0.1,0,0,Math.PI*2);
+    ctx.fill();
+
+    // Body - pixel art style character
+    const col=COLORS[p.color];
+    const bodyW=TSIZE*0.55, bodyH=TSIZE*0.65;
+    const bx=x+(TSIZE-bodyW)/2, by=y+TSIZE*0.2;
+
+    // Suit body
+    ctx.fillStyle=col;
+    ctx.beginPath();
+    ctx.roundRect(bx,by,bodyW,bodyH,bodyW*0.3);
+    ctx.fill();
+
+    // Helmet/head
+    ctx.fillStyle='rgba(180,220,255,0.85)';
+    ctx.beginPath();
+    ctx.roundRect(bx+bodyW*0.1,by-bodyH*0.35,bodyW*0.8,bodyH*0.45,bodyW*0.4);
+    ctx.fill();
+    ctx.strokeStyle='rgba(100,160,220,0.6)';
+    ctx.lineWidth=1.5;
+    ctx.stroke();
+
+    // Avatar inside helmet
+    ctx.font=`${TSIZE*0.28}px serif`;
+    ctx.textAlign='center';
+    ctx.textBaseline='middle';
+    ctx.fillText(p.avatar||'🧑',x+TSIZE/2,by-bodyH*0.1);
+
+    // Backpack
+    ctx.fillStyle=darken(col,0.7);
+    ctx.fillRect(bx-bodyW*0.18,by+bodyH*0.1,bodyW*0.18,bodyH*0.5);
+
+    // Legs (walking animation)
+    const legOff=a.frame<2?TSIZE*0.05:-TSIZE*0.05;
+    ctx.fillStyle=darken(col,0.8);
+    ctx.beginPath();
+    ctx.roundRect(bx+bodyW*0.15,by+bodyH*0.85+legOff,bodyW*0.28,bodyH*0.32,4);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.roundRect(bx+bodyW*0.55,by+bodyH*0.85-legOff,bodyW*0.28,bodyH*0.32,4);
+    ctx.fill();
+
+    // Glow for current turn player
+    if(gs.turn===p.id){
+      ctx.save();
+      ctx.shadowBlur=16;
+      ctx.shadowColor=col;
+      ctx.strokeStyle=col;
+      ctx.lineWidth=2;
+      ctx.beginPath();
+      ctx.roundRect(bx-2,by-bodyH*0.38,bodyW+4,bodyH+bodyH*0.38+4,bodyW*0.35);
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    // Ghost effect
+    if(p.isGhost&&isMe){
+      ctx.save();
+      ctx.globalAlpha=0.3+0.15*Math.sin(Date.now()/300);
+      ctx.fillStyle='rgba(160,100,255,0.5)';
+      ctx.beginPath();
+      ctx.roundRect(bx-4,by-bodyH*0.4,bodyW+8,bodyH+bodyH*0.4+8,bodyW*0.4);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    // Name tag
+    ctx.fillStyle='rgba(0,0,0,0.6)';
+    const nw=ctx.measureText(p.name).width+10;
+    ctx.fillRect(x+TSIZE/2-nw/2,y-16,nw,14);
+    ctx.font='bold 10px Heebo';
+    ctx.fillStyle=isMe?'#fbbf24':COLORS[p.color];
+    ctx.textAlign='center';
+    ctx.textBaseline='top';
+    ctx.fillText(p.name,x+TSIZE/2,y-15);
+  });
+
+  // Particles
+  particles.forEach(p=>{
+    ctx.globalAlpha=p.life/p.maxLife;
+    ctx.font=`${p.size}px serif`;
+    ctx.textAlign='center';
+    ctx.textBaseline='middle';
+    ctx.fillText(p.char,p.x,p.y);
+  });
+  ctx.globalAlpha=1;
+
+  // Darkness overlay (limited vision)
+  if(me&&me.alive){
+    const a=playerAnims[myId];
+    if(a){
+      const px=a.x+TSIZE/2-cam.x, py=a.y+TSIZE/2-cam.y;
+      const vr=TSIZE*3.5;
+      const grad=ctx.createRadialGradient(px+cam.x,py+cam.y,vr*0.4,px+cam.x,py+cam.y,vr*1.2);
+      grad.addColorStop(0,'rgba(0,0,0,0)');
+      grad.addColorStop(0.6,'rgba(0,0,0,0.15)');
+      grad.addColorStop(1,'rgba(0,0,0,0.92)');
+      ctx.save();
+      ctx.fillStyle=grad;
+      ctx.fillRect(cam.x,cam.y,canvas.width,canvas.height);
+      ctx.restore();
+    }
+  }
+
+  ctx.restore();
+  updateGameUI();
 }
 
-function renderActions(s){
-  const me=s.players[myId];
-  const area=document.getElementById('actions');
+function darken(hex,f){
+  let r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);
+  return `rgb(${Math.round(r*f)},${Math.round(g*f)},${Math.round(b*f)})`;
+}
+
+function drawPixelRect(c,x,y,w,h,col){
+  c.fillStyle=col;c.fillRect(x,y,w,h);
+  c.fillStyle='rgba(255,255,255,0.04)';c.fillRect(x,y,w,2);c.fillRect(x,y,2,h);
+  c.fillStyle='rgba(0,0,0,0.3)';c.fillRect(x,y+h-2,w,2);c.fillRect(x+w-2,y,2,h);
+}
+
+function onCanvasClick(e){
+  if(!gs||!gs.players)return;
+  const me=gs.players[myId];
+  if(!me||!me.alive||gs.turn!==myId)return;
+  const rect=canvas.getBoundingClientRect();
+  const wx=(e.clientX-rect.left+cam.x)/TSIZE;
+  const wy=(e.clientY-rect.top+cam.y)/TSIZE;
+  const tc=Math.floor(wx),tr=Math.floor(wy);
+  moveTo(tr,tc);
+}
+
+function updateGameUI(){
+  if(!gs)return;
+  const isMyTurn=gs.turn===myId;
+  const tp=gs.players&&gs.players[gs.turn];
+  document.getElementById('ui-turn').textContent=isMyTurn?'🔥 התור שלך!':'⏳ '+(tp?tp.name:'?');
+  document.getElementById('ui-timer').textContent=gs.timer||90;
+  renderActions();
+}
+
+// ================================================================
+// MOVE
+// ================================================================
+async function moveTo(tr,tc){
+  if(!gs||!gs.players)return;
+  if(gs.turn!==myId)return;
+  const me=gs.players[myId];
+  if(!me||!me.alive)return;
+  if(TILEMAP[tr]===undefined||TILEMAP[tr][tc]===0)return;
+  const dr=Math.abs(me.pos.y-tr), dc=Math.abs(me.pos.x-tc);
+  if(dr>1||dc>1){return;} // must step adjacent
+  await db.ref('rooms/'+roomCode+'/players/'+myId+'/pos').set({x:tc,y:tr});
+  addLog('🚶 '+me.name+' זז');
+}
+
+// ================================================================
+// ACTIONS
+// ================================================================
+function renderActions(){
+  if(!gs||!gs.players)return;
+  const me=gs.players[myId];
+  const area=document.getElementById('game-actions');
   if(!me){area.innerHTML='';return;}
-  if(s.turn!==myId){area.innerHTML='<div class="a-wait">⏳ ממתין לתור שלך...</div>';return;}
-  if(!me.alive){area.innerHTML='<div class="a-wait">☠ אתה מת — צופה בלבד</div>';return;}
+  if(gs.turn!==myId){area.innerHTML='<div class="a-wait">⏳ ממתין לתור שלך...</div>';return;}
+  if(!me.alive){area.innerHTML='<div class="a-wait">☠ צופה בלבד</div>';return;}
+  const tasks=Object.values(gs.tasks||{});
+  const bodies=Object.values(gs.bodies||{});
+  const players=Object.values(gs.players||{});
   const pos=me.pos;
-  const tasks=Object.values(s.tasks||{});
-  const bodies=Object.values(s.bodies||{});
-  const players=Object.values(s.players||{});
-  const taskHere=tasks.find(t=>t.r===pos.r&&t.c===pos.c&&!t.done);
-  const bodyHere=bodies.find(b=>b.r===pos.r&&b.c===pos.c);
-  const nearby=players.filter(p=>p.id!==myId&&p.alive&&p.pos&&Math.abs(p.pos.r-pos.r)<=1&&Math.abs(p.pos.c-pos.c)<=1);
+  const taskHere=tasks.find(t=>t.tx===Math.round(pos.x)&&t.ty===Math.round(pos.y)&&!t.done);
+  const bodyHere=bodies.find(b=>b.tx===Math.round(pos.x)&&b.ty===Math.round(pos.y));
+  const nearby=players.filter(p=>p.id!==myId&&p.alive&&p.pos&&Math.abs(p.pos.x-pos.x)<=1.5&&Math.abs(p.pos.y-pos.y)<=1.5);
   let h='';
-  if(taskHere) h+='<button class="act a-task" onclick="openTask(\''+taskHere.id+'\','+taskHere.defIdx+')">⚙ משימה</button>';
-  if(bodyHere) h+='<button class="act a-report" onclick="doReport()">🚨 דווח גופה</button>';
-  if(me.isGhost&&nearby.length) h+='<button class="act a-kill" onclick="pickKill()">💀 חסל!</button>';
-  h+='<button class="act a-pass" onclick="endTurn()">➡ סיים תור</button>';
+  if(taskHere) h+=`<button class="act a-task" onclick="openTask('${taskHere.id}',${taskHere.defIdx})">⚙<br>משימה</button>`;
+  if(bodyHere) h+=`<button class="act a-rep" onclick="doReport()">🚨<br>דווח</button>`;
+  if(me.isGhost&&nearby.length) h+=`<button class="act a-kill" onclick="pickKill()">💀<br>חסל!</button>`;
+  h+=`<button class="act a-end" onclick="endTurn()">➡<br>סיים תור</button>`;
   area.innerHTML=h;
 }
 
-// ============================================================
-// MOVE
-// ============================================================
-async function moveTo(r,c){
-  if(!gs||!gs.players) return;
-  if(gs.turn!==myId) return;
-  const me=gs.players[myId];
-  if(!me||!me.alive) return;
-  if(Math.abs(me.pos.r-r)>1||Math.abs(me.pos.c-c)>1){addLog('⚠ משבצת רחוקה מדי');return;}
-  if(MAP[r][c]===0) return;
-  await db.ref('rooms/'+roomCode+'/players/'+myId+'/pos').set({r,c});
-  addLog('🚶 '+me.name+' עבר ל'+(RNAMES[r+','+c]||'מסדרון'));
-}
-
-// ============================================================
+// ================================================================
 // TASK
-// ============================================================
+// ================================================================
 function openTask(id,defIdx){
   activeTaskId=id;
   document.getElementById('ov-th').textContent=TASKS[defIdx].name;
@@ -672,113 +828,126 @@ function openTask(id,defIdx){
 }
 async function completeTask(){
   closeOv('ov-task');
-  if(!gs||!activeTaskId) return;
-  const task=gs.tasks[activeTaskId];
-  if(!task) return;
+  if(!gs||!activeTaskId)return;
+  const t=gs.tasks[activeTaskId];if(!t)return;
   const me=gs.players[myId];
   await db.ref('rooms/'+roomCode+'/tasks/'+activeTaskId+'/done').set(true);
   await db.ref('rooms/'+roomCode+'/doneTasks').set((gs.doneTasks||0)+1);
-  addLog('✅ '+me.name+' השלים: '+TASKS[task.defIdx].name,'lt');
+  addLog('✅ '+me.name+': '+TASKS[t.defIdx].name,'lt');
 }
 
-// ============================================================
+// ================================================================
 // KILL
-// ============================================================
+// ================================================================
 function pickKill(){
-  if(!gs) return;
+  if(!gs)return;
   const me=gs.players[myId];
-  const nearby=Object.values(gs.players).filter(p=>p.id!==myId&&p.alive&&p.pos&&Math.abs(p.pos.r-me.pos.r)<=1&&Math.abs(p.pos.c-me.pos.c)<=1);
-  if(!nearby.length) return;
+  const nearby=Object.values(gs.players).filter(p=>p.id!==myId&&p.alive&&p.pos&&Math.abs(p.pos.x-me.pos.x)<=1.5&&Math.abs(p.pos.y-me.pos.y)<=1.5);
+  if(!nearby.length)return;
   killTarget=nearby[0];
   document.getElementById('ov-kav').textContent=killTarget.avatar||'🧑';
   document.getElementById('ov-knm').textContent=killTarget.name;
   openOv('ov-kill');
 }
 async function confirmKill(){
-  closeOv('ov-kill');
-  if(!killTarget) return;
+  closeOv('ov-kill');if(!killTarget)return;
+  // spawn particles
+  const a=playerAnims[killTarget.id];
+  if(a){for(let i=0;i<12;i++){particles.push({x:a.x+TSIZE/2,y:a.y+TSIZE/2,vx:(Math.random()-0.5)*4,vy:-Math.random()*5-2,life:1200,maxLife:1200,size:18,char:['💀','🩸','👻','💨'][Math.floor(Math.random()*4)]});}}
   await db.ref('rooms/'+roomCode+'/players/'+killTarget.id+'/alive').set(false);
-  await db.ref('rooms/'+roomCode+'/bodies/b'+Date.now()).set({r:killTarget.pos.r,c:killTarget.pos.c,pname:killTarget.name});
+  await db.ref('rooms/'+roomCode+'/bodies/b'+Date.now()).set({tx:Math.round(killTarget.pos.x),ty:Math.round(killTarget.pos.y),pname:killTarget.name});
   addLog('💀 '+killTarget.name+' חוסל!','lk');
   killTarget=null;
 }
 
-// ============================================================
+// ================================================================
 // REPORT
-// ============================================================
+// ================================================================
 async function doReport(){
   clearInterval(timerInt);
   const me=gs.players[myId];
-  const key='c'+Date.now();
-  await db.ref('rooms/'+roomCode+'/chat/'+key).set({name:'מערכת',msg:me.name+' דיווח על גופה! מי הרוח?',color:'#e74c3c',ts:Date.now()});
+  await db.ref('rooms/'+roomCode+'/chat/c'+Date.now()).set({name:'מערכת',msg:me.name+' דיווח על גופה!',color:'#e74c3c',ts:Date.now()});
   await db.ref('rooms/'+roomCode).update({phase:'vote',votes:{}});
 }
 
-// ============================================================
+// ================================================================
+// GAME PHASE
+// ================================================================
+function onGame(s){
+  const c=cur();
+  if(c==='s-lobby'||c==='s-role'||c==='s-land'){
+    go('s-game');initCanvas();startTimer();
+  }
+  if(c==='s-game')renderGame_update(s);
+  if(isHost)checkWin(s);
+}
+function renderGame_update(s){
+  // Sync new players into anim state
+  Object.values(s.players||{}).forEach(p=>{
+    if(!playerAnims[p.id]&&p.pos)
+      playerAnims[p.id]={x:p.pos.x*TSIZE,y:p.pos.y*TSIZE,tx:p.pos.x*TSIZE,ty:p.pos.y*TSIZE,frame:0,ft:0};
+  });
+}
+
+// ================================================================
 // VOTE
-// ============================================================
+// ================================================================
 function onVote(s){
-  if(curScreen()!=='s-vote') go('s-vote');
+  if(cur()!=='s-vote')go('s-vote');
   renderVote(s);
 }
 function renderVote(s){
   const chat=Object.values(s.chat||{}).sort((a,b)=>a.ts-b.ts);
   const cb=document.getElementById('chat-box');
-  cb.innerHTML=chat.map(m=>'<div class="chat-m"><span style="font-weight:700;color:'+(m.color||'var(--ghost2)')+'">'+m.name+': </span>'+m.msg+'</div>').join('');
+  cb.innerHTML=chat.map(m=>`<div class="chat-m"><span style="font-weight:700;color:${m.color||'#a78bfa'}">${m.name}: </span>${m.msg}</div>`).join('');
   cb.scrollTop=cb.scrollHeight;
-  const votes=s.votes||{};
-  const myVote=votes[myId];
+  const votes=s.votes||{},myVote=votes[myId];
   const alive=Object.values(s.players||{}).filter(p=>p.alive);
-  document.getElementById('vote-grid').innerHTML=
-    alive.map(p=>'<div class="vc'+(myVote===p.id?' myv':'')+'" onclick="castVote(\''+p.id+'\')">'
-      +'<div class="vc-av">'+(p.avatar||'🧑')+'</div>'
-      +'<div class="vc-nm" style="color:'+COLORS[p.color]+'">'+p.name+(p.id===myId?' (אני)':'')+'</div>'
-      +'<div class="vc-ct">'+Object.values(votes).filter(v=>v===p.id).length+' קולות</div></div>'
-    ).join('')
-    +'<div class="vc" onclick="castVote(\'skip\')"><div class="vc-av">⏭</div><div class="vc-nm" style="color:var(--muted)">דלג</div></div>';
+  document.getElementById('v-grid').innerHTML=
+    alive.map(p=>`<div class="vc${myVote===p.id?' myv':''}" onclick="castVote('${p.id}')">
+      <div class="vc-av">${p.avatar||'🧑'}</div>
+      <div class="vc-nm" style="color:${COLORS[p.color]}">${p.name}${p.id===myId?' (אני)':''}</div>
+      <div class="vc-ct">${Object.values(votes).filter(v=>v===p.id).length} קולות</div></div>`
+    ).join('')+`<div class="vc" onclick="castVote('skip')"><div class="vc-av">⏭</div><div class="vc-nm" style="color:var(--muted)">דלג</div></div>`;
   document.getElementById('btn-resolve').style.display=isHost?'block':'none';
 }
-async function castVote(tid){ await db.ref('rooms/'+roomCode+'/votes/'+myId).set(tid); }
+async function castVote(tid){await db.ref('rooms/'+roomCode+'/votes/'+myId).set(tid);}
 async function sendChat(){
-  const inp=document.getElementById('chat-in');
-  const msg=inp.value.trim(); if(!msg) return;
+  const inp=document.getElementById('chat-in');const msg=inp.value.trim();if(!msg)return;
   const me=gs.players[myId];
-  await db.ref('rooms/'+roomCode+'/chat/c'+Date.now()+'_'+Math.random().toString(36).slice(2,5)).set({name:me.name,msg,color:COLORS[me.color],ts:Date.now()});
+  await db.ref('rooms/'+roomCode+'/chat/c'+Date.now()+'x').set({name:me.name,msg,color:COLORS[me.color],ts:Date.now()});
   inp.value='';
 }
 async function resolveVote(){
-  if(!isHost||!gs) return;
-  const votes=gs.votes||{};
-  const tally={};
+  if(!isHost||!gs)return;
+  const votes=gs.votes||{};const tally={};
   Object.values(votes).forEach(v=>{if(v!=='skip')tally[v]=(tally[v]||0)+1;});
   const sorted=Object.entries(tally).sort((a,b)=>b[1]-a[1]);
   if(sorted.length){
-    const ejId=sorted[0][0];
-    const ej=gs.players[ejId];
+    const ejId=sorted[0][0];const ej=gs.players[ejId];
     if(ej){
       await db.ref('rooms/'+roomCode+'/players/'+ejId+'/alive').set(false);
-      addLog('🗳 '+ej.name+' הוצא בהצבעה','lv');
+      addLog('🗳 '+ej.name+' הוצא','lv');
       if(ej.isGhost){await doResult('humans');return;}
     }
-  } else { addLog('🗳 לא הוצבע על אף אחד','lv'); }
+  }else addLog('🗳 לא הוצבע','lv');
   checkWin(gs);
   const next=nextTurn(gs.turn);
   await db.ref('rooms/'+roomCode).update({phase:'game',turn:next,timer:90,votes:{},chat:{}});
 }
 
-// ============================================================
+// ================================================================
 // TIMER
-// ============================================================
+// ================================================================
 function startTimer(){
   clearInterval(timerInt);
   timerInt=setInterval(async()=>{
-    if(!gs||gs.phase!=='game') return;
+    if(!gs||gs.phase!=='game')return;
     const t=Math.max((gs.timer||1)-1,0);
-    const el=document.getElementById('timer-el');
-    if(el) el.textContent=t;
+    const el=document.getElementById('ui-timer');if(el)el.textContent=t;
     if(isHost){
       await db.ref('rooms/'+roomCode+'/timer').set(t);
-      if(t<=0){ addLog('⏰ הזמן נגמר — עובר לתור הבא'); await endTurn(); }
+      if(t<=0){addLog('⏰ הזמן נגמר');await endTurn();}
     }
   },1000);
 }
@@ -788,18 +957,18 @@ async function endTurn(){
   await db.ref('rooms/'+roomCode).update({turn:next,timer:90});
   startTimer();
 }
-function nextTurn(curId){
-  if(!gs||!gs.players) return curId;
+function nextTurn(cur2){
+  if(!gs||!gs.players)return cur2;
   const alive=Object.values(gs.players).filter(p=>p.alive);
-  const idx=alive.findIndex(p=>p.id===curId);
-  return alive[(idx+1)%alive.length]?.id||alive[0]?.id||curId;
+  const idx=alive.findIndex(p=>p.id===cur2);
+  return alive[(idx+1)%alive.length]?.id||alive[0]?.id||cur2;
 }
 
-// ============================================================
+// ================================================================
 // WIN
-// ============================================================
+// ================================================================
 async function checkWin(s){
-  if(!isHost||!s||s.phase==='vote'||s.phase==='result') return;
+  if(!isHost||!s||s.phase==='vote'||s.phase==='result')return;
   const alive=Object.values(s.players||{}).filter(p=>p.alive);
   const ghost=alive.find(p=>p.isGhost);
   const humans=alive.filter(p=>!p.isGhost);
@@ -807,62 +976,45 @@ async function checkWin(s){
   if(humans.length<=1){await doResult('ghost');return;}
   if((s.doneTasks||0)>=(s.totalTasks||1)&&(s.totalTasks||0)>0){await doResult('humans');return;}
 }
-async function doResult(winner){
-  clearInterval(timerInt);
-  await db.ref('rooms/'+roomCode).update({phase:'result',winner});
-}
+async function doResult(w){clearInterval(timerInt);await db.ref('rooms/'+roomCode).update({phase:'result',winner:w});}
 function onResult(s){
-  if(curScreen()==='s-result') return;
+  if(cur()==='s-result')return;
   const ghost=Object.values(s.players||{}).find(p=>p.isGhost);
   if(s.winner==='humans'){
     document.getElementById('res-icon').textContent='🎉';
     document.getElementById('res-title').textContent='האנשים ניצחו!';
-    document.getElementById('res-title').style.color='var(--ghost2)';
-    document.getElementById('res-desc').textContent='הרוח הייתה '+(ghost?.name||'?')+'. כל הכבוד לקבוצה!';
-  } else {
+    document.getElementById('res-title').style.color='#a78bfa';
+    document.getElementById('res-desc').textContent='הרוח הייתה '+(ghost?.name||'?')+'. כל הכבוד!';
+  }else{
     document.getElementById('res-icon').textContent='👻';
     document.getElementById('res-title').textContent='הרוח ניצחה!';
-    document.getElementById('res-title').style.color='var(--blood)';
-    document.getElementById('res-desc').textContent=(ghost?.name||'?')+' הייתה הרוח וחיסלה את כולם. הבית נשאר ארור לנצח...';
+    document.getElementById('res-title').style.color='#c0392b';
+    document.getElementById('res-desc').textContent=(ghost?.name||'?')+' הייתה הרוח. הבית נשאר ארור לנצח...';
   }
   go('s-result');
 }
 
-// ============================================================
-// LOG
-// ============================================================
+// ================================================================
+// LOG / UTILS
+// ================================================================
 async function addLog(m,t=''){
-  if(!db||!roomCode) return;
-  await db.ref('rooms/'+roomCode+'/log/l'+Date.now()+'_'+Math.random().toString(36).slice(2,5)).set({m,t,ts:Date.now()});
+  if(!db||!roomCode)return;
+  await db.ref('rooms/'+roomCode+'/log/l'+Date.now()+'x').set({m,t,ts:Date.now()});
 }
-
-// ============================================================
-// UTILS
-// ============================================================
 function go(id){
   document.querySelectorAll('.screen').forEach(s=>{s.classList.remove('on');s.style.display='';});
-  const el=document.getElementById(id);
-  if(!el){console.error('screen not found:',id);return;}
-  el.style.display='flex';
-  el.classList.add('on');
+  const el=document.getElementById(id);if(!el)return;
+  el.style.display='flex';el.classList.add('on');
 }
-function curScreen(){
-  const el=document.querySelector('.screen.on');
-  return el?el.id:'';
-}
-function openOv(id){ const el=document.getElementById(id); if(el) el.classList.add('on'); }
-function closeOv(id){ const el=document.getElementById(id); if(el) el.classList.remove('on'); }
-function goLanding(){
-  stopListener(); clearInterval(timerInt);
-  gs=null; roomCode=null; isHost=false;
-  go('s-landing');
-}
+function cur(){const el=document.querySelector('.screen.on');return el?el.id:'';}
+function openOv(id){const el=document.getElementById(id);if(el)el.classList.add('on');}
+function closeOv(id){const el=document.getElementById(id);if(el)el.classList.remove('on');}
+function goLand(){stopListen();clearInterval(timerInt);gs=null;roomCode=null;isHost=false;go('s-land');}
 
-// ============================================================
+// ================================================================
 // BOOT
-// ============================================================
-buildColorRow();
-buildAvatarRow();
+// ================================================================
+buildUI();
 </script>
 </body>
 </html>
