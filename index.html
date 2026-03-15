@@ -351,13 +351,6 @@ async function beginFight(code){
   countdown(3,()=>G.start());
 }
 
-function countdown(n,cb){
-  G.countdownNum=n>0?String(n):'FIGHT!';
-  G.countdownColor=n>0?'#ffffff':'#f0c040';
-  if(n>0)setTimeout(()=>countdown(n-1,cb),850);
-  else setTimeout(()=>{G.countdownNum=null;cb();},900);
-}
-
 /* ════════════════════════════════════════
    GAME ENGINE — canvas-based physics loop
 ════════════════════════════════════════ */
@@ -409,37 +402,30 @@ const G=(()=>{
   /* ── Canvas init ── */
   function initCanvas(){
     canvas=document.getElementById('gameCanvas');
+    ctx=canvas.getContext('2d');
     resizeCanvas();
     window.addEventListener('resize',resizeCanvas);
+    // Start render loop immediately so countdown shows
+    if(!raf)loop();
   }
 
   function resizeCanvas(){
-    const parent=canvas.parentElement;
-    canvas.width=parent.clientWidth;
-    canvas.height=parent.clientHeight;
+    if(!canvas)return;
+    // Use window dimensions minus HUD (~56px) and controls bar (~44px)
+    const hud=document.getElementById('hud');
+    const cbar=document.getElementById('cbar');
+    const hudH=hud?hud.offsetHeight:56;
+    const cbarH=cbar?cbar.offsetHeight:44;
+    canvas.width=window.innerWidth;
+    canvas.height=window.innerHeight-hudH-cbarH;
     W=canvas.width; H=canvas.height;
-    // Re-init fighter positions if already running
-    if(P1){
-      if(P1.y===0||P1.y<FLOOR_Y()-FIGHTER_H){
-        P1.y=FLOOR_Y()-FIGHTER_H;
-        P2.y=FLOOR_Y()-FIGHTER_H;
-      }
-    }
+    if(P1){P1.y=FLOOR_Y()-FIGHTER_H;}
+    if(P2){P2.y=FLOOR_Y()-FIGHTER_H;}
+    audHeads.length=0; // rebuild audience on resize
   }
 
   /* ── setup (before game) ── */
   function setup(code,slot,name){room=code;my=slot;op=slot==='p1'?'p2':'p1';}
-
-  /* ── start (after countdown) ── */
-  function start(){
-    W=canvas.width;H=canvas.height;
-    P1=mkFighter(false);P2=mkFighter(true);
-    P1.y=FLOOR_Y()-FIGHTER_H;
-    P2.y=FLOOR_Y()-FIGHTER_H;
-    active=true;lOts=0;
-    ubars();startTimer();startStam();listenOp();startSync();startPing();
-    loop();
-  }
 
   /* ── Game loop ── */
   let lastT=0;
@@ -448,6 +434,17 @@ const G=(()=>{
     const dt=Math.min((t-lastT)/16.67,3);lastT=t;
     if(active)physics(dt);
     render();
+  }
+
+  /* ── start (after countdown) ── */
+  function start(){
+    resizeCanvas(); // ensure W/H correct
+    P1=mkFighter(false);P2=mkFighter(true);
+    P1.y=FLOOR_Y()-FIGHTER_H;
+    P2.y=FLOOR_Y()-FIGHTER_H;
+    active=true;lOts=0;
+    ubars();startTimer();startStam();listenOp();startSync();startPing();
+    // loop already running from initCanvas
   }
 
   /* ── Physics ── */
@@ -526,7 +523,6 @@ const G=(()=>{
   /* ── RENDER ── */
   function render(){
     if(!canvas||!ctx)return;
-    ctx=canvas.getContext('2d');
     W=canvas.width;H=canvas.height;
     ctx.clearRect(0,0,W,H);
 
@@ -1007,7 +1003,8 @@ const G=(()=>{
     pgInt=setInterval(()=>{update(rf(`rooms/${room}/ping_${my}`),{ts:Date.now()}).catch(()=>{});},3000);
     onValue(rf(`rooms/${room}/ping_${my}`),s=>{
       if(!s.exists())return;
-      document.getElementById('pg')&&(document.getElementById('pg').textContent=(Date.now()-(s.val().ts||Date.now()))+' ms');
+      const el=document.getElementById('pg');
+      if(el)el.textContent=(Date.now()-(s.val().ts||Date.now()))+' ms';
     });
   }
 
@@ -1203,6 +1200,14 @@ const G=(()=>{
     set countdownColor(v){countdownColor=v}
   };
 })();
+
+// countdown must be after G is defined
+function countdown(n,cb){
+  G.countdownNum=n>0?String(n):'FIGHT!';
+  G.countdownColor=n>0?'#ffffff':'#f0c040';
+  if(n>0)setTimeout(()=>countdown(n-1,cb),850);
+  else setTimeout(()=>{G.countdownNum=null;cb();},900);
+}
 
 document.getElementById('bRem').onclick=()=>show('sL');
 document.getElementById('bLob').onclick=()=>show('sL');
