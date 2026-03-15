@@ -2,7 +2,11 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="theme-color" content="#04040a"/>
 <title>BOUT</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,700;0,800;0,900;1,900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet"/>
 <style>
@@ -15,7 +19,13 @@
   --F:'Barlow Condensed',sans-serif;--M:'Rajdhani',sans-serif;
 }
 html,body{width:100%;height:100%;background:var(--bg);color:var(--tx);
-  font-family:var(--M);overflow:hidden;user-select:none;-webkit-tap-highlight-color:transparent}
+  font-family:var(--M);overflow:hidden;user-select:none;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:none;
+  overscroll-behavior:none;}
+
+/* Canvas: prevent all default touch behavior */
+#gameCanvas{touch-action:none;display:block;}
 
 .scr{position:absolute;inset:0;display:none;opacity:0;transition:opacity .35s}
 .scr.on{display:flex;opacity:1}
@@ -44,7 +54,10 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--tx);
 .inp{width:100%;background:rgba(255,255,255,0.03);border:1px solid var(--br2);
   border-bottom:2px solid rgba(240,192,64,0.2);color:var(--tx);
   font-family:var(--F);font-weight:700;font-size:28px;letter-spacing:3px;
-  padding:10px 14px 8px;outline:none;transition:all .2s;text-transform:uppercase;caret-color:var(--gold)}
+  padding:12px 14px 10px;outline:none;transition:all .2s;text-transform:uppercase;
+  caret-color:var(--gold);
+  /* prevent iOS zoom on focus (needs font-size >= 16px in px terms) */
+  -webkit-text-size-adjust:100%;}
 .inp::placeholder{color:rgba(242,237,228,0.14);font-size:22px}
 .inp:focus{border-color:var(--gold);background:rgba(240,192,64,0.04)}
 .sep{height:1px;background:var(--br);margin:2px 0}
@@ -118,17 +131,80 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--tx);
   image-rendering:pixelated;
 }
 
-/* ── CONTROLS BAR ── */
-#cbar{flex-shrink:0;display:flex;align-items:center;justify-content:center;
-  flex-wrap:wrap;gap:4px;padding:7px 10px;border-top:1px solid var(--br);background:var(--s1)}
-.kk{display:inline-flex;align-items:center;justify-content:center;
-  min-width:30px;height:26px;padding:0 8px;background:var(--s2);
-  border:1px solid var(--br2);border-bottom:2px solid rgba(0,0,0,0.6);
-  font-family:var(--M);font-size:10px;font-weight:700;color:rgba(255,255,255,0.5);
-  cursor:pointer;transition:all .07s}
-.kk.w{min-width:58px;font-size:9px;letter-spacing:1px}
-.kk.on,.kk:active{background:rgba(240,192,64,0.12);border-color:var(--gold);
-  color:var(--gold);transform:translateY(1px);border-bottom-width:1px}
+/* ── MOBILE GAMEPAD ── */
+#cbar{
+  flex-shrink:0;
+  display:flex;align-items:stretch;justify-content:space-between;
+  padding:6px 10px 8px;
+  border-top:1px solid var(--br);
+  background:var(--s1);
+  gap:8px;
+  /* safe area for iPhones */
+  padding-bottom:calc(8px + env(safe-area-inset-bottom));
+}
+
+/* Left side: D-pad / joystick */
+#dpad{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:5px;
+  align-items:center;
+}
+
+/* Right side: action buttons */
+#actbts{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  grid-template-rows:1fr 1fr;
+  gap:5px;
+}
+
+.gbt{
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--M);font-weight:700;
+  background:var(--s2);border:1px solid var(--br2);
+  border-bottom:3px solid rgba(0,0,0,0.7);
+  color:rgba(255,255,255,0.6);
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:none;
+  border-radius:4px;
+  transition:all .07s;
+  /* minimum 44px touch target */
+  min-height:44px;min-width:44px;
+  font-size:13px;letter-spacing:1px;
+}
+.gbt.move{font-size:18px;font-weight:700}
+.gbt.wide{
+  grid-column:1/-1;
+  font-size:11px;letter-spacing:2px;
+}
+.gbt.on,.gbt:active{
+  background:rgba(240,192,64,0.15);
+  border-color:var(--gold);color:var(--gold);
+  transform:translateY(1px);border-bottom-width:2px;
+}
+.gbt.red.on,.gbt.red:active{background:rgba(224,48,48,0.15);border-color:var(--red);color:var(--red);}
+.gbt.blu.on,.gbt.blu:active{background:rgba(46,140,204,0.15);border-color:var(--blu);color:var(--blu);}
+.gbt.grn.on,.gbt.grn:active{background:rgba(46,204,130,0.15);border-color:var(--grn);color:var(--grn);}
+
+/* keyboard hint row (desktop only) */
+#kbhint{
+  display:none;
+  align-items:center;justify-content:center;
+  gap:4px;padding:4px 10px;
+  border-top:1px solid var(--br);
+  background:var(--s1);flex-shrink:0;
+}
+@media(hover:hover) and (pointer:fine){
+  /* desktop — show compact key hints, hide big gamepad */
+  #cbar{padding:7px 10px;}
+  #dpad{display:flex;gap:5px;align-items:center;}
+  #actbts{display:flex;gap:5px;align-items:center;}
+  .gbt{min-height:28px;min-width:30px;font-size:10px;padding:0 8px;border-bottom-width:2px;}
+  .gbt.wide{min-width:58px;}
+  .gbt.move{font-size:10px;}
+}
 .kl{font-size:7px;letter-spacing:2px;color:var(--mu);padding:0 1px;font-family:var(--M);font-weight:700}
 .ks{width:1px;height:16px;background:var(--br);margin:0 2px}
 
@@ -222,17 +298,20 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--tx);
   <canvas id="gameCanvas"></canvas>
 
   <div id="cbar">
-    <span class="kl">MOVE</span>
-    <button class="kk" data-k="a">A</button>
-    <button class="kk" data-k="d">D</button>
-    <div class="ks"></div>
-    <button class="kk" data-k="j">J</button><span class="kl">JAB</span>
-    <button class="kk" data-k="k">K</button><span class="kl">CROSS</span>
-    <button class="kk" data-k="l">L</button><span class="kl">HOOK</span>
-    <div class="ks"></div>
-    <button class="kk w" data-k=" "
-      onmousedown="G.kd(' ')" onmouseup="G.ku(' ')"
-      ontouchstart="G.kd(' ')" ontouchend="G.ku(' ')">DODGE/BLOCK</button>
+    <!-- Left: movement -->
+    <div id="dpad">
+      <button class="gbt move" id="bt-l">◀</button>
+      <button class="gbt move" id="bt-r">▶</button>
+      <button class="gbt grn wide" id="bt-sp">DODGE / BLOCK</button>
+    </div>
+
+    <!-- Right: attacks -->
+    <div id="actbts">
+      <button class="gbt blu" id="bt-j">JAB<br><span style="font-size:9px;opacity:.5">J</span></button>
+      <button class="gbt" id="bt-k">CROSS<br><span style="font-size:9px;opacity:.5">K</span></button>
+      <button class="gbt red" id="bt-l2">HOOK<br><span style="font-size:9px;opacity:.5">L</span></button>
+      <button class="gbt grn" id="bt-b">BLOCK<br><span style="font-size:9px;opacity:.5">SPC</span></button>
+    </div>
   </div>
 </div>
 
@@ -411,17 +490,16 @@ const G=(()=>{
 
   function resizeCanvas(){
     if(!canvas)return;
-    // Use window dimensions minus HUD (~56px) and controls bar (~44px)
     const hud=document.getElementById('hud');
     const cbar=document.getElementById('cbar');
-    const hudH=hud?hud.offsetHeight:56;
-    const cbarH=cbar?cbar.offsetHeight:44;
+    const hudH=hud?hud.getBoundingClientRect().height:56;
+    const cbarH=cbar?cbar.getBoundingClientRect().height:100;
     canvas.width=window.innerWidth;
-    canvas.height=window.innerHeight-hudH-cbarH;
+    canvas.height=Math.max(180, window.innerHeight-hudH-cbarH);
     W=canvas.width; H=canvas.height;
     if(P1){P1.y=FLOOR_Y()-FIGHTER_H;}
     if(P2){P2.y=FLOOR_Y()-FIGHTER_H;}
-    audHeads.length=0; // rebuild audience on resize
+    audHeads.length=0;
   }
 
   /* ── setup (before game) ── */
@@ -1160,38 +1238,101 @@ const G=(()=>{
     document.getElementById('H2').style.background=hc(p2hp);
   }
 
-  /* ── KEYBOARD ── */
+  /* ── INPUT HANDLING (keyboard + touch) ── */
   const keys={};
+
   function kd(k){
-    if(keys[k])return;keys[k]=true;pvis(k,true);
+    if(keys[k])return;keys[k]=true;
     if(!active)return;
-    if(k===' '){
-      // Tap = dodge in movement direction, hold = block
+    if(k==='a'||k==='arrowleft')return; // movement handled in physics
+    if(k==='d'||k==='arrowright')return;
+    if(k===' '||k==='dodge'){
       const M=me();
       if(M&&(keys['a']||keys['arrowleft']))myDodge('l');
       else if(M&&(keys['d']||keys['arrowright']))myDodge('r');
       else myBlock(true);
       return;
     }
-    if(k==='a'||k==='arrowleft'){return;}// handled in physics
-    if(k==='d'||k==='arrowright'){return;}
+    if(k==='block'){myBlock(true);return;}
     if(k==='j'||k==='k'||k==='l')myPunch(k);
   }
-  function ku(k){keys[k]=false;pvis(k,false);if(k===' ')myBlock(false);}
-  function pvis(k,on){const b=document.querySelector(`.kk[data-k="${k}"]`);if(b)b.classList.toggle('on',on);}
 
+  function ku(k){
+    keys[k]=false;
+    if(k===' '||k==='block')myBlock(false);
+  }
+
+  // Keyboard
   document.addEventListener('keydown',e=>{
     const k=e.key===' '?' ':e.key.toLowerCase();
-    if(k===' '||k==='arrowleft'||k==='arrowright')e.preventDefault();
+    if(['arrowleft','arrowright','arrowup','arrowdown',' '].includes(k))e.preventDefault();
     kd(k);
   });
-  document.addEventListener('keyup',e=>{const k=e.key===' '?' ':e.key.toLowerCase();ku(k);});
-  document.querySelectorAll('.kk[data-k]').forEach(b=>{
-    const k=b.dataset.k;if(k===' ')return;
-    b.addEventListener('pointerdown',()=>kd(k));
-    b.addEventListener('pointerup',()=>ku(k));
-    b.addEventListener('pointerleave',()=>ku(k));
+  document.addEventListener('keyup',e=>{
+    const k=e.key===' '?' ':e.key.toLowerCase();
+    ku(k);
   });
+
+  // Touch/pointer — bind each button robustly
+  function bindBtn(id, keyDown, keyUp, isHold=false){
+    const el=document.getElementById(id);
+    if(!el)return;
+    const down=()=>{el.classList.add('on');if(keyDown)kd(keyDown);};
+    const up=()=>{el.classList.remove('on');if(keyUp)ku(keyUp);};
+    // pointerdown/up handles both mouse and touch
+    el.addEventListener('pointerdown',e=>{e.preventDefault();down();});
+    el.addEventListener('pointerup',e=>{e.preventDefault();up();});
+    el.addEventListener('pointercancel',()=>up());
+    // For held buttons, also track pointerleave
+    if(isHold)el.addEventListener('pointerleave',()=>up());
+  }
+
+  // Left / Right — held keys
+  document.getElementById('bt-l').addEventListener('pointerdown',e=>{
+    e.preventDefault();
+    document.getElementById('bt-l').classList.add('on');
+    keys['a']=true;
+  });
+  document.getElementById('bt-l').addEventListener('pointerup',e=>{
+    e.preventDefault();
+    document.getElementById('bt-l').classList.remove('on');
+    keys['a']=false;
+  });
+  document.getElementById('bt-l').addEventListener('pointercancel',()=>{
+    document.getElementById('bt-l').classList.remove('on');keys['a']=false;
+  });
+  document.getElementById('bt-l').addEventListener('pointerleave',()=>{
+    document.getElementById('bt-l').classList.remove('on');keys['a']=false;
+  });
+
+  document.getElementById('bt-r').addEventListener('pointerdown',e=>{
+    e.preventDefault();
+    document.getElementById('bt-r').classList.add('on');
+    keys['d']=true;
+  });
+  document.getElementById('bt-r').addEventListener('pointerup',e=>{
+    e.preventDefault();
+    document.getElementById('bt-r').classList.remove('on');
+    keys['d']=false;
+  });
+  document.getElementById('bt-r').addEventListener('pointercancel',()=>{
+    document.getElementById('bt-r').classList.remove('on');keys['d']=false;
+  });
+  document.getElementById('bt-r').addEventListener('pointerleave',()=>{
+    document.getElementById('bt-r').classList.remove('on');keys['d']=false;
+  });
+
+  // Dodge/Block (SPACE) — tap = dodge, hold = block
+  bindBtn('bt-sp',' ',' ',true);
+  // Pure block button
+  bindBtn('bt-b','block','block',true);
+  // Punches
+  bindBtn('bt-j','j',null);
+  bindBtn('bt-k','k',null);
+  bindBtn('bt-l2','l',null);
+
+  // Prevent context menu on long press (mobile)
+  document.getElementById('cbar').addEventListener('contextmenu',e=>e.preventDefault());
 
   return{setup,initCanvas,start,kd,ku,
     get countdownNum(){return countdownNum},
