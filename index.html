@@ -1,667 +1,284 @@
 <!DOCTYPE html>
-<html lang="he">
+<html lang="he" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
-<title>טלפרומפטר</title>
-<style>
-  :root{
-    --void:#0A0B0D;
-    --panel:#17181C;
-    --panel-raised:#1F2126;
-    --hairline:#2B2E34;
-    --text:#F2F1EC;
-    --text-dim:#8B8D93;
-    --tally:#E8342A;
-    --tally-dim:#5A1712;
-    --amber:#E8A93A;
-    --mono: 'JetBrains Mono', 'SF Mono', ui-monospace, Menlo, Consolas, monospace;
-    --sans: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Helvetica, Arial, sans-serif;
-  }
-  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
-  html,body{
-    margin:0; padding:0; height:100%; width:100%;
-    background:var(--void); color:var(--text);
-    font-family:var(--sans);
-    overflow:hidden;
-    -webkit-user-select:none; user-select:none;
-  }
-  button{font-family:inherit; -webkit-user-select:none; user-select:none;}
-  input{font-family:inherit;}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>טלפרומפטר חכם</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background-color: #121212;
+      color: #ffffff;
+      min-height: 100vh;
+    }
 
-  .screen{
-    position:fixed; inset:0; display:none;
-    flex-direction:column; align-items:center;
-  }
-  .screen.active{display:flex;}
+    /* 1. מסך בחירת מצב */
+    #modeSelector {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      gap: 20px;
+      padding: 20px;
+    }
+    .mode-btn {
+      width: 100%;
+      max-width: 300px;
+      padding: 20px;
+      font-size: 20px;
+      font-weight: bold;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      background: #00e676;
+      color: #000;
+    }
+    .mode-btn.display-mode {
+      background: #29b6f6;
+    }
 
-  /* ---------- SETUP ---------- */
-  #setup{justify-content:center; padding:32px; gap:28px;}
-  .brand{text-align:center;}
-  .brand .mark{
-    font-family:var(--mono); font-size:11px; letter-spacing:0.28em;
-    color:var(--tally); text-transform:uppercase;
-  }
-  .brand h1{
-    margin:6px 0 0; font-size:34px; font-weight:700; letter-spacing:-0.01em;
-  }
-  .brand p{margin:8px 0 0; color:var(--text-dim); font-size:14px; line-height:1.6; max-width:320px;}
+    /* 2. עיצוב השלט */
+    #controllerView {
+      display: none;
+      padding: 20px;
+      flex-direction: column;
+      gap: 15px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    textarea {
+      width: 100%;
+      height: 180px;
+      background: #1e1e1e;
+      color: #fff;
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 16px;
+    }
+    .controls-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .control-group {
+      background: #1e1e1e;
+      padding: 12px;
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .action-btn {
+      background: #00e676;
+      color: #000;
+      border: none;
+      padding: 14px;
+      border-radius: 8px;
+      font-weight: bold;
+      font-size: 18px;
+      cursor: pointer;
+    }
+    .action-btn.pause { background: #ff3d00; color: #fff; }
+    .toggle-group {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #1e1e1e;
+      padding: 12px;
+      border-radius: 8px;
+    }
 
-  .code-block{
-    background:var(--panel); border:1px solid var(--hairline); border-radius:16px;
-    padding:20px; width:100%; max-width:360px; display:flex; flex-direction:column; gap:12px;
-  }
-  .code-label{font-family:var(--mono); font-size:11px; letter-spacing:0.18em; color:var(--text-dim); text-transform:uppercase;}
-  .code-row{display:flex; gap:10px;}
-  #codeInput{
-    flex:1; background:var(--void); border:1px solid var(--hairline); border-radius:10px;
-    color:var(--text); font-family:var(--mono); font-size:24px; letter-spacing:0.3em;
-    text-align:center; padding:12px 8px; text-transform:uppercase; min-width:0;
-  }
-  #codeInput:focus{outline:none; border-color:var(--amber);}
-  .btn-generate{
-    background:var(--panel-raised); border:1px solid var(--hairline); color:var(--text);
-    border-radius:10px; padding:0 16px; font-size:13px; font-weight:600; cursor:pointer;
-  }
-  .btn-generate:active{background:var(--hairline);}
-
-  .role-row{display:flex; gap:12px; width:100%; max-width:360px;}
-  .role-btn{
-    flex:1; background:var(--panel); border:1px solid var(--hairline); border-radius:16px;
-    padding:22px 12px; display:flex; flex-direction:column; align-items:center; gap:10px;
-    cursor:pointer; color:var(--text);
-  }
-  .role-btn:active{background:var(--panel-raised);}
-  .role-btn svg{width:30px; height:30px; stroke:var(--text); opacity:0.9;}
-  .role-btn .role-title{font-weight:700; font-size:15px;}
-  .role-btn .role-sub{font-family:var(--mono); font-size:10px; color:var(--text-dim); letter-spacing:0.1em;}
-  .role-btn:disabled{opacity:0.35; pointer-events:none;}
-
-  #setupError{color:var(--tally); font-size:13px; font-family:var(--mono); min-height:16px;}
-
-  /* ---------- DISPLAY ---------- */
-  #display{background:#000; justify-content:flex-start; cursor:none;}
-  .dp-mirror{width:100%; height:100%; overflow:hidden; position:relative;}
-  .dp-scroll{
-    position:absolute; left:0; right:0; will-change:transform;
-    padding:0 6vw;
-  }
-  .dp-text{
-    max-width:1000px; margin:0 auto; text-align:center;
-    font-weight:700; line-height:1.5; color:var(--text);
-    white-space:pre-wrap; word-wrap:break-word;
-  }
-  .dp-spacer{width:100%;}
-
-  .dp-hud{
-    position:fixed; inset:0; pointer-events:none;
-    display:flex; align-items:flex-start; justify-content:space-between;
-    padding:20px 24px; opacity:0; transition:opacity .4s;
-  }
-  .dp-hud.show{opacity:1;}
-  .dp-tally{display:flex; align-items:center; gap:8px; font-family:var(--mono); font-size:11px; color:var(--text-dim); letter-spacing:.15em;}
-  .dp-dot{width:9px; height:9px; border-radius:50%; background:var(--tally-dim); flex-shrink:0;}
-  .dp-dot.live{background:var(--tally); box-shadow:0 0 10px var(--tally); animation:pulse 1.4s ease-in-out infinite;}
-  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.45;}}
-  .dp-exit{
-    pointer-events:all; background:rgba(23,24,28,.85); border:1px solid var(--hairline);
-    color:var(--text-dim); border-radius:10px; padding:8px 14px; font-family:var(--mono);
-    font-size:11px; letter-spacing:.1em; cursor:pointer;
-  }
-
-  /* ---------- REMOTE ---------- */
-  #remote{justify-content:flex-start; overflow-y:auto; -webkit-overflow-scrolling:touch;}
-  .rm-wrap{width:100%; max-width:440px; margin:0 auto; padding:20px 20px 40px; display:flex; flex-direction:column; gap:18px;}
-  .rm-header{display:flex; align-items:center; justify-content:space-between;}
-  .rm-header .code-chip{
-    font-family:var(--mono); font-size:13px; letter-spacing:.2em; color:var(--amber);
-    background:var(--panel); border:1px solid var(--hairline); border-radius:8px; padding:6px 10px;
-  }
-  .rm-header .conn{display:flex; align-items:center; gap:6px; font-family:var(--mono); font-size:10px; color:var(--text-dim); letter-spacing:.1em;}
-  .conn-dot{width:7px; height:7px; border-radius:50%; background:#3EAE5C;}
-
-  .panel{background:var(--panel); border:1px solid var(--hairline); border-radius:16px; padding:16px;}
-  .panel-label{font-family:var(--mono); font-size:10px; letter-spacing:.16em; color:var(--text-dim); text-transform:uppercase; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;}
-  .link-btn{background:none; border:none; color:var(--amber); font-family:var(--mono); font-size:10px; letter-spacing:.1em; cursor:pointer; padding:2px 4px;}
-
-  #scriptArea{
-    width:100%; min-height:110px; max-height:220px; background:var(--void); color:var(--text);
-    border:1px solid var(--hairline); border-radius:10px; padding:10px; font-size:14px; line-height:1.6;
-    resize:vertical; text-align:right; direction:auto;
-  }
-  #scriptArea:focus{outline:none; border-color:var(--amber);}
-
-  .transport{display:flex; align-items:center; justify-content:center; padding:14px 0 6px;}
-  .play-btn{
-    width:104px; height:104px; border-radius:50%; border:3px solid var(--hairline);
-    background:var(--panel-raised); display:flex; align-items:center; justify-content:center;
-    cursor:pointer; position:relative; transition:border-color .2s, background .2s;
-  }
-  .play-btn.playing{border-color:var(--tally); background:radial-gradient(circle,rgba(232,52,42,.18),transparent 70%);}
-  .play-btn svg{width:34px; height:34px; fill:var(--text);}
-  .play-btn .ring{
-    position:absolute; inset:-3px; border-radius:50%; border:2px solid var(--tally);
-    opacity:0; animation:none;
-  }
-  .play-btn.playing .ring{opacity:1; animation:pulse 1.4s ease-in-out infinite;}
-
-  .knob-wrap{display:flex; flex-direction:column; align-items:center; gap:8px; padding:6px 0 2px;}
-  #speedKnob{touch-action:none; cursor:pointer;}
-  .speed-readout{font-family:var(--mono); font-size:22px; color:var(--amber); letter-spacing:.05em;}
-  .speed-readout span{font-size:11px; color:var(--text-dim); margin-right:6px;}
-
-  .row2{display:flex; gap:12px;}
-  .row2 .panel{flex:1; display:flex; flex-direction:column; align-items:center; gap:8px; padding:14px 10px;}
-  .stepper{display:flex; align-items:center; gap:14px;}
-  .step-btn{
-    width:34px; height:34px; border-radius:8px; background:var(--panel-raised); border:1px solid var(--hairline);
-    color:var(--text); font-size:18px; display:flex; align-items:center; justify-content:center; cursor:pointer;
-  }
-  .step-btn:active{background:var(--hairline);}
-  .step-val{font-family:var(--mono); font-size:13px; color:var(--text-dim); min-width:34px; text-align:center;}
-
-  .toggle{
-    width:46px; height:26px; border-radius:20px; background:var(--void); border:1px solid var(--hairline);
-    position:relative; cursor:pointer;
-  }
-  .toggle .knob-dot{position:absolute; top:2px; left:2px; width:20px; height:20px; border-radius:50%; background:var(--text-dim); transition:transform .18s, background .18s;}
-  .toggle.on{border-color:var(--amber);}
-  .toggle.on .knob-dot{transform:translateX(20px); background:var(--amber);}
-
-  .restart-btn{
-    width:100%; background:var(--panel); border:1px solid var(--hairline); color:var(--text-dim);
-    border-radius:12px; padding:12px; font-family:var(--mono); font-size:11px; letter-spacing:.14em;
-    text-transform:uppercase; cursor:pointer;
-  }
-  .restart-btn:active{background:var(--panel-raised); color:var(--text);}
-
-  .go-display{
-    width:100%; background:var(--tally); border:none; color:#fff; border-radius:12px;
-    padding:14px; font-size:14px; font-weight:700; cursor:pointer; letter-spacing:.02em;
-  }
-</style>
+    /* 3. עיצוב תצוגת הפרומפטר */
+    #displayView {
+      display: none;
+      background-color: #000;
+      height: 100vh;
+      width: 100vw;
+      overflow: hidden;
+    }
+    #viewport {
+      height: 100vh;
+      overflow-y: scroll;
+      padding: 40vh 5vw;
+      scrollbar-width: none;
+    }
+    #viewport::-webkit-scrollbar { display: none; }
+    #prompterContent {
+      font-weight: bold;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      text-align: right;
+    }
+    .mirrored { transform: scaleX(-1); }
+    
+    .back-btn {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      background: rgba(255,255,255,0.2);
+      color: #fff;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      z-index: 100;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
 
-<!-- ================= SETUP ================= -->
-<div id="setup" class="screen active">
-  <div class="brand">
-    <div class="mark">BROADCAST CONTROL</div>
-    <h1>טלפרומפטר</h1>
-    <p>אייפד אחד מציג את הטקסט, טלפון אחר שולט במהירות ובגלילה. חברו את שני המכשירים עם אותו קוד.</p>
+  <!-- מסך בחירת תפקיד -->
+  <div id="modeSelector">
+    <h2>מה המכשיר הזה עושה?</h2>
+    <button class="mode-btn" id="selectController">📱 הפעל כשלט</button>
+    <button class="mode-btn display-mode" id="selectDisplay">📺 הפעל כמסך פרומפטר</button>
   </div>
 
-  <div class="code-block">
-    <div class="code-label">קוד חיבור</div>
-    <div class="code-row">
-      <input id="codeInput" maxlength="4" placeholder="0000" inputmode="numeric">
-      <button class="btn-generate" id="genBtn">צור קוד</button>
-    </div>
-  </div>
+  <!-- תצוגת השלט -->
+  <div id="controllerView">
+    <button class="back-btn" onclick="location.reload()">↺ חזור לבחירה</button>
+    <h2 style="text-align:center; color:#00e676;">שלט טלפרומפטר</h2>
+    
+    <textarea id="textInput" placeholder="הכנס כאן את הטקסט למקרא..."></textarea>
+    <button class="action-btn" id="playBtn">נגן / הראה</button>
 
-  <div class="role-row">
-    <button class="role-btn" id="displayRoleBtn">
-      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M8 20h8" stroke-linecap="round"/></svg>
-      <div class="role-title">מסך תצוגה</div>
-      <div class="role-sub">אייפד</div>
-    </button>
-    <button class="role-btn" id="remoteRoleBtn">
-      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><rect x="7" y="2" width="10" height="20" rx="2.2"/><path d="M11 19h2" stroke-linecap="round"/></svg>
-      <div class="role-title">שלט</div>
-      <div class="role-sub">טלפון</div>
-    </button>
-  </div>
-  <div id="setupError"></div>
-</div>
-
-<!-- ================= DISPLAY ================= -->
-<div id="display" class="screen">
-  <div class="dp-mirror" id="dpMirror">
-    <div class="dp-scroll" id="dpScroll">
-      <div class="dp-spacer" id="dpSpacerTop"></div>
-      <div class="dp-text" id="dpText"></div>
-      <div class="dp-spacer" id="dpSpacerBottom" style="height:60vh;"></div>
-    </div>
-  </div>
-  <div class="dp-hud" id="dpHud">
-    <div class="dp-tally"><span class="dp-dot" id="dpDot"></span><span id="dpCodeLabel">----</span></div>
-    <button class="dp-exit" id="dpExit">יציאה</button>
-  </div>
-</div>
-
-<!-- ================= REMOTE ================= -->
-<div id="remote" class="screen">
-  <div class="rm-wrap">
-    <div class="rm-header">
-      <div class="code-chip" id="rmCodeChip">----</div>
-      <div class="conn"><span class="conn-dot" id="rmConnDot"></span><span id="rmConnText">מתחבר…</span></div>
-    </div>
-
-    <div class="panel">
-      <div class="panel-label">
-        <span>טקסט</span>
-        <button class="link-btn" id="scriptToggle">ערוך</button>
+    <div class="controls-grid">
+      <div class="control-group">
+        <label>מהירות (<span id="speedVal">3</span>)</label>
+        <input type="range" id="speedInput" min="1" max="10" value="3">
       </div>
-      <textarea id="scriptArea" style="display:none;" placeholder="הדביקו כאן את הטקסט להקראה…"></textarea>
-      <div id="scriptPreview" style="font-size:13px; color:var(--text-dim); line-height:1.6; max-height:60px; overflow:hidden;"></div>
-    </div>
-
-    <div class="panel">
-      <div class="panel-label"><span>נגינה</span></div>
-      <div class="transport">
-        <button class="play-btn" id="playBtn" aria-label="נגן או השהה">
-          <div class="ring"></div>
-          <svg id="playIcon" viewBox="0 0 24 24"><polygon points="6,4 20,12 6,20"/></svg>
-        </button>
-      </div>
-      <div class="knob-wrap">
-        <svg id="speedKnob" width="120" height="120" viewBox="0 0 120 120">
-          <circle cx="60" cy="60" r="52" fill="var(--void)" stroke="var(--hairline)" stroke-width="2"/>
-          <path id="knobArc" d="" fill="none" stroke="var(--amber)" stroke-width="4" stroke-linecap="round"/>
-          <g id="knobHandle">
-            <circle cx="60" cy="16" r="5" fill="var(--text)"/>
-          </g>
-        </svg>
-        <div class="speed-readout"><span>מהירות</span><span id="speedVal">40</span></div>
+      <div class="control-group">
+        <label>פונט (<span id="fontVal">48</span>px)</label>
+        <input type="range" id="fontInput" min="20" max="100" value="48">
       </div>
     </div>
 
-    <div class="row2">
-      <div class="panel">
-        <div class="panel-label" style="margin-bottom:2px;">גודל טקסט</div>
-        <div class="stepper">
-          <button class="step-btn" id="fontMinus">−</button>
-          <span class="step-val" id="fontVal">48</span>
-          <button class="step-btn" id="fontPlus">+</button>
-        </div>
-      </div>
-      <div class="panel">
-        <div class="panel-label" style="margin-bottom:2px;">מראה (הפוך)</div>
-        <div class="toggle" id="mirrorToggle"><div class="knob-dot"></div></div>
-      </div>
+    <div class="toggle-group">
+      <span>מצב מראה (Flip)</span>
+      <input type="checkbox" id="mirrorToggle">
     </div>
 
-    <button class="restart-btn" id="restartBtn">↺ התחל מחדש</button>
-    <button class="go-display" id="rmToDisplayBtn">פתח גם כאן כמסך תצוגה</button>
+    <button class="action-btn" id="resetBtn" style="background:#333; color:#fff;">חזור להתחלה</button>
   </div>
-</div>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
-import {
-  getDatabase,
-  ref,
-  get,
-  set,
-  onValue
-} from "https://www.gstatic.com/firebasejs/12.17.1/firebase-database.js";
+  <!-- תצוגת הפרומפטר -->
+  <div id="displayView">
+    <button class="back-btn" onclick="location.reload()">↺ חזור</button>
+    <div id="viewport">
+      <div id="prompterContent">ממתין לטקסט מהשלט...</div>
+    </div>
+  </div>
 
-const firebaseConfig = {
-  apiKey: "AIzaSyA-gi3EIwLFcNS6MN6RGqs3L5UQsxTAbzk",
-  authDomain: "ghost-a424e.firebaseapp.com",
-  databaseURL: "https://ghost-a424e-default-rtdb.firebaseio.com",
-  projectId: "ghost-a424e",
-  storageBucket: "ghost-a424e.firebasestorage.app",
-  messagingSenderId: "449116961300",
-  appId: "1:449116961300:web:e3b20392eb17101e4cc501",
-  measurementId: "G-8B1FZQT6FF"
-};
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getDatabase, ref, update, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
-const firebaseApp = initializeApp(firebaseConfig);
-const database = getDatabase(firebaseApp);
-
-(function(){
-  const $ = id => document.getElementById(id);
-  let roomCode = null;
-  let role = null; // 'display' | 'remote'
-  let state = null; // last known synced state
-  let serverTimeOffset = 0;
-  let connected = false;
-
-  const DEFAULT_STATE = () => ({
-    script: 'הדביקו כאן את הטקסט שלכם.\n\nהמסך יגלול אוטומטית לפי המהירות שתקבעו בשלט.',
-    speed: 40,
-    fontSize: 48,
-    mirror: false,
-    playing: false,
-    offset: 0,
-    startTime: 0,
-    updatedAt: Date.now()
-  });
-
-  function roomRef(code){ return ref(database, 'teleprompter/' + code); }
-  function now(){ return Date.now() + serverTimeOffset; }
-
-  function computePos(s){
-    if(!s) return 0;
-    if(s.playing){
-      return s.offset + (now() - s.startTime) * (s.speed/1000);
-    }
-    return s.offset;
-  }
-
-  async function loadState(code){
-    try{
-      const snapshot = await get(roomRef(code));
-      return snapshot.exists() ? snapshot.val() : null;
-    }catch(e){
-      console.error('Firebase read failed:', e);
-      return null;
-    }
-  }
-
-  async function saveState(code, s){
-    try{
-      s.updatedAt = now();
-      await set(roomRef(code), s);
-      return true;
-    }catch(e){
-      console.error('Firebase write failed:', e);
-      showFirebaseError(e);
-      return false;
-    }
-  }
-
-  function showFirebaseError(e){
-    const msg = e && e.code === 'PERMISSION_DENIED'
-      ? 'אין הרשאת כתיבה ל-Realtime Database. בדקו את לשונית Rules.'
-      : 'שגיאת חיבור ל-Firebase. בדקו אינטרנט ו-Rules.';
-    const err = $('setupError');
-    if(err) err.textContent = msg;
-  }
-
-  // Keep clocks aligned across phone/iPad and show the real connection state.
-  onValue(ref(database, '.info/serverTimeOffset'), snap => {
-    serverTimeOffset = Number(snap.val() || 0);
-  });
-
-  onValue(ref(database, '.info/connected'), snap => {
-    connected = snap.val() === true;
-    const dot = $('rmConnDot');
-    const label = $('rmConnText');
-    if(dot) dot.style.background = connected ? '#3EAE5C' : '#E8342A';
-    if(label) label.textContent = connected ? 'מחובר' : 'לא מחובר';
-  });
-
-  // ---------------- SETUP SCREEN ----------------
-  const codeInput = $('codeInput');
-  const setupError = $('setupError');
-
-  $('genBtn').addEventListener('click', ()=>{
-    codeInput.value = String(Math.floor(1000 + Math.random()*9000));
-  });
-  codeInput.addEventListener('input', ()=>{
-    codeInput.value = codeInput.value.replace(/\D/g,'').slice(0,4);
-  });
-
-  function showScreen(id){
-    document.querySelectorAll('.screen').forEach(el=>el.classList.remove('active'));
-    $(id).classList.add('active');
-  }
-
-  async function enterAs(chosenRole){
-    const code = codeInput.value.trim();
-    if(code.length !== 4){
-      setupError.textContent = 'הזינו קוד בן 4 ספרות, או לחצו "צור קוד"';
-      return;
-    }
-    setupError.textContent = '';
-    roomCode = code;
-    role = chosenRole;
-
-    let existing = await loadState(roomCode);
-    if(!existing){
-      existing = DEFAULT_STATE();
-      const ok = await saveState(roomCode, existing);
-      if(!ok) return;
-    }
-    state = existing;
-
-    if(role === 'display') startDisplay();
-    else startRemote();
-  }
-
-  $('displayRoleBtn').addEventListener('click', ()=>enterAs('display'));
-  $('remoteRoleBtn').addEventListener('click', ()=>enterAs('remote'));
-
-  // ---------------- DISPLAY ----------------
-  const dpText = $('dpText');
-  const dpScroll = $('dpScroll');
-  const dpMirror = $('dpMirror');
-  const dpDot = $('dpDot');
-  const dpHud = $('dpHud');
-  const dpCodeLabel = $('dpCodeLabel');
-  let dpUnsubscribe = null;
-  let dpRafId = null;
-
-  function renderDisplayStatic(){
-    dpText.textContent = state.script;
-    dpText.style.fontSize = state.fontSize + 'px';
-    dpMirror.style.transform = state.mirror ? 'scaleX(-1)' : 'scaleX(1)';
-    dpDot.className = 'dp-dot' + (state.playing ? ' live' : '');
-    dpCodeLabel.textContent = roomCode;
-    $('dpSpacerTop').style.height = window.innerHeight + 'px';
-  }
-
-  function dpTick(){
-    const pos = computePos(state);
-    dpScroll.style.transform = 'translateY(' + (-pos) + 'px)';
-    dpRafId = requestAnimationFrame(dpTick);
-  }
-
-  function applyDisplayState(fresh){
-    if(!fresh) return;
-    const scriptChanged = !state || fresh.script !== state.script;
-    const fontChanged = !state || fresh.fontSize !== state.fontSize;
-    const mirrorChanged = !state || fresh.mirror !== state.mirror;
-    state = fresh;
-    if(scriptChanged || fontChanged || mirrorChanged) renderDisplayStatic();
-    else dpDot.className = 'dp-dot' + (state.playing ? ' live' : '');
-  }
-
-  function startDisplay(){
-    showScreen('display');
-    renderDisplayStatic();
-    if(dpRafId) cancelAnimationFrame(dpRafId);
-    dpTick();
-    if(dpUnsubscribe) dpUnsubscribe();
-    dpUnsubscribe = onValue(roomRef(roomCode), snapshot => {
-      if(snapshot.exists()) applyDisplayState(snapshot.val());
-    }, showFirebaseError);
-    if(document.documentElement.requestFullscreen){
-      document.documentElement.requestFullscreen().catch(()=>{});
-    }
-  }
-
-  let hudTimeout = null;
-  $('display').addEventListener('click', ()=>{
-    dpHud.classList.add('show');
-    clearTimeout(hudTimeout);
-    hudTimeout = setTimeout(()=>dpHud.classList.remove('show'), 2500);
-  });
-  $('dpExit').addEventListener('click', (e)=>{
-    e.stopPropagation();
-    if(document.fullscreenElement) document.exitFullscreen().catch(()=>{});
-    if(dpUnsubscribe){ dpUnsubscribe(); dpUnsubscribe = null; }
-    if(dpRafId) cancelAnimationFrame(dpRafId);
-    showScreen('setup');
-  });
-
-  // ---------------- REMOTE ----------------
-  let rmUnsubscribe = null;
-  let editingScript = false;
-  let dragging = false;
-
-  function syncRemoteUI(){
-    $('scriptArea').value = state.script;
-    updateScriptPreview();
-    $('speedVal').textContent = Math.round(state.speed);
-    $('fontVal').textContent = state.fontSize;
-    setMirrorUI(state.mirror);
-    setPlayingUI(state.playing);
-    updateKnob(state.speed);
-  }
-
-  function startRemote(){
-    showScreen('remote');
-    $('rmCodeChip').textContent = roomCode;
-    syncRemoteUI();
-    if(rmUnsubscribe) rmUnsubscribe();
-    rmUnsubscribe = onValue(roomRef(roomCode), snapshot => {
-      if(!snapshot.exists() || editingScript || dragging) return;
-      state = snapshot.val();
-      syncRemoteUI();
-    }, showFirebaseError);
-  }
-
-  function updateScriptPreview(){
-    const p = $('scriptPreview');
-    p.textContent = state.script.slice(0, 120) + (state.script.length > 120 ? '…' : '');
-  }
-
-  $('scriptToggle').addEventListener('click', ()=>{
-    editingScript = !editingScript;
-    const ta = $('scriptArea');
-    const prev = $('scriptPreview');
-    if(editingScript){
-      ta.style.display = 'block';
-      prev.style.display = 'none';
-      $('scriptToggle').textContent = 'סיום';
-      ta.focus();
-    } else {
-      ta.style.display = 'none';
-      prev.style.display = 'block';
-      $('scriptToggle').textContent = 'ערוך';
-      const newScript = ta.value;
-      if(newScript !== state.script){
-        state.script = newScript;
-        state.offset = 0;
-        state.startTime = state.playing ? now() : 0;
-        updateScriptPreview();
-        saveState(roomCode, state);
-      }
-    }
-  });
-
-  function setPlayingUI(playing){
-    const btn = $('playBtn');
-    const icon = $('playIcon');
-    btn.classList.toggle('playing', playing);
-    icon.innerHTML = playing
-      ? '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>'
-      : '<polygon points="6,4 20,12 6,20"/>';
-  }
-
-  $('playBtn').addEventListener('click', ()=>{
-    const pos = computePos(state);
-    state.offset = pos;
-    state.playing = !state.playing;
-    state.startTime = state.playing ? now() : 0;
-    setPlayingUI(state.playing);
-    saveState(roomCode, state);
-  });
-
-  $('restartBtn').addEventListener('click', ()=>{
-    state.offset = 0;
-    state.startTime = state.playing ? now() : 0;
-    saveState(roomCode, state);
-  });
-
-  function setMirrorUI(on){
-    $('mirrorToggle').classList.toggle('on', on);
-  }
-  $('mirrorToggle').addEventListener('click', ()=>{
-    state.mirror = !state.mirror;
-    setMirrorUI(state.mirror);
-    saveState(roomCode, state);
-  });
-
-  $('fontMinus').addEventListener('click', ()=>{
-    state.fontSize = Math.max(20, state.fontSize - 4);
-    $('fontVal').textContent = state.fontSize;
-    saveState(roomCode, state);
-  });
-  $('fontPlus').addEventListener('click', ()=>{
-    state.fontSize = Math.min(120, state.fontSize + 4);
-    $('fontVal').textContent = state.fontSize;
-    saveState(roomCode, state);
-  });
-
-  $('rmToDisplayBtn').addEventListener('click', ()=>{
-    if(rmUnsubscribe){ rmUnsubscribe(); rmUnsubscribe = null; }
-    role = 'display';
-    startDisplay();
-  });
-
-  // ---- speed knob (rotary) ----
-  const KNOB_MIN = 5, KNOB_MAX = 220;
-  const ANGLE_MIN = -135, ANGLE_MAX = 135;
-  const knobSvg = $('speedKnob');
-  const knobArc = $('knobArc');
-  const knobHandle = $('knobHandle');
-
-  function speedToAngle(v){
-    const t = (v - KNOB_MIN) / (KNOB_MAX - KNOB_MIN);
-    return ANGLE_MIN + t * (ANGLE_MAX - ANGLE_MIN);
-  }
-  function describeArc(angleDeg){
-    const cx=60, cy=60, r=52;
-    const startAngle = ANGLE_MIN - 90;
-    const endAngle = angleDeg - 90;
-    const toXY = (deg)=>{
-      const rad = deg * Math.PI/180;
-      return [cx + r*Math.cos(rad), cy + r*Math.sin(rad)];
+    // ⚠️ הפרטים שלך מ-Firebase Console
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+      databaseURL: "https://YOUR_PROJECT_ID-default-rtdb.firebaseio.com",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_PROJECT_ID.appspot.com",
+      messagingSenderId: "SENDER_ID",
+      appId: "APP_ID"
     };
-    const [sx, sy] = toXY(startAngle);
-    const [ex, ey] = toXY(endAngle);
-    const largeArc = (angleDeg - ANGLE_MIN) > 180 ? 1 : 0;
-    return `M ${sx} ${sy} A ${r} ${r} 0 ${largeArc} 1 ${ex} ${ey}`;
-  }
-  function updateKnob(v){
-    const angle = speedToAngle(v);
-    knobArc.setAttribute('d', describeArc(angle));
-    knobHandle.setAttribute('transform', `rotate(${angle} 60 60)`);
-    $('speedVal').textContent = Math.round(v);
-  }
 
-  function angleFromEvent(e){
-    const rect = knobSvg.getBoundingClientRect();
-    const cx = rect.left + rect.width/2;
-    const cy = rect.top + rect.height/2;
-    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-    let deg = Math.atan2(clientX - cx, -(clientY - cy)) * 180/Math.PI;
-    deg = Math.max(ANGLE_MIN, Math.min(ANGLE_MAX, deg));
-    return deg;
-  }
-  function angleToSpeed(deg){
-    const t = (deg - ANGLE_MIN) / (ANGLE_MAX - ANGLE_MIN);
-    return KNOB_MIN + t * (KNOB_MAX - KNOB_MIN);
-  }
-  function onKnobMove(e){
-    if(!dragging) return;
-    e.preventDefault();
-    const deg = angleFromEvent(e);
-    const speed = angleToSpeed(deg);
-    updateKnob(speed);
-    const pos = computePos(state);
-    state.offset = pos;
-    state.startTime = state.playing ? now() : 0;
-    state.speed = speed;
-  }
-  function onKnobEnd(){
-    if(!dragging) return;
-    dragging = false;
-    saveState(roomCode, state);
-  }
-  knobSvg.addEventListener('pointerdown', (e)=>{ dragging = true; onKnobMove(e); });
-  window.addEventListener('pointermove', onKnobMove);
-  window.addEventListener('pointerup', onKnobEnd);
-  knobSvg.addEventListener('touchstart', (e)=>{ dragging = true; onKnobMove(e); }, {passive:false});
-  window.addEventListener('touchmove', onKnobMove, {passive:false});
-  window.addEventListener('touchend', onKnobEnd);
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const prompterRef = ref(db, 'prompter');
 
-})();
-</script>
+    const modeSelector = document.getElementById('modeSelector');
+    const controllerView = document.getElementById('controllerView');
+    const displayView = document.getElementById('displayView');
+
+    // ------------------- ניווט בין מצבים -------------------
+    document.getElementById('selectController').addEventListener('click', () => startController());
+    document.getElementById('selectDisplay').addEventListener('click', () => startDisplay());
+
+    // בדיקה אם עברו דרך URL (למשל: index.html?mode=display)
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('mode') === 'display') startDisplay();
+    if (urlParams.get('mode') === 'controller') startController();
+
+    // ------------------- לוגיקת שלט -------------------
+    function startController() {
+      modeSelector.style.display = 'none';
+      controllerView.style.display = 'flex';
+
+      let state = { text: "", isPlaying: false, speed: 3, fontSize: 48, isMirrored: false, resetScroll: false };
+      const sync = () => update(prompterRef, state);
+
+      document.getElementById('textInput').addEventListener('input', (e) => { state.text = e.target.value; sync(); });
+      
+      const playBtn = document.getElementById('playBtn');
+      playBtn.addEventListener('click', () => {
+        state.isPlaying = !state.isPlaying;
+        playBtn.textContent = state.isPlaying ? "השהה" : "נגן";
+        playBtn.className = state.isPlaying ? "action-btn pause" : "action-btn";
+        sync();
+      });
+
+      document.getElementById('speedInput').addEventListener('input', (e) => {
+        state.speed = parseInt(e.target.value);
+        document.getElementById('speedVal').textContent = state.speed;
+        sync();
+      });
+
+      document.getElementById('fontInput').addEventListener('input', (e) => {
+        state.fontSize = parseInt(e.target.value);
+        document.getElementById('fontVal').textContent = state.fontSize;
+        sync();
+      });
+
+      document.getElementById('mirrorToggle').addEventListener('change', (e) => {
+        state.isMirrored = e.target.checked;
+        sync();
+      });
+
+      document.getElementById('resetBtn').addEventListener('click', () => {
+        state.resetScroll = true; sync();
+        setTimeout(() => { state.resetScroll = false; sync(); }, 200);
+      });
+    }
+
+    // ------------------- לוגיקת מסך -------------------
+    function startDisplay() {
+      modeSelector.style.display = 'none';
+      displayView.style.display = 'block';
+
+      const viewport = document.getElementById('viewport');
+      const content = document.getElementById('prompterContent');
+      let currentSpeed = 3;
+      let isPlaying = false;
+      let scrollInterval = null;
+
+      onValue(prompterRef, (snapshot) => {
+        const data = snapshot.val();
+        if (!data) return;
+
+        if (data.text !== undefined && content.innerText !== data.text) {
+          content.innerText = data.text || "ממתין לטקסט...";
+        }
+        if (data.fontSize) content.style.fontSize = `${data.fontSize}px`;
+        if (data.isMirrored !== undefined) {
+          data.isMirrored ? viewport.classList.add('mirrored') : viewport.classList.remove('mirrored');
+        }
+        if (data.resetScroll) viewport.scrollTop = 0;
+
+        currentSpeed = data.speed || 3;
+        isPlaying = !!data.isPlaying;
+
+        // מנגנון גלילה
+        if (scrollInterval) clearInterval(scrollInterval);
+        if (isPlaying) {
+          scrollInterval = setInterval(() => { viewport.scrollTop += (currentSpeed / 2); }, 16);
+        }
+      });
+    }
+  </script>
 </body>
 </html>
