@@ -210,9 +210,9 @@
     <button class="back-btn" onclick="location.reload()">↺ חזור לבחירה</button>
     <h2 style="text-align:center; color:#00e676;">שלט טלפרומפטר</h2>
     
-    <!-- ספריית תסריטים שמורים -->
+    <!-- ספריית תסריטים שמורים ב-Firebase -->
     <div class="library-card">
-      <h4>📂 ספריית תסריטים שמורים</h4>
+      <h4>📂 ספריית תסריטים שמורים (מסונכרן בענן)</h4>
       <div class="library-row">
         <select id="savedScriptsSelect">
           <option value="">-- בחר תסריט שמור --</option>
@@ -221,7 +221,7 @@
       </div>
       <div class="library-row">
         <input type="text" id="scriptTitleInput" placeholder="שם לתסריט החדש (למשל: סרטון 1)">
-        <button class="sub-btn" id="saveScriptBtn" style="background: #00e676; color: #000;">💾 שמור</button>
+        <button class="sub-btn" id="saveScriptBtn" style="background: #00e676; color: #000;">💾 שמור בענן</button>
       </div>
     </div>
 
@@ -284,7 +284,7 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getDatabase, ref, update, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+    import { getDatabase, ref, update, set, remove, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyA-gi3EIwLFcNS6MN6RGqs3L5UQsxTAbzk",
@@ -300,6 +300,7 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
     const prompterRef = ref(db, 'prompter');
+    const scriptsRef = ref(db, 'saved_scripts');
 
     const modeSelector = document.getElementById('modeSelector');
     const controllerView = document.getElementById('controllerView');
@@ -330,69 +331,76 @@
         stepBack: false
       };
 
+      let loadedScripts = {};
+
       const sync = () => update(prompterRef, state);
 
       const textInput = document.getElementById('textInput');
       textInput.addEventListener('input', (e) => { state.text = e.target.value; sync(); });
 
-      // --- ניהול ספריית תסריטים שמורים (LocalStorage) ---
+      // --- ניהול תסריטים שמורים בענן (Firebase Realtime Database) ---
       const savedSelect = document.getElementById('savedScriptsSelect');
       const titleInput = document.getElementById('scriptTitleInput');
 
-      function loadSavedScriptsDropdown() {
-        const scripts = JSON.parse(localStorage.getItem('prompter_scripts') || '{}');
+      // האזנה לכל התסריטים השמורים ב-Firebase (מעדכן את הרשימה בכל הטלפונים בלייב!)
+      onValue(scriptsRef, (snapshot) => {
+        loadedScripts = snapshot.val() || {};
+        const currentVal = savedSelect.value;
         savedSelect.innerHTML = '<option value="">-- בחר תסריט שמור --</option>';
-        Object.keys(scripts).forEach(title => {
+        
+        Object.keys(loadedScripts).forEach(key => {
           const opt = document.createElement('option');
-          opt.value = title;
-          opt.textContent = title;
+          opt.value = key;
+          opt.textContent = loadedScripts[key].title || key;
           savedSelect.appendChild(opt);
         });
-      }
 
-      // שמירת תסריט
+        if (loadedScripts[currentVal]) {
+          savedSelect.value = currentVal;
+        }
+      });
+
+      // שמירת תסריט ב-Firebase
       document.getElementById('saveScriptBtn').addEventListener('click', () => {
         const title = titleInput.value.trim();
         const content = textInput.value;
         if (!title) { alert('אנא הכנס שם לתסריט'); return; }
         if (!content) { alert('אין טקסט לשמירה'); return; }
 
-        const scripts = JSON.parse(localStorage.getItem('prompter_scripts') || '{}');
-        scripts[title] = content;
-        localStorage.setItem('prompter_scripts', JSON.stringify(scripts));
+        // יצירת מפתח נקי מתווים מיוחדים
+        const safeKey = title.replace(/[.#$/[\]]/g, "_");
 
-        titleInput.value = '';
-        loadSavedScriptsDropdown();
-        savedSelect.value = title;
-        alert(`התסריט "${title}" נשמר בהצלחה!`);
+        set(ref(db, `saved_scripts/${safeKey}`), {
+          title: title,
+          content: content
+        }).then(() => {
+          titleInput.value = '';
+          savedSelect.value = safeKey;
+          alert(`התסריט "${title}" נשמר בענן וזמין מכל מכשיר!`);
+        });
       });
 
-      // בחירת תסריט מהרשימה
+      // טעינת תסריט שנבחר מהרשימה
       savedSelect.addEventListener('change', (e) => {
-        const title = e.target.value;
-        if (!title) return;
-        const scripts = JSON.parse(localStorage.getItem('prompter_scripts') || '{}');
-        if (scripts[title] !== undefined) {
-          textInput.value = scripts[title];
-          state.text = scripts[title];
-          sync();
-        }
+        const key = e.target.value;
+        if (!key || !loadedScripts[key]) return;
+
+        const scriptContent = loadedScripts[key].content;
+        textInput.value = scriptContent;
+        state.text = scriptContent;
+        sync();
       });
 
-      // מחיקת תסריט
+      // מחיקת תסריט מ-Firebase
       document.getElementById('deleteScriptBtn').addEventListener('click', () => {
-        const title = savedSelect.value;
-        if (!title) { alert('אנא בחר תסריט למחיקה'); return; }
-        if (confirm(`להמשיך ולמחוק את התסריט "${title}"?`)) {
-          const scripts = JSON.parse(localStorage.getItem('prompter_scripts') || '{}');
-          delete scripts[title];
-          localStorage.setItem('prompter_scripts', JSON.stringify(scripts));
-          loadSavedScriptsDropdown();
+        const key = savedSelect.value;
+        if (!key) { alert('אנא בחר תסריט למחיקה'); return; }
+        const scriptName = loadedScripts[key] ? loadedScripts[key].title : key;
+
+        if (confirm(`להמשיך ולמחוק את התסריט "${scriptName}" מהענן?`)) {
+          remove(ref(db, `saved_scripts/${key}`));
         }
       });
-
-      // טעינה ראשונית של הרשימה
-      loadSavedScriptsDropdown();
 
       // --- שאר הפקודות בשלט ---
       const playBtn = document.getElementById('playBtn');
