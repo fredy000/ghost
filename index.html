@@ -4,10 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>טלפרומפטר חכם</title>
+  <!-- טעינת גופנים מ-Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@600;800&family=Heebo:wght@700;900&family=Rubik:wght@700;900&display=swap" rel="stylesheet">
+  
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      font-family: system-ui, -apple-system, sans-serif;
+      font-family: 'Rubik', system-ui, -apple-system, sans-serif;
       background-color: #121212;
       color: #ffffff;
       min-height: 100vh;
@@ -47,6 +52,7 @@
       gap: 15px;
       max-width: 600px;
       margin: 0 auto;
+      padding-bottom: 40px;
     }
     textarea {
       width: 100%;
@@ -57,6 +63,7 @@
       border-radius: 8px;
       padding: 12px;
       font-size: 16px;
+      font-family: inherit;
     }
     .controls-grid {
       display: grid;
@@ -90,6 +97,33 @@
       padding: 12px;
       border-radius: 8px;
     }
+    select {
+      background: #2a2a2a;
+      color: #fff;
+      border: 1px solid #444;
+      padding: 10px;
+      border-radius: 6px;
+      font-size: 16px;
+    }
+    .btn-group-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+    }
+    .sub-btn {
+      background: #2a2a2a;
+      color: #fff;
+      border: 1px solid #444;
+      padding: 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .sub-btn.active {
+      background: #00e676;
+      color: #000;
+      border-color: #00e676;
+    }
 
     /* 3. עיצוב תצוגת הפרומפטר */
     #displayView {
@@ -107,10 +141,11 @@
     }
     #viewport::-webkit-scrollbar { display: none; }
     #prompterContent {
-      font-weight: bold;
+      font-weight: 800;
       line-height: 1.5;
       white-space: pre-wrap;
       text-align: right;
+      font-family: 'Rubik', sans-serif;
     }
     .mirrored { transform: scaleX(-1); }
     
@@ -145,13 +180,42 @@
     <textarea id="textInput" placeholder="הכנס כאן את הטקסט למקרא..."></textarea>
     <button class="action-btn" id="playBtn">נגן / הראה</button>
 
+    <!-- שליטה בגלילה -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+      <button class="sub-btn" id="stepBackBtn">↩ קפוץ אחורה</button>
+      <button class="sub-btn" id="resetBtn">⏮ חזור להתחלה</button>
+    </div>
+
+    <!-- הגדרות טיפוגרפיה -->
+    <div class="controls-grid">
+      <div class="control-group">
+        <label>גופן (Font)</label>
+        <select id="fontFamilyInput">
+          <option value="'Rubik', sans-serif">Rubik</option>
+          <option value="'Heebo', sans-serif">Heebo</option>
+          <option value="'Assistant', sans-serif">Assistant</option>
+          <option value="Arial, sans-serif">Arial</option>
+          <option value="monospace">Monospace</option>
+        </select>
+      </div>
+
+      <div class="control-group">
+        <label>יישור טקסט</label>
+        <div class="btn-group-3">
+          <button class="sub-btn active" id="alignRight">ימין</button>
+          <button class="sub-btn" id="alignCenter">מרכז</button>
+          <button class="sub-btn" id="alignLeft">שמאל</button>
+        </div>
+      </div>
+    </div>
+
     <div class="controls-grid">
       <div class="control-group">
         <label>מהירות (<span id="speedVal">3</span>)</label>
         <input type="range" id="speedInput" min="1" max="10" value="3">
       </div>
       <div class="control-group">
-        <label>פונט (<span id="fontVal">48</span>px)</label>
+        <label>גודל פונט (<span id="fontVal">48</span>px)</label>
         <input type="range" id="fontInput" min="20" max="100" value="48">
       </div>
     </div>
@@ -160,8 +224,6 @@
       <span>מצב מראה (Flip)</span>
       <input type="checkbox" id="mirrorToggle">
     </div>
-
-    <button class="action-btn" id="resetBtn" style="background:#333; color:#fff;">חזור להתחלה</button>
   </div>
 
   <!-- תצוגת הפרומפטר -->
@@ -176,7 +238,6 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
     import { getDatabase, ref, update, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
-    // ה-Firebase Config האמיתי שלך
     const firebaseConfig = {
       apiKey: "AIzaSyA-gi3EIwLFcNS6MN6RGqs3L5UQsxTAbzk",
       authDomain: "ghost-a424e.firebaseapp.com",
@@ -200,7 +261,6 @@
     document.getElementById('selectController').addEventListener('click', () => startController());
     document.getElementById('selectDisplay').addEventListener('click', () => startDisplay());
 
-    // בדיקה אם עברו דרך URL (למשל: index.html?mode=display)
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('mode') === 'display') startDisplay();
     if (urlParams.get('mode') === 'controller') startController();
@@ -210,7 +270,18 @@
       modeSelector.style.display = 'none';
       controllerView.style.display = 'flex';
 
-      let state = { text: "", isPlaying: false, speed: 3, fontSize: 48, isMirrored: false, resetScroll: false };
+      let state = { 
+        text: "", 
+        isPlaying: false, 
+        speed: 3, 
+        fontSize: 48, 
+        fontFamily: "'Rubik', sans-serif",
+        textAlign: "right",
+        isMirrored: false, 
+        resetScroll: false,
+        stepBack: false
+      };
+
       const sync = () => update(prompterRef, state);
 
       document.getElementById('textInput').addEventListener('input', (e) => { state.text = e.target.value; sync(); });
@@ -235,14 +306,39 @@
         sync();
       });
 
+      document.getElementById('fontFamilyInput').addEventListener('change', (e) => {
+        state.fontFamily = e.target.value;
+        sync();
+      });
+
+      // יישור טקסט
+      const setAlign = (align, btnId) => {
+        state.textAlign = align;
+        ['alignRight', 'alignCenter', 'alignLeft'].forEach(id => {
+          document.getElementById(id).classList.toggle('active', id === btnId);
+        });
+        sync();
+      };
+
+      document.getElementById('alignRight').addEventListener('click', () => setAlign('right', 'alignRight'));
+      document.getElementById('alignCenter').addEventListener('click', () => setAlign('center', 'alignCenter'));
+      document.getElementById('alignLeft').addEventListener('click', () => setAlign('left', 'alignLeft'));
+
       document.getElementById('mirrorToggle').addEventListener('change', (e) => {
         state.isMirrored = e.target.checked;
         sync();
       });
 
+      // קפיצה אחורה (כמה שורות למעלה)
+      document.getElementById('stepBackBtn').addEventListener('click', () => {
+        state.stepBack = true; sync();
+        setTimeout(() => { state.stepBack = false; sync(); }, 150);
+      });
+
+      // חזרה לתחילה
       document.getElementById('resetBtn').addEventListener('click', () => {
         state.resetScroll = true; sync();
-        setTimeout(() => { state.resetScroll = false; sync(); }, 200);
+        setTimeout(() => { state.resetScroll = false; sync(); }, 150);
       });
     }
 
@@ -265,10 +361,21 @@
           content.innerText = data.text || "ממתין לטקסט...";
         }
         if (data.fontSize) content.style.fontSize = `${data.fontSize}px`;
+        if (data.fontFamily) content.style.fontFamily = data.fontFamily;
+        if (data.textAlign) content.style.textAlign = data.textAlign;
+
         if (data.isMirrored !== undefined) {
           data.isMirrored ? viewport.classList.add('mirrored') : viewport.classList.remove('mirrored');
         }
+
+        // חזרה לתחילה
         if (data.resetScroll) viewport.scrollTop = 0;
+
+        // קפיצה קטנה אחורה (גלילה למעלה לפי גודל הפונט)
+        if (data.stepBack) {
+          const jumpAmount = (data.fontSize || 48) * 3; // קופץ כ-3 שורות אחורה
+          viewport.scrollTop = Math.max(0, viewport.scrollTop - jumpAmount);
+        }
 
         currentSpeed = data.speed || 3;
         isPlaying = !!data.isPlaying;
