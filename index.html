@@ -54,6 +54,33 @@
       margin: 0 auto;
       padding-bottom: 40px;
     }
+    
+    /* קופסת ניהול תסריטים */
+    .library-card {
+      background: #1e1e1e;
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .library-card h4 { color: #00e676; font-size: 14px; }
+    .library-row {
+      display: flex;
+      gap: 8px;
+    }
+
+    input[type="text"] {
+      flex: 1;
+      background: #2a2a2a;
+      color: #fff;
+      border: 1px solid #444;
+      padding: 10px;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
     textarea {
       width: 100%;
       height: 180px;
@@ -103,7 +130,8 @@
       border: 1px solid #444;
       padding: 10px;
       border-radius: 6px;
-      font-size: 16px;
+      font-size: 15px;
+      flex: 1;
     }
     .btn-group-3 {
       display: grid;
@@ -123,6 +151,11 @@
       background: #00e676;
       color: #000;
       border-color: #00e676;
+    }
+    .sub-btn.danger {
+      background: #d32f2f;
+      color: #fff;
+      border-color: #d32f2f;
     }
 
     /* 3. עיצוב תצוגת הפרומפטר */
@@ -177,6 +210,21 @@
     <button class="back-btn" onclick="location.reload()">↺ חזור לבחירה</button>
     <h2 style="text-align:center; color:#00e676;">שלט טלפרומפטר</h2>
     
+    <!-- ספריית תסריטים שמורים -->
+    <div class="library-card">
+      <h4>📂 ספריית תסריטים שמורים</h4>
+      <div class="library-row">
+        <select id="savedScriptsSelect">
+          <option value="">-- בחר תסריט שמור --</option>
+        </select>
+        <button class="sub-btn danger" id="deleteScriptBtn">🗑️ מחק</button>
+      </div>
+      <div class="library-row">
+        <input type="text" id="scriptTitleInput" placeholder="שם לתסריט החדש (למשל: סרטון 1)">
+        <button class="sub-btn" id="saveScriptBtn" style="background: #00e676; color: #000;">💾 שמור</button>
+      </div>
+    </div>
+
     <textarea id="textInput" placeholder="הכנס כאן את הטקסט למקרא..."></textarea>
     <button class="action-btn" id="playBtn">נגן / הראה</button>
 
@@ -284,8 +332,69 @@
 
       const sync = () => update(prompterRef, state);
 
-      document.getElementById('textInput').addEventListener('input', (e) => { state.text = e.target.value; sync(); });
-      
+      const textInput = document.getElementById('textInput');
+      textInput.addEventListener('input', (e) => { state.text = e.target.value; sync(); });
+
+      // --- ניהול ספריית תסריטים שמורים (LocalStorage) ---
+      const savedSelect = document.getElementById('savedScriptsSelect');
+      const titleInput = document.getElementById('scriptTitleInput');
+
+      function loadSavedScriptsDropdown() {
+        const scripts = JSON.parse(localStorage.getItem('prompter_scripts') || '{}');
+        savedSelect.innerHTML = '<option value="">-- בחר תסריט שמור --</option>';
+        Object.keys(scripts).forEach(title => {
+          const opt = document.createElement('option');
+          opt.value = title;
+          opt.textContent = title;
+          savedSelect.appendChild(opt);
+        });
+      }
+
+      // שמירת תסריט
+      document.getElementById('saveScriptBtn').addEventListener('click', () => {
+        const title = titleInput.value.trim();
+        const content = textInput.value;
+        if (!title) { alert('אנא הכנס שם לתסריט'); return; }
+        if (!content) { alert('אין טקסט לשמירה'); return; }
+
+        const scripts = JSON.parse(localStorage.getItem('prompter_scripts') || '{}');
+        scripts[title] = content;
+        localStorage.setItem('prompter_scripts', JSON.stringify(scripts));
+
+        titleInput.value = '';
+        loadSavedScriptsDropdown();
+        savedSelect.value = title;
+        alert(`התסריט "${title}" נשמר בהצלחה!`);
+      });
+
+      // בחירת תסריט מהרשימה
+      savedSelect.addEventListener('change', (e) => {
+        const title = e.target.value;
+        if (!title) return;
+        const scripts = JSON.parse(localStorage.getItem('prompter_scripts') || '{}');
+        if (scripts[title] !== undefined) {
+          textInput.value = scripts[title];
+          state.text = scripts[title];
+          sync();
+        }
+      });
+
+      // מחיקת תסריט
+      document.getElementById('deleteScriptBtn').addEventListener('click', () => {
+        const title = savedSelect.value;
+        if (!title) { alert('אנא בחר תסריט למחיקה'); return; }
+        if (confirm(`להמשיך ולמחוק את התסריט "${title}"?`)) {
+          const scripts = JSON.parse(localStorage.getItem('prompter_scripts') || '{}');
+          delete scripts[title];
+          localStorage.setItem('prompter_scripts', JSON.stringify(scripts));
+          loadSavedScriptsDropdown();
+        }
+      });
+
+      // טעינה ראשונית של הרשימה
+      loadSavedScriptsDropdown();
+
+      // --- שאר הפקודות בשלט ---
       const playBtn = document.getElementById('playBtn');
       playBtn.addEventListener('click', () => {
         state.isPlaying = !state.isPlaying;
@@ -311,7 +420,6 @@
         sync();
       });
 
-      // יישור טקסט
       const setAlign = (align, btnId) => {
         state.textAlign = align;
         ['alignRight', 'alignCenter', 'alignLeft'].forEach(id => {
@@ -329,13 +437,11 @@
         sync();
       });
 
-      // קפיצה אחורה (כמה שורות למעלה)
       document.getElementById('stepBackBtn').addEventListener('click', () => {
         state.stepBack = true; sync();
         setTimeout(() => { state.stepBack = false; sync(); }, 150);
       });
 
-      // חזרה לתחילה
       document.getElementById('resetBtn').addEventListener('click', () => {
         state.resetScroll = true; sync();
         setTimeout(() => { state.resetScroll = false; sync(); }, 150);
@@ -368,19 +474,16 @@
           data.isMirrored ? viewport.classList.add('mirrored') : viewport.classList.remove('mirrored');
         }
 
-        // חזרה לתחילה
         if (data.resetScroll) viewport.scrollTop = 0;
 
-        // קפיצה קטנה אחורה (גלילה למעלה לפי גודל הפונט)
         if (data.stepBack) {
-          const jumpAmount = (data.fontSize || 48) * 3; // קופץ כ-3 שורות אחורה
+          const jumpAmount = (data.fontSize || 48) * 3;
           viewport.scrollTop = Math.max(0, viewport.scrollTop - jumpAmount);
         }
 
         currentSpeed = data.speed || 3;
         isPlaying = !!data.isPlaying;
 
-        // מנגנון גלילה
         if (scrollInterval) clearInterval(scrollInterval);
         if (isPlaying) {
           scrollInterval = setInterval(() => { viewport.scrollTop += (currentSpeed / 2); }, 16);
