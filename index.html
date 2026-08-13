@@ -2,239 +2,199 @@
 <html lang="he" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>טלפרומפטר חכם</title>
-  <!-- טעינת גופנים מ-Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@600;800&family=Heebo:wght@700;900&family=Rubik:wght@700;900&display=swap" rel="stylesheet">
-  
+
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'Rubik', system-ui, -apple-system, sans-serif;
-      background-color: #121212;
-      color: #ffffff;
-      min-height: 100vh;
+    :root{
+      --bg:#101112;
+      --card:#1a1b1e;
+      --card-2:#212226;
+      --border:#2a2c31;
+      --text:#f4f4f5;
+      --text-dim:#9a9ca3;
+      --accent:#00e676;
+      --accent-dim:#0a3b26;
+      --danger:#ff4d4d;
+      --radius:14px;
+      --safe-b: env(safe-area-inset-bottom, 0px);
+    }
+    *{ box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+    body{
+      font-family:'Rubik', system-ui, -apple-system, sans-serif;
+      background:var(--bg); color:var(--text); min-height:100vh;
+    }
+    input, textarea, select { -webkit-user-select:text; user-select:text; }
+    button { -webkit-user-select:none; user-select:none; }
+
+    /* ---------- מסך בחירת מצב ---------- */
+    #modeSelector{
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      height:100vh; gap:16px; padding:24px; text-align:center;
+    }
+    #modeSelector h2{ font-size:20px; color:var(--text-dim); margin-bottom:8px; font-weight:700; }
+    .mode-btn{
+      width:100%; max-width:320px; padding:22px; font-size:18px; font-weight:800;
+      border:none; border-radius:16px; cursor:pointer; background:var(--accent); color:#04120a;
+      display:flex; align-items:center; justify-content:center; gap:10px;
+      transition:transform .12s ease;
+    }
+    .mode-btn:active{ transform:scale(0.97); }
+    .mode-btn.display-mode{ background:#29b6f6; color:#04141c; }
+
+    /* ---------- שלט ---------- */
+    #controllerView{
+      display:none; flex-direction:column; gap:14px;
+      max-width:640px; margin:0 auto;
+      padding:16px 16px calc(96px + var(--safe-b));
+    }
+    .top-bar{
+      position:sticky; top:0; z-index:20; display:flex; align-items:center; justify-content:space-between;
+      padding:10px 4px; background:linear-gradient(var(--bg) 70%, transparent);
+      backdrop-filter:blur(6px);
+    }
+    .top-bar h2{ font-size:17px; font-weight:800; }
+    .conn-badge{
+      display:flex; align-items:center; gap:6px; font-size:11px; color:var(--text-dim);
+      background:var(--card); border:1px solid var(--border); border-radius:20px; padding:5px 10px;
+    }
+    .conn-dot{ width:7px; height:7px; border-radius:50%; background:var(--danger); flex-shrink:0; transition:background .2s; }
+    .conn-dot.on{ background:var(--accent); box-shadow:0 0 6px var(--accent); }
+    .back-btn{
+      background:var(--card); border:1px solid var(--border); color:var(--text);
+      padding:8px 12px; border-radius:10px; font-size:13px; cursor:pointer;
     }
 
-    /* 1. מסך בחירת מצב */
-    #modeSelector {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      gap: 20px;
-      padding: 20px;
+    .card{
+      background:var(--card); border:1px solid var(--border); border-radius:var(--radius);
+      padding:14px; display:flex; flex-direction:column; gap:10px;
     }
-    .mode-btn {
-      width: 100%;
-      max-width: 300px;
-      padding: 20px;
-      font-size: 20px;
-      font-weight: bold;
-      border: none;
-      border-radius: 12px;
-      cursor: pointer;
-      background: #00e676;
-      color: #000;
+    .card h4{ color:var(--accent); font-size:13px; font-weight:700; letter-spacing:.02em; }
+    .row{ display:flex; gap:8px; }
+
+    input[type="text"]{
+      flex:1; background:var(--card-2); color:var(--text); border:1px solid var(--border);
+      padding:11px 12px; border-radius:10px; font-size:14px;
     }
-    .mode-btn.display-mode {
-      background: #29b6f6;
+    input[type="text"]:focus, textarea:focus{ outline:none; border-color:var(--accent); }
+
+    select{
+      background:var(--card-2); color:var(--text); border:1px solid var(--border);
+      padding:11px 12px; border-radius:10px; font-size:14px; flex:1;
     }
 
-    /* 2. עיצוב השלט */
-    #controllerView {
-      display: none;
-      padding: 20px;
-      flex-direction: column;
-      gap: 15px;
-      max-width: 600px;
-      margin: 0 auto;
-      padding-bottom: 40px;
-    }
-    
-    /* קופסת ניהול תסריטים */
-    .library-card {
-      background: #1e1e1e;
-      border: 1px solid #333;
-      border-radius: 8px;
-      padding: 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-    .library-card h4 { color: #00e676; font-size: 14px; }
-    .library-row {
-      display: flex;
-      gap: 8px;
+    textarea{
+      width:100%; height:170px; background:var(--card-2); color:var(--text);
+      border:1px solid var(--border); border-radius:12px; padding:14px; font-size:16px;
+      font-family:inherit; line-height:1.5; resize:vertical;
     }
 
-    input[type="text"] {
-      flex: 1;
-      background: #2a2a2a;
-      color: #fff;
-      border: 1px solid #444;
-      padding: 10px;
-      border-radius: 6px;
-      font-size: 14px;
+    .controls-grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    .control-group{
+      background:var(--card); border:1px solid var(--border); padding:12px; border-radius:var(--radius);
+      display:flex; flex-direction:column; gap:10px;
     }
+    .control-group label{ font-size:12px; color:var(--text-dim); display:flex; justify-content:space-between; }
+    .control-group label b{ color:var(--text); font-weight:700; }
+    input[type="range"]{ width:100%; accent-color:var(--accent); height:22px; }
 
-    textarea {
-      width: 100%;
-      height: 180px;
-      background: #1e1e1e;
-      color: #fff;
-      border: 1px solid #333;
-      border-radius: 8px;
-      padding: 12px;
-      font-size: 16px;
-      font-family: inherit;
+    .btn-group-3{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; }
+    .sub-btn{
+      background:var(--card-2); color:var(--text); border:1px solid var(--border);
+      padding:11px; border-radius:10px; cursor:pointer; font-weight:700; font-size:13px;
+      transition:background .15s, border-color .15s;
     }
-    .controls-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-    .control-group {
-      background: #1e1e1e;
-      padding: 12px;
-      border-radius: 8px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-    .action-btn {
-      background: #00e676;
-      color: #000;
-      border: none;
-      padding: 14px;
-      border-radius: 8px;
-      font-weight: bold;
-      font-size: 18px;
-      cursor: pointer;
-    }
-    .action-btn.pause { background: #ff3d00; color: #fff; }
-    .toggle-group {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: #1e1e1e;
-      padding: 12px;
-      border-radius: 8px;
-    }
-    select {
-      background: #2a2a2a;
-      color: #fff;
-      border: 1px solid #444;
-      padding: 10px;
-      border-radius: 6px;
-      font-size: 15px;
-      flex: 1;
-    }
-    .btn-group-3 {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 8px;
-    }
-    .sub-btn {
-      background: #2a2a2a;
-      color: #fff;
-      border: 1px solid #444;
-      padding: 10px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-    .sub-btn.active {
-      background: #00e676;
-      color: #000;
-      border-color: #00e676;
-    }
-    .sub-btn.danger {
-      background: #d32f2f;
-      color: #fff;
-      border-color: #d32f2f;
-    }
+    .sub-btn:active{ background:#2c2e33; }
+    .sub-btn.active{ background:var(--accent-dim); color:var(--accent); border-color:var(--accent); }
+    .sub-btn.danger{ background:#3a1414; color:#ff8080; border-color:#5c1f1f; }
+    .sub-btn.primary{ background:var(--accent); color:#04120a; border-color:var(--accent); }
 
-    /* 3. עיצוב תצוגת הפרומפטר */
-    #displayView {
-      display: none;
-      background-color: #000;
-      height: 100vh;
-      width: 100vw;
-      overflow: hidden;
+    .toggle-group{
+      display:flex; align-items:center; justify-content:space-between; background:var(--card);
+      border:1px solid var(--border); padding:14px; border-radius:var(--radius); font-size:14px;
     }
-    #viewport {
-      height: 100vh;
-      overflow-y: scroll;
-      padding: 40vh 5vw;
-      scrollbar-width: none;
+    .switch{ position:relative; width:46px; height:26px; }
+    .switch input{ opacity:0; width:0; height:0; }
+    .slider{
+      position:absolute; inset:0; background:var(--card-2); border:1px solid var(--border);
+      border-radius:20px; cursor:pointer; transition:.15s;
     }
-    #viewport::-webkit-scrollbar { display: none; }
-    #prompterContent {
-      font-weight: 800;
-      line-height: 1.5;
-      white-space: pre-wrap;
-      text-align: right;
-      font-family: 'Rubik', sans-serif;
+    .slider:before{
+      content:""; position:absolute; height:19px; width:19px; left:3px; top:2px;
+      background:var(--text-dim); border-radius:50%; transition:.15s;
     }
-    .mirrored { transform: scaleX(-1); }
-    
-    .back-btn {
-      position: fixed;
-      top: 10px;
-      left: 10px;
-      background: rgba(255,255,255,0.2);
-      color: #fff;
-      border: none;
-      padding: 6px 12px;
-      border-radius: 6px;
-      z-index: 100;
-      cursor: pointer;
+    .switch input:checked + .slider{ background:var(--accent-dim); border-color:var(--accent); }
+    .switch input:checked + .slider:before{ transform:translateX(20px); background:var(--accent); }
+
+    .play-bar{
+      position:fixed; left:0; right:0; bottom:0; z-index:30;
+      padding:12px 16px calc(12px + var(--safe-b));
+      background:linear-gradient(transparent, var(--bg) 30%);
     }
+    .action-btn{
+      width:100%; background:var(--accent); color:#04120a; border:none; padding:17px;
+      border-radius:14px; font-weight:800; font-size:17px; cursor:pointer;
+      box-shadow:0 6px 18px rgba(0,230,118,.25); transition:transform .1s, background .15s;
+    }
+    .action-btn:active{ transform:scale(0.98); }
+    .action-btn.pause{ background:var(--danger); color:#fff; box-shadow:0 6px 18px rgba(255,77,77,.25); }
+
+    .toast{
+      position:fixed; left:50%; bottom:calc(90px + var(--safe-b)); transform:translateX(-50%) translateY(20px);
+      background:#1f2124; border:1px solid var(--border); color:var(--text); font-size:13px;
+      padding:10px 16px; border-radius:10px; z-index:50; opacity:0; pointer-events:none;
+      transition:opacity .2s, transform .2s; max-width:90vw; text-align:center;
+    }
+    .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+
+    /* ---------- תצוגת הפרומפטר ---------- */
+    #displayView{ display:none; background:#000; height:100vh; width:100vw; overflow:hidden; }
+    #viewport{ height:100vh; overflow-y:scroll; padding:40vh 5vw; scrollbar-width:none; }
+    #viewport::-webkit-scrollbar{ display:none; }
+    #prompterContent{
+      font-weight:800; line-height:1.5; white-space:pre-wrap; text-align:right; font-family:'Rubik', sans-serif;
+    }
+    .mirrored{ transform:scaleX(-1); }
+    .back-btn.floating{ position:fixed; top:10px; left:10px; background:rgba(255,255,255,0.15); color:#fff; border:none; padding:8px 14px; border-radius:8px; z-index:100; cursor:pointer; }
   </style>
 </head>
 <body>
 
-  <!-- מסך בחירת תפקיד -->
   <div id="modeSelector">
     <h2>מה המכשיר הזה עושה?</h2>
     <button class="mode-btn" id="selectController">📱 הפעל כשלט</button>
     <button class="mode-btn display-mode" id="selectDisplay">📺 הפעל כמסך פרומפטר</button>
   </div>
 
-  <!-- תצוגת השלט -->
   <div id="controllerView">
-    <button class="back-btn" onclick="location.reload()">↺ חזור לבחירה</button>
-    <h2 style="text-align:center; color:#00e676;">שלט טלפרומפטר</h2>
-    
-    <!-- ספריית תסריטים שמורים ב-Firebase -->
-    <div class="library-card">
+    <div class="top-bar">
+      <button class="back-btn" onclick="location.reload()">↺ חזור</button>
+      <h2>שלט טלפרומפטר</h2>
+      <div class="conn-badge"><span class="conn-dot" id="connDot"></span><span id="connText">מתחבר…</span></div>
+    </div>
+
+    <div class="card">
       <h4>📂 ספריית תסריטים שמורים (מסונכרן בענן)</h4>
-      <div class="library-row">
-        <select id="savedScriptsSelect">
-          <option value="">-- בחר תסריט שמור --</option>
-        </select>
+      <div class="row">
+        <select id="savedScriptsSelect"><option value="">-- בחר תסריט שמור --</option></select>
         <button class="sub-btn danger" id="deleteScriptBtn">🗑️ מחק</button>
       </div>
-      <div class="library-row">
+      <div class="row">
         <input type="text" id="scriptTitleInput" placeholder="שם לתסריט החדש (למשל: סרטון 1)">
-        <button class="sub-btn" id="saveScriptBtn" style="background: #00e676; color: #000;">💾 שמור בענן</button>
+        <button class="sub-btn primary" id="saveScriptBtn">💾 שמור</button>
       </div>
     </div>
 
     <textarea id="textInput" placeholder="הכנס כאן את הטקסט למקרא..."></textarea>
-    <button class="action-btn" id="playBtn">נגן / הראה</button>
 
-    <!-- שליטה בגלילה -->
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
       <button class="sub-btn" id="stepBackBtn">↩ קפוץ אחורה</button>
       <button class="sub-btn" id="resetBtn">⏮ חזור להתחלה</button>
     </div>
 
-    <!-- הגדרות טיפוגרפיה -->
     <div class="controls-grid">
       <div class="control-group">
         <label>גופן (Font)</label>
@@ -246,7 +206,6 @@
           <option value="monospace">Monospace</option>
         </select>
       </div>
-
       <div class="control-group">
         <label>יישור טקסט</label>
         <div class="btn-group-3">
@@ -259,24 +218,31 @@
 
     <div class="controls-grid">
       <div class="control-group">
-        <label>מהירות (<span id="speedVal">3</span>)</label>
+        <label>מהירות <b id="speedVal">3</b></label>
         <input type="range" id="speedInput" min="1" max="10" value="3">
       </div>
       <div class="control-group">
-        <label>גודל פונט (<span id="fontVal">48</span>px)</label>
+        <label>גודל פונט <b><span id="fontVal">48</span>px</b></label>
         <input type="range" id="fontInput" min="20" max="100" value="48">
       </div>
     </div>
 
     <div class="toggle-group">
       <span>מצב מראה (Flip)</span>
-      <input type="checkbox" id="mirrorToggle">
+      <label class="switch">
+        <input type="checkbox" id="mirrorToggle">
+        <span class="slider"></span>
+      </label>
     </div>
+
+    <div class="play-bar">
+      <button class="action-btn" id="playBtn">▶ נגן / הראה</button>
+    </div>
+    <div class="toast" id="toast"></div>
   </div>
 
-  <!-- תצוגת הפרומפטר -->
   <div id="displayView">
-    <button class="back-btn" onclick="location.reload()">↺ חזור</button>
+    <button class="back-btn floating" onclick="location.reload()">↺ חזור</button>
     <div id="viewport">
       <div id="prompterContent">ממתין לטקסט מהשלט...</div>
     </div>
@@ -306,7 +272,6 @@
     const controllerView = document.getElementById('controllerView');
     const displayView = document.getElementById('displayView');
 
-    // ------------------- ניווט בין מצבים -------------------
     document.getElementById('selectController').addEventListener('click', () => startController());
     document.getElementById('selectDisplay').addEventListener('click', () => startDisplay());
 
@@ -314,149 +279,186 @@
     if (urlParams.get('mode') === 'display') startDisplay();
     if (urlParams.get('mode') === 'controller') startController();
 
-    // ------------------- לוגיקת שלט -------------------
+    onValue(ref(db, '.info/connected'), (snap) => {
+      const dot = document.getElementById('connDot');
+      const txt = document.getElementById('connText');
+      if (!dot) return;
+      const connected = snap.val() === true;
+      dot.classList.toggle('on', connected);
+      txt.textContent = connected ? 'מחובר' : 'מנסה להתחבר…';
+    });
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      if (!toast) return;
+      toast.textContent = msg;
+      toast.classList.add('show');
+      clearTimeout(showToast._t);
+      showToast._t = setTimeout(() => toast.classList.remove('show'), 2200);
+    }
+
     function startController() {
       modeSelector.style.display = 'none';
       controllerView.style.display = 'flex';
 
-      let state = { 
-        text: "", 
-        isPlaying: false, 
-        speed: 3, 
-        fontSize: 48, 
+      let state = {
+        text: "",
+        isPlaying: false,
+        speed: 3,
+        fontSize: 48,
         fontFamily: "'Rubik', sans-serif",
         textAlign: "right",
-        isMirrored: false, 
+        isMirrored: false,
         resetScroll: false,
         stepBack: false
       };
 
       let loadedScripts = {};
+      let hasLoadedInitialState = false;
+      let textSyncTimer = null;
 
       const sync = () => update(prompterRef, state);
+      const syncNow = (patch) => { Object.assign(state, patch); sync(); };
 
       const textInput = document.getElementById('textInput');
-      textInput.addEventListener('input', (e) => { state.text = e.target.value; sync(); });
+      const speedInput = document.getElementById('speedInput');
+      const fontInput = document.getElementById('fontInput');
+      const fontFamilyInput = document.getElementById('fontFamilyInput');
+      const mirrorToggle = document.getElementById('mirrorToggle');
+      const playBtn = document.getElementById('playBtn');
 
-      // --- ניהול תסריטים שמורים בענן (Firebase Realtime Database) ---
+      onValue(prompterRef, (snapshot) => {
+        if (hasLoadedInitialState) return;
+        const data = snapshot.val();
+        if (data) {
+          state = { ...state, ...data };
+          textInput.value = state.text || "";
+          speedInput.value = state.speed;
+          document.getElementById('speedVal').textContent = state.speed;
+          fontInput.value = state.fontSize;
+          document.getElementById('fontVal').textContent = state.fontSize;
+          fontFamilyInput.value = state.fontFamily;
+          mirrorToggle.checked = !!state.isMirrored;
+          setAlign(state.textAlign || 'right', {
+            right: 'alignRight', center: 'alignCenter', left: 'alignLeft'
+          }[state.textAlign || 'right'], false);
+          updatePlayBtnUI(!!state.isPlaying);
+        }
+        hasLoadedInitialState = true;
+      }, { onlyOnce: true });
+
+      textInput.addEventListener('input', (e) => {
+        state.text = e.target.value;
+        clearTimeout(textSyncTimer);
+        textSyncTimer = setTimeout(sync, 250);
+      });
+
       const savedSelect = document.getElementById('savedScriptsSelect');
       const titleInput = document.getElementById('scriptTitleInput');
 
-      // האזנה לכל התסריטים השמורים ב-Firebase (מעדכן את הרשימה בכל הטלפונים בלייב!)
       onValue(scriptsRef, (snapshot) => {
         loadedScripts = snapshot.val() || {};
         const currentVal = savedSelect.value;
         savedSelect.innerHTML = '<option value="">-- בחר תסריט שמור --</option>';
-        
         Object.keys(loadedScripts).forEach(key => {
           const opt = document.createElement('option');
           opt.value = key;
           opt.textContent = loadedScripts[key].title || key;
           savedSelect.appendChild(opt);
         });
-
-        if (loadedScripts[currentVal]) {
-          savedSelect.value = currentVal;
-        }
+        if (loadedScripts[currentVal]) savedSelect.value = currentVal;
       });
 
-      // שמירת תסריט ב-Firebase
       document.getElementById('saveScriptBtn').addEventListener('click', () => {
         const title = titleInput.value.trim();
         const content = textInput.value;
-        if (!title) { alert('אנא הכנס שם לתסריט'); return; }
-        if (!content) { alert('אין טקסט לשמירה'); return; }
+        if (!title) { showToast('אנא הכנס שם לתסריט'); return; }
+        if (!content) { showToast('אין טקסט לשמירה'); return; }
 
-        // יצירת מפתח נקי מתווים מיוחדים
         const safeKey = title.replace(/[.#$/[\]]/g, "_");
-
-        set(ref(db, `saved_scripts/${safeKey}`), {
-          title: title,
-          content: content
-        }).then(() => {
-          titleInput.value = '';
-          savedSelect.value = safeKey;
-          alert(`התסריט "${title}" נשמר בענן וזמין מכל מכשיר!`);
-        });
+        set(ref(db, `saved_scripts/${safeKey}`), { title, content })
+          .then(() => {
+            titleInput.value = '';
+            savedSelect.value = safeKey;
+            showToast(`התסריט "${title}" נשמר בענן`);
+          })
+          .catch(() => showToast('שגיאה בשמירה - בדוק הרשאות Firebase'));
       });
 
-      // טעינת תסריט שנבחר מהרשימה
       savedSelect.addEventListener('change', (e) => {
         const key = e.target.value;
         if (!key || !loadedScripts[key]) return;
-
         const scriptContent = loadedScripts[key].content;
         textInput.value = scriptContent;
         state.text = scriptContent;
         sync();
       });
 
-      // מחיקת תסריט מ-Firebase
       document.getElementById('deleteScriptBtn').addEventListener('click', () => {
         const key = savedSelect.value;
-        if (!key) { alert('אנא בחר תסריט למחיקה'); return; }
+        if (!key) { showToast('אנא בחר תסריט למחיקה'); return; }
         const scriptName = loadedScripts[key] ? loadedScripts[key].title : key;
-
-        if (confirm(`להמשיך ולמחוק את התסריט "${scriptName}" מהענן?`)) {
-          remove(ref(db, `saved_scripts/${key}`));
+        if (confirm(`למחוק את התסריט "${scriptName}"?`)) {
+          remove(ref(db, `saved_scripts/${key}`)).then(() => showToast('התסריט נמחק'));
         }
       });
 
-      // --- שאר הפקודות בשלט ---
-      const playBtn = document.getElementById('playBtn');
+      function updatePlayBtnUI(playing) {
+        playBtn.textContent = playing ? '⏸ השהה' : '▶ נגן / הראה';
+        playBtn.className = playing ? 'action-btn pause' : 'action-btn';
+      }
+
       playBtn.addEventListener('click', () => {
         state.isPlaying = !state.isPlaying;
-        playBtn.textContent = state.isPlaying ? "השהה" : "נגן";
-        playBtn.className = state.isPlaying ? "action-btn pause" : "action-btn";
+        updatePlayBtnUI(state.isPlaying);
         sync();
       });
 
-      document.getElementById('speedInput').addEventListener('input', (e) => {
-        state.speed = parseInt(e.target.value);
+      speedInput.addEventListener('input', (e) => {
+        state.speed = parseInt(e.target.value, 10);
         document.getElementById('speedVal').textContent = state.speed;
         sync();
       });
 
-      document.getElementById('fontInput').addEventListener('input', (e) => {
-        state.fontSize = parseInt(e.target.value);
+      fontInput.addEventListener('input', (e) => {
+        state.fontSize = parseInt(e.target.value, 10);
         document.getElementById('fontVal').textContent = state.fontSize;
         sync();
       });
 
-      document.getElementById('fontFamilyInput').addEventListener('change', (e) => {
+      fontFamilyInput.addEventListener('change', (e) => {
         state.fontFamily = e.target.value;
         sync();
       });
 
-      const setAlign = (align, btnId) => {
+      function setAlign(align, btnId, doSync = true) {
         state.textAlign = align;
         ['alignRight', 'alignCenter', 'alignLeft'].forEach(id => {
           document.getElementById(id).classList.toggle('active', id === btnId);
         });
-        sync();
-      };
+        if (doSync) sync();
+      }
 
       document.getElementById('alignRight').addEventListener('click', () => setAlign('right', 'alignRight'));
       document.getElementById('alignCenter').addEventListener('click', () => setAlign('center', 'alignCenter'));
       document.getElementById('alignLeft').addEventListener('click', () => setAlign('left', 'alignLeft'));
 
-      document.getElementById('mirrorToggle').addEventListener('change', (e) => {
+      mirrorToggle.addEventListener('change', (e) => {
         state.isMirrored = e.target.checked;
         sync();
       });
 
       document.getElementById('stepBackBtn').addEventListener('click', () => {
-        state.stepBack = true; sync();
-        setTimeout(() => { state.stepBack = false; sync(); }, 150);
+        syncNow({ stepBack: true });
+        setTimeout(() => syncNow({ stepBack: false }), 150);
       });
 
       document.getElementById('resetBtn').addEventListener('click', () => {
-        state.resetScroll = true; sync();
-        setTimeout(() => { state.resetScroll = false; sync(); }, 150);
+        syncNow({ resetScroll: true });
+        setTimeout(() => syncNow({ resetScroll: false }), 150);
       });
     }
 
-    // ------------------- לוגיקת מסך -------------------
     function startDisplay() {
       modeSelector.style.display = 'none';
       displayView.style.display = 'block';
