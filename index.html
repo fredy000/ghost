@@ -75,29 +75,30 @@
     .card h4{ color:var(--accent); font-size:13px; font-weight:700; letter-spacing:.02em; display:flex; justify-content:space-between; align-items:center; }
     .row{ display:flex; gap:8px; }
 
-    /* כרטיסיית תצוגה בלייב בשלט */
+    /* כרטיסיית תצוגה בלייב בזמן אמת */
     .live-card {
       background: #14241b;
-      border: 1px solid #00e67644;
+      border: 1px solid #00e67666;
     }
     .live-progress-bg {
-      width: 100%; height: 6px; background: var(--card-2); border-radius: 3px; overflow: hidden;
+      width: 100%; height: 8px; background: var(--card-2); border-radius: 4px; overflow: hidden;
     }
     .live-progress-fill {
-      height: 100%; width: 0%; background: var(--accent); transition: width 0.2s ease;
+      height: 100%; width: 0%; background: var(--accent); transition: width 0.05s linear;
     }
     .live-line-box {
       background: var(--card-2);
       border: 1px solid var(--border);
       border-radius: 8px;
       padding: 10px 12px;
-      font-size: 14px;
+      font-size: 15px;
       font-weight: 700;
       color: #fff;
-      min-height: 42px;
+      min-height: 48px;
       display: flex;
       align-items: center;
       line-height: 1.4;
+      word-break: break-word;
     }
 
     input[type="text"]{
@@ -177,11 +178,12 @@
 
     /* ---------- תצוגת הפרומפטר ---------- */
     #displayView{ display:none; background:#000; height:100vh; width:100vw; overflow:hidden; }
-    #viewport{ height:100vh; overflow-y:scroll; padding:40vh 5vw; scrollbar-width:none; }
+    #viewport{ height:100vh; overflow-y:scroll; padding:45vh 5vw; scrollbar-width:none; }
     #viewport::-webkit-scrollbar{ display:none; }
     #prompterContent{
       font-weight:800; line-height:1.5; white-space:pre-wrap; text-align:right; font-family:'Rubik', sans-serif;
     }
+    .line-span { display: inline-block; width: 100%; }
     .mirrored{ transform:scaleX(-1); }
     .back-btn.floating{ position:fixed; top:10px; left:10px; background:rgba(255,255,255,0.15); color:#fff; border:none; padding:8px 14px; border-radius:8px; z-index:100; cursor:pointer; }
   </style>
@@ -201,7 +203,7 @@
       <div class="conn-badge"><span class="conn-dot" id="connDot"></span><span id="connText">מתחבר…</span></div>
     </div>
 
-    <!-- כרטיסיית מעקב בלייב מהמסך -->
+    <!-- כרטיסיית מעקב בזמן אמת בלייב מהמסך -->
     <div class="card live-card">
       <h4><span>📺 מוצג כעת במסך</span> <span id="liveProgressVal" style="color:var(--accent);">0%</span></h4>
       <div class="live-progress-bg">
@@ -362,14 +364,16 @@
       const mirrorToggle = document.getElementById('mirrorToggle');
       const playBtn = document.getElementById('playBtn');
 
-      // האזנה לדיווח הלייב מהמסך
+      // האזנה מיידית וללא השהיה לסטטוס מהפרומפטר
       onValue(statusRef, (snapshot) => {
         const data = snapshot.val();
         if (!data) return;
         const progress = data.progress || 0;
         document.getElementById('liveProgressVal').textContent = `${progress}%`;
         document.getElementById('liveProgressBar').style.width = `${progress}%`;
-        document.getElementById('liveCurrentLine').textContent = data.currentLine || "ממתין לתחילת הגלילה...";
+        if (data.currentLine) {
+          document.getElementById('liveCurrentLine').textContent = data.currentLine;
+        }
       });
 
       onValue(prompterRef, (snapshot) => {
@@ -512,39 +516,68 @@
       const content = document.getElementById('prompterContent');
       let currentSpeed = 3;
       let isPlaying = false;
-      let scrollInterval = null;
-      let telemetryTimer = null;
+      let scrollAnimFrame = null;
+      let lastReportTime = 0;
 
-      // דיווח מיקום גלילה ושורה נוכחית לשלט (מתוזמן כל 200 מילי-שניות)
-      function reportTelemetry() {
-        if (telemetryTimer) return;
-        telemetryTimer = setTimeout(() => {
-          telemetryTimer = null;
-          const totalScrollable = viewport.scrollHeight - viewport.clientHeight;
-          const progress = totalScrollable > 0 ? Math.min(100, Math.max(0, Math.round((viewport.scrollTop / totalScrollable) * 100))) : 0;
-          
-          const lines = (content.innerText || "").split('\n').filter(l => l.trim() !== '');
-          let activeLine = "";
-          if (lines.length > 0) {
-            const lineIndex = Math.min(lines.length - 1, Math.max(0, Math.floor((progress / 100) * lines.length)));
-            activeLine = lines[lineIndex];
-          }
-
-          update(statusRef, {
-            progress: progress,
-            currentLine: activeLine
-          });
-        }, 200);
+      // פונקציית פריסת הטקסט לשורות כדי לאפשר זיהוי לייב מדויק
+      function renderTextWithSpans(text) {
+        if (!text) { content.innerHTML = "ממתין לטקסט..."; return; }
+        const lines = text.split('\n');
+        content.innerHTML = lines.map(line => `<span class="line-span">${line || '&nbsp;'}</span>`).join('<br>');
       }
 
-      viewport.addEventListener('scroll', reportTelemetry);
+      // חישוב דיווח חי בזמן אמת לשלט
+      function reportTelemetryNow() {
+        const now = performance.now();
+        if (now - lastReportTime < 50) return; // הגבלה קלה מאוד (20 פריים בשניה) למניעת עומס
+        lastReportTime = now;
+
+        const totalScrollable = viewport.scrollHeight - viewport.clientHeight;
+        const progress = totalScrollable > 0 ? Math.min(100, Math.max(0, Math.round((viewport.scrollTop / totalScrollable) * 100))) : 0;
+
+        // זיהוי הטקסט שבמרכז המסך הפיזי בנקודת ה-Y של מרכז ה-viewport
+        const centerY = window.innerHeight / 2;
+        const centerX = window.innerWidth / 2;
+        const elem = document.elementFromPoint(centerX, centerY);
+        
+        let currentLineText = "";
+        if (elem && elem.classList.contains('line-span')) {
+          currentLineText = elem.innerText.trim();
+        } else {
+          // גיבוי במידה והנקודה נופלת ברווח בין שורות
+          const spans = content.querySelectorAll('.line-span');
+          for (let span of spans) {
+            const rect = span.getBoundingClientRect();
+            if (rect.top <= centerY && rect.bottom >= centerY) {
+              currentLineText = span.innerText.trim();
+              break;
+            }
+          }
+        }
+
+        update(statusRef, {
+          progress: progress,
+          currentLine: currentLineText || "..."
+        });
+      }
+
+      viewport.addEventListener('scroll', reportTelemetryNow);
+
+      function autoScrollLoop() {
+        if (isPlaying) {
+          viewport.scrollTop += (currentSpeed / 3.5);
+          reportTelemetryNow();
+          scrollAnimFrame = requestAnimationFrame(autoScrollLoop);
+        }
+      }
 
       onValue(prompterRef, (snapshot) => {
         const data = snapshot.val();
         if (!data) return;
 
-        if (data.text !== undefined && content.innerText !== data.text) {
-          content.innerText = data.text || "ממתין לטקסט...";
+        if (data.text !== undefined && content.getAttribute('data-raw-text') !== data.text) {
+          content.setAttribute('data-raw-text', data.text);
+          renderTextWithSpans(data.text);
         }
         if (data.fontSize) content.style.fontSize = `${data.fontSize}px`;
         if (data.fontFamily) content.style.fontFamily = data.fontFamily;
@@ -556,24 +589,24 @@
 
         if (data.resetScroll) {
           viewport.scrollTop = 0;
-          reportTelemetry();
+          reportTelemetryNow();
         }
 
         if (data.stepBack) {
           const jumpAmount = (data.fontSize || 48) * 3;
           viewport.scrollTop = Math.max(0, viewport.scrollTop - jumpAmount);
-          reportTelemetry();
+          reportTelemetryNow();
         }
 
         currentSpeed = data.speed || 3;
+        const wasPlaying = isPlaying;
         isPlaying = !!data.isPlaying;
 
-        if (scrollInterval) clearInterval(scrollInterval);
-        if (isPlaying) {
-          scrollInterval = setInterval(() => { 
-            viewport.scrollTop += (currentSpeed / 2); 
-            reportTelemetry();
-          }, 16);
+        if (isPlaying && !wasPlaying) {
+          cancelAnimationFrame(scrollAnimFrame);
+          scrollAnimFrame = requestAnimationFrame(autoScrollLoop);
+        } else if (!isPlaying) {
+          cancelAnimationFrame(scrollAnimFrame);
         }
       });
     }
