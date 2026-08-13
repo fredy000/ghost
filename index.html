@@ -30,12 +30,33 @@
     input, textarea, select { -webkit-user-select:text; user-select:text; }
     button { -webkit-user-select:none; user-select:none; }
 
-    /* ---------- מסך בחירת מצב ---------- */
-    #modeSelector{
+    /* ---------- מסך הזנת קוד ---------- */
+    #codeSelector{
       display:flex; flex-direction:column; align-items:center; justify-content:center;
       height:100vh; gap:16px; padding:24px; text-align:center;
     }
-    #modeSelector h2{ font-size:20px; color:var(--text-dim); margin-bottom:8px; font-weight:700; }
+    #codeSelector h2{ font-size:22px; color:var(--text); font-weight:800; }
+    #codeSelector p{ font-size:14px; color:var(--text-dim); max-width:300px; line-height:1.4; }
+    
+    .code-input {
+      width:100%; max-width:320px; padding:16px; font-size:22px; font-weight:800;
+      text-align:center; letter-spacing:2px; border-radius:14px;
+      border:2px solid var(--border); background:var(--card-2); color:var(--text);
+      outline:none; transition:border-color .2s;
+    }
+    .code-input:focus { border-color:var(--accent); }
+
+    /* ---------- מסך בחירת מצב ---------- */
+    #modeSelector{
+      display:none; flex-direction:column; align-items:center; justify-content:center;
+      height:100vh; gap:16px; padding:24px; text-align:center;
+    }
+    #modeSelector h2{ font-size:20px; color:var(--text-dim); font-weight:700; }
+    .room-badge {
+      background:var(--accent-dim); color:var(--accent); border:1px solid var(--accent);
+      padding:6px 14px; border-radius:20px; font-size:13px; font-weight:700; margin-bottom:10px;
+    }
+
     .mode-btn{
       width:100%; max-width:320px; padding:22px; font-size:18px; font-weight:800;
       border:none; border-radius:16px; cursor:pointer; background:var(--accent); color:#04120a;
@@ -44,6 +65,11 @@
     }
     .mode-btn:active{ transform:scale(0.97); }
     .mode-btn.display-mode{ background:#29b6f6; color:#04141c; }
+
+    .change-code-btn {
+      background:none; border:none; color:var(--text-dim); text-decoration:underline;
+      font-size:13px; cursor:pointer; margin-top:10px;
+    }
 
     /* ---------- שלט ---------- */
     #controllerView{
@@ -190,12 +216,24 @@
 </head>
 <body>
 
+  <!-- מסך 1: הכנסת קוד חדר -->
+  <div id="codeSelector">
+    <h2>🔑 התחברות לטלפרומפטר</h2>
+    <p>הכנס קוד אישי/חדר. כל המכשירים עם אותו הקוד ישתנכרנו יחד.</p>
+    <input type="text" id="roomCodeInput" class="code-input" placeholder="למשל: 1234" dir="ltr" maxlength="20">
+    <button class="mode-btn" id="enterRoomBtn">התחבר לחדר</button>
+  </div>
+
+  <!-- מסך 2: בחירת מצב (שלט או מסך) -->
   <div id="modeSelector">
+    <div class="room-badge" id="currentRoomDisplay">חדר: -</div>
     <h2>מה המכשיר הזה עושה?</h2>
     <button class="mode-btn" id="selectController">📱 הפעל כשלט</button>
     <button class="mode-btn display-mode" id="selectDisplay">📺 הפעל כמסך פרומפטר</button>
+    <button class="change-code-btn" id="changeCodeBtn">🔑 החלף קוד / התנתק</button>
   </div>
 
+  <!-- מסך 3: שלט -->
   <div id="controllerView">
     <div class="top-bar">
       <button class="back-btn" onclick="location.reload()">↺ חזור</button>
@@ -277,6 +315,7 @@
     <div class="toast" id="toast"></div>
   </div>
 
+  <!-- מסך 4: תצוגת פרומפטר -->
   <div id="displayView">
     <button class="back-btn floating" onclick="location.reload()">↺ חזור</button>
     <div id="viewport">
@@ -301,20 +340,65 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
-    const prompterRef = ref(db, 'prompter');
-    const scriptsRef = ref(db, 'saved_scripts');
-    const statusRef = ref(db, 'prompter_status');
 
+    // אלמנטים
+    const codeSelector = document.getElementById('codeSelector');
     const modeSelector = document.getElementById('modeSelector');
     const controllerView = document.getElementById('controllerView');
     const displayView = document.getElementById('displayView');
+    const roomCodeInput = document.getElementById('roomCodeInput');
+    const enterRoomBtn = document.getElementById('enterRoomBtn');
+    const currentRoomDisplay = document.getElementById('currentRoomDisplay');
+    const changeCodeBtn = document.getElementById('changeCodeBtn');
+
+    let currentRoomCode = localStorage.getItem('prompter_room_code') || '';
+    let prompterRef, scriptsRef, statusRef;
+
+    // אתחול נתיבים ב-Firebase לפי הקוד
+    function setRoomReferences(code) {
+      const sanitizedCode = code.trim().toLowerCase().replace(/[.#$/[\]]/g, "_");
+      currentRoomCode = sanitizedCode;
+      localStorage.setItem('prompter_room_code', sanitizedCode);
+      
+      prompterRef = ref(db, `rooms/${sanitizedCode}/prompter`);
+      scriptsRef = ref(db, `rooms/${sanitizedCode}/saved_scripts`);
+      statusRef = ref(db, `rooms/${sanitizedCode}/prompter_status`);
+
+      currentRoomDisplay.textContent = `🔑 קוד חדר: ${sanitizedCode}`;
+    }
+
+    // ניהול מסך ההתחלה
+    if (currentRoomCode) {
+      setRoomReferences(currentRoomCode);
+      codeSelector.style.display = 'none';
+      modeSelector.style.display = 'flex';
+    } else {
+      codeSelector.style.display = 'flex';
+      modeSelector.style.display = 'none';
+    }
+
+    enterRoomBtn.addEventListener('click', () => {
+      const code = roomCodeInput.value.trim();
+      if (!code) {
+        alert('אנא הכנס קוד חדר');
+        return;
+      }
+      setRoomReferences(code);
+      codeSelector.style.display = 'none';
+      modeSelector.style.display = 'flex';
+    });
+
+    changeCodeBtn.addEventListener('click', () => {
+      localStorage.removeItem('prompter_room_code');
+      location.reload();
+    });
 
     document.getElementById('selectController').addEventListener('click', () => startController());
     document.getElementById('selectDisplay').addEventListener('click', () => startDisplay());
 
     const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('mode') === 'display') startDisplay();
-    if (urlParams.get('mode') === 'controller') startController();
+    if (urlParams.get('mode') === 'display' && currentRoomCode) startDisplay();
+    if (urlParams.get('mode') === 'controller' && currentRoomCode) startController();
 
     onValue(ref(db, '.info/connected'), (snap) => {
       const dot = document.getElementById('connDot');
@@ -334,6 +418,7 @@
       showToast._t = setTimeout(() => toast.classList.remove('show'), 2200);
     }
 
+    /* ---------- לוגיקת שלט ---------- */
     function startController() {
       modeSelector.style.display = 'none';
       controllerView.style.display = 'flex';
@@ -364,7 +449,6 @@
       const mirrorToggle = document.getElementById('mirrorToggle');
       const playBtn = document.getElementById('playBtn');
 
-      // קבלת דיווח חי מהמסך
       onValue(statusRef, (snapshot) => {
         const data = snapshot.val();
         if (!data) return;
@@ -425,13 +509,13 @@
         if (!content) { showToast('אין טקסט לשמירה'); return; }
 
         const safeKey = title.replace(/[.#$/[\]]/g, "_");
-        set(ref(db, `saved_scripts/${safeKey}`), { title, content })
+        set(ref(db, `rooms/${currentRoomCode}/saved_scripts/${safeKey}`), { title, content })
           .then(() => {
             titleInput.value = '';
             savedSelect.value = safeKey;
             showToast(`התסריט "${title}" נשמר בענן`);
           })
-          .catch(() => showToast('שגיאה בשמירה - בדוק הרשאות Firebase'));
+          .catch(() => showToast('שגיאה בשמירה'));
       });
 
       savedSelect.addEventListener('change', (e) => {
@@ -448,7 +532,7 @@
         if (!key) { showToast('אנא בחר תסריט למחיקה'); return; }
         const scriptName = loadedScripts[key] ? loadedScripts[key].title : key;
         if (confirm(`למחוק את התסריט "${scriptName}"?`)) {
-          remove(ref(db, `saved_scripts/${key}`)).then(() => showToast('התסריט נמחק'));
+          remove(ref(db, `rooms/${currentRoomCode}/saved_scripts/${key}`)).then(() => showToast('התסריט נמחק'));
         }
       });
 
@@ -508,6 +592,7 @@
       });
     }
 
+    /* ---------- לוגיקת תצוגת פרומפטר ---------- */
     function startDisplay() {
       modeSelector.style.display = 'none';
       displayView.style.display = 'block';
@@ -526,13 +611,11 @@
         content.innerHTML = lines.map(line => `<span class="line-span">${line || '&nbsp;'}</span>`).join('');
       }
 
-      // שליחת סטטוס רציפה ונקייה לשלט
       function sendTelemetry() {
         const totalScrollable = viewport.scrollHeight - viewport.clientHeight;
         const progress = totalScrollable > 0 ? Math.min(100, Math.max(0, Math.round((viewport.scrollTop / totalScrollable) * 100))) : 0;
 
         const centerY = window.innerHeight / 2;
-        const centerX = window.innerWidth / 2;
         const spans = content.querySelectorAll('.line-span');
         let currentLineText = "";
 
@@ -550,7 +633,6 @@
         });
       }
 
-      // מנוע הגלילה החלק - 60FPS
       function scrollEngine() {
         if (isPlaying) {
           exactScrollTop += (currentSpeed * 0.5);
@@ -559,7 +641,6 @@
         }
       }
 
-      // הסנכרון של הגלילה במידה והמשתמש גולל ידנית במסך
       viewport.addEventListener('scroll', () => {
         if (Math.abs(viewport.scrollTop - exactScrollTop) > 10) {
           exactScrollTop = viewport.scrollTop;
